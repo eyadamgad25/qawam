@@ -1,0 +1,31 @@
+{
+  "name": "qawam",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Qawam (قوام) — Arabic-first, physiotherapist-supervised home-rehabilitation coach (educational prototype)",
+  "type": "module",
+  "workspaces": [
+    "web",
+    "api"
+  ],
+  "scripts": {
+    "lint": "eslint web/src api/src",
+    "format": "prettier --write \"web/**/*.{ts,tsx,json,css}\" \"api/**/*.{ts,json}\" \"*.json\"",
+    "format:check": "prettier --check \"web/**/*.{ts,tsx,json,css}\" \"api/**/*.{ts,json}\" \"*.json\"",
+    "test": "npm run test:web && npm run test:api",
+    "test:web": "npm -w web test",
+    "test:api": "npm -w api test",
+    "typecheck": "npm -w web run typecheck && npm -w api run typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0"
+  }
+}

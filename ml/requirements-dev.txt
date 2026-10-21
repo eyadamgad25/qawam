@@ -1,0 +1,3 @@
+# Pinned from this machine's pip (Python 3.14). CI uses Python 3.11 — if pytest 9.1.1
+# fails there, pin a 3.11-tested version. MediaPipe/numpy land in Task 1.
+pytest==9.1.1

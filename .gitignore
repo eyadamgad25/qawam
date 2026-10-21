@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build / coverage
+dist/
+build/
+coverage/
+*.tsbuildinfo
+web/dev-dist/
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+credentials.json
+secrets/
+
+# Data — raw videos, skeletons, patient-like files stay local
+data/raw/
+data/processed/
+data/cache/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.pkl
+*.parquet
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*

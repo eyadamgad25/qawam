@@ -4,15 +4,15 @@
 
 This folder holds a README and (locally, gitignored) download paths.
 
-## Expected datasets (not downloaded in Task 0)
+## Datasets
 
 | Name | Role | License | How to verify |
 | --- | --- | --- | --- |
-| REHAB24-6 | Primary RGB + mocap-derived GT | **UNVERIFIED** | Task 1: open the dataset README/paper page before any pipeline code |
+| REHAB24-6 | Primary RGB + 2D joints + repetition CSV | Zenodo custom: academic / non-profit non-commercial research only (their spelling “noncomercial”); cite SISAP 2024 paper; commercial → info@visioncraft.ai. Quoted 2026-10-21 from https://zenodo.org/records/13305826 | `docs/dataset-report.md` |
 | UI-PRMD | Secondary | **UNVERIFIED** | Official project page + license file |
 | KIMORE | Secondary | **UNVERIFIED** | Official project page + license file |
 
-Do not assume academic use is allowed. Check redistribution, commercial, and video-of-people terms.
+UI-PRMD / KIMORE: do not assume academic use is allowed until their license files are read. REHAB24-6 terms are in `docs/dataset-report.md`. Never commit `data/raw/`.
 
 ## Local layout (suggested, gitignored)
 

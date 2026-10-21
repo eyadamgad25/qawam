@@ -31,7 +31,7 @@ tests/        fixtures, golden outputs, Python/JS tests
 ## Prerequisites
 
 - Node.js **20+** (this machine currently has 24.18.1; whether that is the current LTS is **UNVERIFIED** — check [nodejs.org](https://nodejs.org))
-- Python **3.11** for ML/eval (CI uses 3.11). This machine currently reports **Python 3.14 only** — install 3.11 before Task 1
+- Python **3.14** for ML/eval (matches this machine’s `.venv` and CI). The original brief said 3.11; that was changed in Task 1a.
 - Git
 - MongoDB local or Atlas — not required until Task 5
 
@@ -53,21 +53,18 @@ npm run format:check
 npm test
 ```
 
-Python (after installing 3.11 and creating a venv — recommended):
+Python (PowerShell, from repo root):
 
-```bash
-py -3.11 -m venv .venv
-# Windows PowerShell:
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r ml/requirements-dev.txt
-python -m pytest
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r ml/requirements.txt -r ml/requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest
 ```
 
-If 3.11 is not installed, GitHub Actions still runs pytest on 3.11. Local pytest on 3.14 is **UNVERIFIED**.
+Dataset files live in `data/raw/rehab24-6/` and are gitignored. License and layout: `docs/dataset-report.md`.
 
 ## Status
 
-Task 0 (scaffold) only. No pose pipeline, no API, no PWA yet.
+Task 1a: dataset report + sealed subject-wise loader. No MediaPipe evaluation yet.
 
 ## License
 

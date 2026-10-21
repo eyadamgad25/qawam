@@ -1,13 +1,13 @@
 # ml/
 
-Python 3.11 target (CI). Local 3.14 is **UNVERIFIED** for MediaPipe/OpenCV.
+Python **3.14** (CI + local `.venv`). Runtime pins: `requirements.txt`. pytest/jupyter: `requirements-dev.txt`.
 
-Packages will appear as tasks land:
+- `qawam_ml/rehab24.py` — REHAB24-6 CSV loader, clean subset, sealed test split
+- `splits.json` — frozen subject-wise 6/2/2 on `person_id`
+- `pose/` — MediaPipe offline (Task 1b+)
+- `eval/` — evaluation CLI (Task 4; sealing already starts in the loader)
 
-- `pose/` — MediaPipe offline
-- `angles/` — in-plane joint angles (Task 2)
-- `rules/` — may wrap JSON from `/rules`
-- `eval/` — subject-wise splits + sealed test (Task 4)
-- `nlp/` — pain-note lexicon baseline (later)
-
-Install test tools: `python -m pip install -r ml/requirements-dev.txt`
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r ml/requirements.txt -r ml/requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest
+```

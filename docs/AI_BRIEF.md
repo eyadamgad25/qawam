@@ -8,7 +8,7 @@ Rules for working together:
 3. Ask at most 1–3 questions, and only when blocked. Otherwise state your assumption and continue.
 4. Keep an experiment log and decisions log in `docs/` (append an entry after every meaningful step).
 5. Explain trade-offs briefly. I must be able to defend every design choice to examiners.
-Environment: [OS: Windows 11 / macOS], editor: VS Code, Git + GitHub, MongoDB (local or Atlas), Node.js LTS, Python 3.11. Team size: [N]. Deadline: [DATE]. Physio advisor: [NAME or "not yet"]. Supervisor: [NAME].
+Environment: [OS: Windows 11 / macOS], editor: VS Code, Git + GitHub, MongoDB (local or Atlas), Node.js LTS, Python 3.14 (Task 1a; original brief said 3.11). Team size: [N]. Deadline: [DATE]. Physio advisor: [NAME or "not yet"]. Supervisor: [NAME].
 
 ## 1. What we are building
 Qawam is an Arabic-first, physiotherapist-supervised home-rehabilitation coach (PWA). A physio prescribes an exercise plan; the patient performs it in front of a phone/laptop camera; on-device pose estimation (MediaPipe) counts reps and checks form using physio-approved RULES; the app gives Arabic text/voice cues. Its defining behavior: it REFUSES TO JUDGE when pose confidence is low ("I can't see this well — adjust the camera") instead of guessing. Patients also log pain in free Egyptian-dialect text, which is converted into structured symptoms with red-flag triage. A recall engine nudges patients who miss sessions, and the physio only reviews sessions flagged by exception. A progression recommender suggests plan changes that the physio must approve.
@@ -46,7 +46,7 @@ Prioritization: C1, C2, C3 + classifier, C5, C4 are core. C8 rule-based is in th
 - Frontend: React + Vite + TypeScript (strict), PWA (service worker, offline-first, IndexedDB queue for sessions), Arabic RTL default via i18n, logical CSS properties.
 - Pose: MediaPipe Pose Landmarker (Tasks Vision, in browser, WASM/GPU) — verify license/version. Python MediaPipe/OpenCV for offline evaluation.
 - Backend: Node.js + Express + TypeScript, MongoDB (Mongoose or native driver with JSON-schema validation), JWT auth with roles, `clinicId` scoping on every query. Append-only audit log.
-- ML/experiments: Python 3.11, Jupyter, NumPy, pandas, scikit-learn; PyTorch only if needed; Google Colab for any GPU work.
+- ML/experiments: Python 3.14 (Task 1a; original brief said 3.11), Jupyter, NumPy, pandas, scikit-learn; PyTorch only if needed; Google Colab for any GPU work.
 - NLP: Hugging Face transformers (CAMeLBERT / AraBERT / MARBERT — verify licenses), plus a rule/lexicon layer; optional LLM with JSON-schema output and template fallback.
 - Messaging: a `NotificationChannel` interface with implementations for email/SMS/web push and `wa.me` links; real WhatsApp Business API is optional (needs approval/cost — UNVERIFIED).
 - Quality: ESLint + Prettier, pytest, Vitest/Jest, GitHub Actions CI, Docker Compose for later deployment.

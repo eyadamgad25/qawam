@@ -8,7 +8,7 @@ Rules for working together:
 3. Ask at most 1–3 questions, and only when blocked. Otherwise state your assumption and continue.
 4. Keep an experiment log and decisions log in `docs/` (append an entry after every meaningful step).
 5. Explain trade-offs briefly. I must be able to defend every design choice to examiners.
-Environment: [OS: Windows 11 / macOS], editor: VS Code, Git + GitHub, MongoDB (local or Atlas), Node.js LTS, Python 3.14 (Task 1a; original brief said 3.11). Team size: [N]. Deadline: [DATE]. Physio advisor: [NAME or "not yet"]. Supervisor: [NAME].
+Environment: [OS: Windows 11 / macOS], editor: VS Code, Git + GitHub, MongoDB (local or Atlas), Node.js LTS, Python 3.14 (Task 1a; original brief said 3.11). Team size: [N]. Deadline: [DATE]. Physio advisor: TBD (unassigned). Supervisor: [NAME]. Demos: seed account **Demo Physio (not a real clinician)** — not an approver.
 
 ## 1. What we are building
 Qawam is an Arabic-first, physiotherapist-supervised home-rehabilitation coach (PWA). A physio prescribes an exercise plan; the patient performs it in front of a phone/laptop camera; on-device pose estimation (MediaPipe) counts reps and checks form using physio-approved RULES; the app gives Arabic text/voice cues. Its defining behavior: it REFUSES TO JUDGE when pose confidence is low ("I can't see this well — adjust the camera") instead of guessing. Patients also log pain in free Egyptian-dialect text, which is converted into structured symptoms with red-flag triage. A recall engine nudges patients who miss sessions, and the physio only reviews sessions flagged by exception. A progression recommender suggests plan changes that the physio must approve.
@@ -21,7 +21,7 @@ Users/roles: patient (or athlete), physio/coach, clinic admin, system admin.
 - RULES decide feedback and safety. ML/LLM output can never create, remove, or soften a safety rule or red flag.
 - Fail safe: low confidence => "cannot_assess" (with a reason code), never false praise, never a guess.
 - Red flags (sharp pain, numbness, dizziness, chest pain, or other physio-configured terms) => stop prompt, notify physio, show a "call 123" prompt. NEVER auto-dial. The NLP red-flag detector = (high-recall lexicon) OR (model); the model can never suppress a lexicon hit.
-- Clinical thresholds are CONFIGURATION set by the physio, never hardcoded. Use clearly marked `PLACEHOLDER_NEEDS_PHYSIO_APPROVAL` defaults.
+- Clinical thresholds are CONFIGURATION set by the physio, never hardcoded. Use clearly marked `PLACEHOLDER_NEEDS_PHYSIO_APPROVAL` defaults. Evidence levels: provisional default (demo only); data-derived (REHAB24-6 **train** choose / **validation** check; still provisional — lab healthy adults); clinician-approved (named human physiotherapist only). No rule may be `approved` without that named human. UI: banner **Prototype, not clinically approved** whenever a provisional rule fired.
 - The physio approves every plan change. The patient is never auto-progressed.
 - Video stays on the device by default. Only keypoint-derived metrics and scores are uploaded. Clips are uploaded only with explicit consent, encrypted, with limited retention.
 - Engagement is POSITIVE-ONLY: no punishment, no leaderboards, no negative points. Do not reward rep count alone (reward quality) and do not reward low pain scores (reward completing the honest check-in). A red flag pauses all rewards.
@@ -69,14 +69,17 @@ Rule schema (JSON, versioned, stored in `rules/` and MongoDB):
   "view": "side",
   "requires": ["LEFT_KNEE","LEFT_HIP","LEFT_ANKLE"],
   "condition": {"metric":"knee_flexion_min_deg","op":"<=","value":"PLACEHOLDER_NEEDS_PHYSIO_APPROVAL"},
-  "minConfidence": 0.6,
+  "minConfidence": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL",
   "cue": {"ar":"انزل أكثر قليلاً","en":"Go a little lower"},
   "severity": "info",
   "source": "physio advisor / literature ref",
+  "status": "provisional",
   "approvedBy": null,
-  "approvedAt": null
+  "approvedAt": null,
+  "provenance": "default"
 }
 ```
+`status`: `provisional` | `approved`. `provenance`: `default` | `dataset-derived` | `clinician`. `approved` requires `approvedBy` = a named human physiotherapist (not TBD, not **Demo Physio (not a real clinician)**). Dataset-derived rules stay `provisional` until that review.
 
 MongoDB collections (all include `clinicId`, timestamps): users, clinics, patients, plans, exercises (versioned), sessions (summary + per-rep metrics + capture-quality + model/rule versions), rules (versioned), painNotes (raw text + structured extraction + redFlag + reviewStatus), recommendations (status: proposed|approved|rejected|edited, reasons, ruleIds), nudges (channel, template, propensity, outcome), engagementEvents, consents, auditLogs (append-only).
 

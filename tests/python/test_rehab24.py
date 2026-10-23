@@ -6,7 +6,9 @@ from pathlib import Path
 import pytest
 
 from qawam_ml.rehab24 import (
+    DEFAULT_TEST_ACCESS_LOG,
     JOINT_NAMES,
+    REPO_ROOT,
     SealedTestSplitError,
     load_repetitions,
     load_splits,
@@ -77,7 +79,7 @@ def test_read_segmentation_semicolon_and_paths(tmp_path: Path) -> None:
     assert empty_subtype.person_id == 2
 
 
-def test_clean_subset_uses_the_three_stated_flags(tmp_path: Path) -> None:
+def test_gt_quality_filter_replaces_old_clean_subset(tmp_path: Path) -> None:
     csv_path, splits_path, log_path = _write_synth(tmp_path)
     val = load_repetitions(
         "validation",
@@ -92,7 +94,8 @@ def test_clean_subset_uses_the_three_stated_flags(tmp_path: Path) -> None:
         dataset_root=tmp_path,
         csv_path=csv_path,
         splits_path=splits_path,
-        clean=True,
+        filter_name="gt_quality",
+        cam=17,
         test_access_log=log_path,
     )
     assert len(val_clean) == 1
@@ -102,7 +105,8 @@ def test_clean_subset_uses_the_three_stated_flags(tmp_path: Path) -> None:
         dataset_root=tmp_path,
         csv_path=csv_path,
         splits_path=splits_path,
-        clean=True,
+        filter_name="gt_quality",
+        cam=17,
         test_access_log=log_path,
     )
     # person 2 lights_on=1 extra17=0 mocap=0; person 3 lights_on=0 excluded
@@ -149,8 +153,8 @@ def test_test_split_logs_when_final_true(tmp_path: Path) -> None:
     assert {row.person_id for row in rows} == {7, 9}
     logged = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
     assert len(logged) == 1
+    assert set(logged[0]) == {"timestamp", "split", "n_rows", "caller"}
     assert logged[0]["split"] == "test"
-    assert logged[0]["final"] is True
     assert logged[0]["n_rows"] == 2
     assert logged[0]["caller"] == "pytest"
 
@@ -168,3 +172,8 @@ def test_frozen_repo_splits_file_has_ten_subjects() -> None:
     assert validation.isdisjoint(test)
     assert train | validation | test == set(range(1, 11))
     assert splits["test"] == [7, 9]
+
+
+def test_default_test_access_log_is_committed_logs_jsonl() -> None:
+    assert DEFAULT_TEST_ACCESS_LOG == REPO_ROOT / "logs" / "test_access.jsonl"
+    assert DEFAULT_TEST_ACCESS_LOG.exists()

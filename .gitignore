@@ -48,6 +48,8 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-# Logs
+# Logs — keep logs/ tracked (sealed-test JSONL; no payloads)
 *.log
 npm-debug.log*
+!logs/
+!logs/test_access.jsonl

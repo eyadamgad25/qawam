@@ -4,6 +4,24 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-23 — Task 1a-4 — Evidence levels and rule schema (docs only)
+
+- **Hypothesis:** Naming three evidence levels and schema fields `status` / `approvedBy` / `approvedAt` / `provenance` stops dataset cutoffs and demo accounts from looking clinically approved.
+- **Setup:** Docs only; no code, no `data/raw/`, no `ml/splits.json`.
+- **Command:** none (schema/docs).
+- **Data:** none.
+- **Result:** Levels defined in `docs/decisions.md` and `docs/safety-case.md`. Schema updated in `docs/AI_BRIEF.md` and `rules/README.md`. Advisor recorded as TBD (unassigned); demo seed is not an approver; provisional-fire banner required.
+- **Caveats / UNVERIFIED:** Banner and approval-gate enforcement are not implemented until later tasks. G1 still open.
+
+## 2026-10-23 — Task 1a-3 — Filters, split audit, test-access log path
+
+- **Hypothesis:** Named stdlib filters match the stated flag logic; CSV-only audit can describe the frozen 6/2/2 split without touching video/npy or `ml/splits.json`.
+- **Setup:** Windows, `.venv` Python 3.14.0; pytest stdlib tests; pandas only in `audit_splits.py`.
+- **Command:** `.\.venv\Scripts\python.exe -m pytest tests/python`; `.\.venv\Scripts\python.exe ml/eval/audit_splits.py`.
+- **Data:** `Segmentation.csv` (semicolon, 1072 rows) + frozen `ml/splits.json`. Test split not loaded via `load_repetitions`.
+- **Result:** `pytest tests/python` 14 passed. Audit: train 592 / val 238 / test 242 (CSV metadata; test not loaded). `gt_quality` cam17 train 267 val 98; cam18 train 402 val 115. Warning: validation Ex6 correctness=0 has 9 reps. `ml/splits.json` unchanged.
+- **Caveats / UNVERIFIED:** Audit test-split cells are CSV metadata counts, not an evaluation run. License dual-wording recorded; we follow the stricter research-only text plus CC BY-NC 4.0.
+
 ## 2026-10-21 — Task 1a — REHAB24-6 inspect + loader tests
 
 - **Hypothesis:** Local REHAB24-6 matches the owner’s CSV/file facts; a synthetic-fixture loader can split on `person_id` and seal the test set.

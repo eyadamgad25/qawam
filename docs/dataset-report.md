@@ -7,8 +7,9 @@ Status: local files inspected 2026-10-21. No MediaPipe run in this pass. Do not 
 - Record: [Zenodo 13305826](https://zenodo.org/records/13305826), DOI [10.5281/zenodo.13305826](https://doi.org/10.5281/zenodo.13305826), version v1, published 28 Aug 2024.
 - Creators listed on that page: Černek, Sedmidubsky, Budikova, Jánošová, Katzer, Procházka (Masaryk University / VisionCraft / 4D Fyzioterapie).
 - Citation on the page: Černek, A., Sedmidubsky, J., Budikova P.: *REHAB24-6: Physical Therapy Dataset for Analyzing Pose Estimation Methods*. SISAP 2024.
-- **License (quoted from the Zenodo page, including their spelling):** “This dataset is for academic or non-profit organization noncomercial research use only. By using you agree to appropriately reference the paper above in any publication making of its use. For comercial purposes contact us at info@visioncraft.ai”
-- This is **not** a Creative Commons SPDX id. Redistribution of videos into git is forbidden by our `.gitignore` and is a bad idea under those terms. How those terms interact with a student GitHub repo that only stores code is **UNVERIFIED** — ask the supervisor; do not upload `data/raw/`.
+- **Rights field (Zenodo metadata `license.id`, checked 2026-10-23):** `cc-by-nc-4.0` (CC BY-NC 4.0).
+- **Description / License text (quoted from the Zenodo page, including their spelling):** “This dataset is for academic or non-profit organization noncomercial research use only. By using you agree to appropriately reference the paper above in any publication making of its use. For comercial purposes contact us at info@visioncraft.ai”
+- **What we follow:** both statements apply. We follow the **stricter** combination: academic or non-profit **noncommercial research use only**, plus the required SISAP 2024 citation. CC BY-NC 4.0 alone would still allow some non-research non-commercial uses; the description text does not. Redistribution of videos into git is forbidden by our `.gitignore` and is a bad idea under those terms. How those terms interact with a student GitHub repo that only stores code is **UNVERIFIED** — ask the supervisor; do not upload `data/raw/`.
 
 Owner report: `videos.zip` and `2d_joints.zip` were extracted into `Ex1`…`Ex6` (merged). All 5 MD5 hashes match the Zenodo record. This pass did **not** re-hash the zips. Zenodo lists (among others):
 
@@ -59,7 +60,7 @@ Zenodo text: Camera17 = horizontal RGB, Camera18 = vertical RGB; both 30 FPS. CS
 - Reps per `exercise_id`: 1=178, 2=208, 3=107, 4=210, 5=174, 6=195.
 - Subject coverage is **not** a full 10×6 grid: `person_id` 10 appears only in `exercise_id` 3; `person_id` 1 has no rows in `exercise_id` 5.
 - `exercise_subtype` empty on 510 rows; non-empty values seen: `right arm` (178), `left leg` (106), `right leg` (104), `front leg right` (91), `front leg left` (83).
-- Clean-subset rule used by the loader (as specified for this task): `mocap_erroneous=0` AND `extra_person_in_cam17=0` AND `lights_on=1` → **521** rows in the full CSV. `extra_person_in_cam18` is **not** part of that filter.
+- Filters live in `ml/qawam_ml/filters.py` (Task 1a-3). `gt_quality(row, cam)`: `mocap_erroneous=0` AND `lights_on=1` AND `extra_person_in_cam{cam}=0`. `label_quality` drops the mocap check. The old single clean-subset (`mocap_erroneous=0` AND `extra_person_in_cam17=0` AND `lights_on=1`) is `gt_quality(..., 17)` → **521** rows in the full CSV.
 
 Whether `first_frame`/`last_frame` are inclusive is **UNVERIFIED** (file does not say). Loader returns the integers as stored.
 

@@ -9,12 +9,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal, Mapping
 
+from qawam_ml.filters import apply_filter
+
 SplitName = Literal["train", "validation", "test"]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = REPO_ROOT / "data" / "raw" / "rehab24-6"
 DEFAULT_SPLITS_PATH = Path(__file__).resolve().parents[1] / "splits.json"
-DEFAULT_TEST_ACCESS_LOG = REPO_ROOT / "data" / "cache" / "sealed-test-access.jsonl"
+DEFAULT_TEST_ACCESS_LOG = REPO_ROOT / "logs" / "test_access.jsonl"
 
 # From data/raw/rehab24-6/joints_names.txt (index: name). Do not remap here.
 JOINT_NAMES: tuple[str, ...] = (
@@ -89,14 +91,6 @@ class Repetition:
     joints_c18_30fps: Path
     joints_c18_120fps: Path
 
-    def is_clean_subset(self) -> bool:
-        """mocap_erroneous=0 AND extra_person_in_cam17=0 AND lights_on=1."""
-        return (
-            self.mocap_erroneous == 0
-            and self.extra_person_in_cam17 == 0
-            and self.lights_on == 1
-        )
-
 
 def exercise_folder(exercise_id: int) -> str:
     return f"Ex{exercise_id}"
@@ -137,9 +131,8 @@ def _log_test_access(
 ) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     record = {
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "split": "test",
-        "final": True,
         "n_rows": n_rows,
         "caller": caller,
     }
@@ -204,7 +197,8 @@ def load_repetitions(
     dataset_root: Path | None = None,
     csv_path: Path | None = None,
     splits_path: Path | None = None,
-    clean: bool = False,
+    filter_name: str = "none",
+    cam: int = 17,
     final: bool = False,
     test_access_log: Path | None = None,
     caller: str = "load_repetitions",
@@ -212,7 +206,8 @@ def load_repetitions(
     """Return repetitions for one subject-wise split.
 
     The test split is sealed: raise unless final=True, and append a JSONL
-    line for every successful test load.
+    line for every successful test load. Log path defaults to
+    ``logs/test_access.jsonl`` (timestamp, split, n_rows, caller only).
     """
     if split not in ("train", "validation", "test"):
         raise ValueError(f"unknown split {split!r}")
@@ -229,8 +224,7 @@ def load_repetitions(
 
     rows = read_segmentation(root, csv_path=csv_path)
     selected = [row for row in rows if row.person_id in allowed]
-    if clean:
-        selected = [row for row in selected if row.is_clean_subset()]
+    selected = apply_filter(selected, filter_name, cam)
 
     if split == "test":
         log_path = (

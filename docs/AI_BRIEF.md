@@ -149,4 +149,3 @@ Then continue per milestones.
 ## 13. Response format
 End every reply with: "Verify: ..." (how I confirm it works), "Log: ..." (the entry to append to experiments/decisions), and "Next: ..." (the next small task).
 
-Start now with Task 0. Before writing code, list any assumptions you are making and any blocking questions (max 3).

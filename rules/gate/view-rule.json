@@ -1,0 +1,10 @@
+{
+  "type": "view-match",
+  "feature": "frontalness = |left shoulder x - right shoulder x| / torso length (2D, px)",
+  "side_pack_max_frontalness": 0.178,
+  "front_pack_min_frontalness": 0.601,
+  "requires": "one-rep offset calibration against the clinic-recorded reference",
+  "label": "calibrated",
+  "trained_on": "REHAB24-6 train+validation subjects, view labels only",
+  "status": "research-only; not a clinical setting"
+}

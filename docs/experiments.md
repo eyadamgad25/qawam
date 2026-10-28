@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-29 — Squat with a clinic reference, end to end in the browser
+
+- **Question:** Does the research pipeline (squat pack, view gate, personal reference) work as an app feature on real video?
+- **Change:** `web/src/squat/`: reads `rules/packs/lower-limb.squat.json` and `rules/gate/view-rule.json`, runs MediaPipe Lite on each frame of a local video in the browser (15 frames per second of video), measures knee flexion of the leg nearer the camera, refuses clips that are not side-on, finds reps from the clip's own range, compares each home rep with the chosen reference rep (DTW identical to `ml/qawam_ml/reference.py`, checked to 10 decimals) and shows an Arabic cue per rep. The tolerance is physio-set (default 10 deg labelled as a test value); an optional goniometer reading on the reference rep turns depth into real degrees.
+- **Data:** REHAB24-6 PM_043 (subject 5, training split), trimmed locally, not committed: reference = reps 1-2 from camera 18 (side); home = reps 3-8 (3-5 correct, 6-8 incorrect) from camera 18 (side) and camera 17 (front). Headless Chromium, WASM and model served from local copies.
+- **Result:** Side view accepted (frontalness 0.09 and 0.06); all 6 home reps found at the right times. Depth difference vs reference rep 1, app vs motion capture (left knee): rep 3 -1 / 0, rep 4 +21 / +19, rep 5 +17 / +12, rep 6 +40 / +33, rep 7 +51 / +42, rep 8 +52 / +42 deg. The incorrect reps were the deepest; reps 4-5, labelled correct, really were 12-19 deg deeper than the reference, so at a 10 deg tolerance they are flagged and at 20 deg they are not. Front view of the same reps refused (frontalness 0.64) with "I can't see you well: put the phone at your side". Analysis took 55 s for a 9 s clip and 225 s for a 39 s clip on 2 CPU cores.
+- **Caveats:** One person; the reference comes from the same session; the tolerance is not clinical; analysis is slower than real time on this machine.
+- **Next:** Live camera mode with the setup wizard (check the view before recording); faster processing (play the video instead of seeking); try it on our own phone recordings.
+
 ## 2026-10-29 — Lite vs Full pose model, same frames and gate
 
 - **Question:** Does MediaPipe Pose Landmarker Full measure better than Lite, and does the view rule + one-rep calibration still hold with it?

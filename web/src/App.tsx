@@ -5,6 +5,7 @@ import {
 } from './anglePipelineDemo';
 import { evaluatePainTriage, type PainTriageResult } from './painTriage';
 import LocalVideoPoseDemo from './LocalVideoPoseDemo';
+import SquatReferenceDemo from './squat/SquatReferenceDemo';
 
 export const SAFETY_NOTICE = {
   arabic:
@@ -60,6 +61,8 @@ export default function App() {
           </p>
         </div>
       </section>
+
+      <SquatReferenceDemo />
 
       <LocalVideoPoseDemo />
 

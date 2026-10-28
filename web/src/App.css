@@ -470,3 +470,155 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.squat-step {
+  margin-block-start: 1.25rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid #dde7e1;
+}
+
+.squat-step h3 {
+  margin: 0 0 0.25rem;
+  color: #17211d;
+  font-size: 1.1rem;
+}
+
+.squat-step[aria-disabled='true'] h3 {
+  color: #6b7b72;
+}
+
+.squat-settings select,
+.squat-settings input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #87998f;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #17211d;
+  font: inherit;
+}
+
+.squat-settings select:focus-visible,
+.squat-settings input:focus-visible {
+  outline: 3px solid #8b5d00;
+  outline-offset: 2px;
+}
+
+.analysis-progress {
+  display: grid;
+  gap: 0.35rem;
+  margin-block: 0.75rem;
+}
+
+.analysis-progress progress {
+  width: 100%;
+  accent-color: #176b50;
+}
+
+.clip-status {
+  margin-block-start: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-inline-start: 4px solid #176b50;
+  border-radius: 0.6rem;
+  background: #f1f6f2;
+}
+
+.clip-status.clip-refused {
+  border-inline-start-color: #a53d2d;
+  background: #fff7f4;
+}
+
+.clip-status p {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.clip-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  color: #52645a;
+  font-size: 0.9rem;
+}
+
+.rep-feedback-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rep-feedback {
+  display: grid;
+  grid-template-columns: 1fr minmax(8rem, 15rem);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-inline-start: 4px solid #176b50;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.rep-feedback[data-cue='SHALLOWER_THAN_REFERENCE'],
+.rep-feedback[data-cue='DEEPER_THAN_REFERENCE'],
+.rep-feedback[data-cue='DIFFERENT_PATH'] {
+  border-inline-start-color: #b07d2b;
+}
+
+.rep-feedback p {
+  margin-block: 0.25rem 0;
+}
+
+.rep-numbers {
+  color: #52645a;
+  font-size: 0.88rem;
+}
+
+.curve-chart {
+  width: 100%;
+  height: auto;
+}
+
+.curve-chart path {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.curve-reference {
+  stroke: #87998f;
+  stroke-dasharray: 5 4;
+}
+
+.curve-rep {
+  stroke: #176b50;
+}
+
+.curve-legend {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.88rem;
+}
+
+.legend-reference::before,
+.legend-rep::before {
+  display: inline-block;
+  width: 1.4rem;
+  margin-inline-end: 0.4rem;
+  vertical-align: middle;
+  border-block-start: 3px dashed #87998f;
+  content: '';
+}
+
+.legend-rep::before {
+  border-block-start: 3px solid #176b50;
+}
+
+@media (max-width: 34rem) {
+  .rep-feedback {
+    grid-template-columns: 1fr;
+  }
+}

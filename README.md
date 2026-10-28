@@ -84,6 +84,24 @@ optionally enter your own manually observed repetition count beforehand to see
 the absolute count difference. This manual comparison is a test aid, not a
 validated benchmark. Replay the video to run the counter again.
 
+### Try the squat with a clinic reference
+
+At the top of the page, **سكوات مقارنةً بتكرارك المرجعي** compares home squats
+with a reference squat recorded with the physio:
+
+1. Film two short videos (under 2 minutes each) **from the side**, whole body
+   visible from shoulders to feet: a reference with one or two good squats, and
+   a "home" video with a few squats (try some shallower or deeper ones).
+2. Under step 1, choose the reference video and wait for the analysis (it runs
+   on your computer; expect around 5 seconds of processing per second of video).
+3. Under step 2, choose the home video. Each rep gets an Arabic cue, its depth
+   difference from the reference, and a curve against the reference.
+4. Film the home video from the front to see the coach refuse and ask you to
+   turn side-on.
+
+The tolerance (default 10°) is a test value for the physio to set, not a
+clinical value. Nothing is uploaded.
+
 Python (PowerShell, from repo root):
 
 ```powershell
@@ -95,7 +113,7 @@ Dataset files live in `data/raw/rehab24-6/` and are gitignored. License and layo
 
 ## Status
 
-Current state: dataset/split safeguards and exploratory pose evaluation are in place; the browser can overlay MediaPipe landmarks and run a visibly labeled experimental arm-raise counter with synthetic unit tests. There is not yet a validated exercise mapping, threshold set, form assessment, clinician-approved rule set, or clinical validation.
+Current state: dataset/split safeguards and exploratory pose evaluation are in place; the browser runs a squat compared with a clinic reference rep, with a camera-view gate that refuses wrong views (checked end to end on REHAB24-6 video), plus the earlier pose overlay and experimental arm-raise counter. There is not yet a validated exercise mapping, threshold set, form assessment, clinician-approved rule set, or clinical validation.
 
 ## License
 

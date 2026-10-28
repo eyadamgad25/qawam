@@ -116,7 +116,7 @@ export function gateClip(clip: ClipAnalysis): ClipGate {
   if (reasons.length === 0 && clip.reps.length === 0) {
     reasons.push('NO_REPS');
   }
-  let messageAr = 'التصوير مناسب.';
+  let messageAr = 'زاوية التصوير مناسبة، والجسم ظاهر بوضوح.';
   if (reasons.includes('LOW_DETECTION')) {
     messageAr =
       'لا أرى جسمك في معظم الفيديو: ابتعد عن الهاتف حتى يظهر جسمك كاملًا، وأضئ المكان.';

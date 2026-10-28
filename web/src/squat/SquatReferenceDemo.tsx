@@ -77,7 +77,7 @@ function ClipStatus({ clip }: { clip: ClipAnalysis }) {
         <span>
           زاوية التصوير (frontalness):{' '}
           {clip.view.frontalness === null ? '—' : clip.view.frontalness.toFixed(2)}{' '}
-          (المطلوب ≤ {clip.view.cutoff})
+          (المقبول للتصوير الجانبي حتى {clip.view.cutoff})
         </span>
         <span>الرجل المتابَعة: {clip.side === 'left' ? 'اليسرى' : 'اليمنى'}</span>
         <span>تكرارات وُجدت: {clip.reps.length}</span>
@@ -193,7 +193,7 @@ export default function SquatReferenceDemo() {
             </li>
             <li>
               يقبل التقييم فقط إذا كان التصوير من الجنب: نسبة عرض الكتفين إلى طول الجذع
-              ≤ 0.178 (قيمة بحثية من بيانات REHAB24-6).
+              لا تتجاوز 0.178 (قيمة بحثية من بيانات REHAB24-6).
             </li>
             <li>
               لكل تكرار: فرق أقصى عمق عن المرجع، ومتوسط فرق المسار بعد محاذاة الزمن

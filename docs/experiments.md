@@ -4,6 +4,23 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-29 — Full-frame MediaPipe angle baseline and visibility gate, REHAB24-6 lower limb
+
+- **Question:** How far are MediaPipe Pose Landmarker Lite angles from the REHAB24-6 2D ground truth on every frame, by camera view, and can landmark visibility alone certify a false-cue rate?
+- **Setup:** `ml/eval/angle_eval.py --exercises 6 5 4`, Lite model (float16 v1), VIDEO mode, every frame of every `gt_quality` repetition, train and validation subjects only (test 7, 9 untouched). Pack primary angles: squat and lunge knee flexion, leg abduction hip abduction. Gate unit = repetition x camera x side; "wrong" = rep mean error > 10 deg (evaluation tolerance, not clinical) or pose missing on half the frames. Run in the cloud workspace on the Zenodo copy, 2 CPU cores, median 20.3 ms per frame.
+- **Result, angle error (frame MAE in degrees, train / validation):**
+
+| Exercise | Declared view in pack | Declared view | Other views |
+| --- | --- | --- | --- |
+| Squat (Ex6) | side | 8.6 / 4.7 (cam18 profile) | front 6.0 / 2.4; half-profile 9.1-9.5 / 5.4-6.3 |
+| Lunge (Ex5) | side | 5.8 / 6.0 (cam18 profile) | front 5.6 / 3.0; half-profile 4.7-9.8 / 4.5-5.9 |
+| Leg abduction (Ex4) | front | 3.7 / 9.0 (cam17 front) | profile 43.2 / 48.0; half-profile 5.8-14.0 / 2.1-21.8 |
+
+  Pose was detected on 100% of frames. Per-subject rep MAE ranged 4.6-10.5 deg for squat and lunge and 15-21 deg for leg abduction pooled over views (the profile view dominates that number).
+- **Result, gate:** mean landmark visibility predicts a wrong measurement only weakly (AUC 0.66). At alpha = 0.10 (delta 0.10) no threshold can be certified, so the gate abstains on every rep (train wrong rate 29%, validation 14%). Restricting to the declared view lowers the wrong rate (squat 24%, lunge 7%, abduction 0%) but still certifies nothing at 0.10; at alpha = 0.20 it certifies 6-7% coverage.
+- **Interpretation:** (1) Camera view matters more than the model: leg abduction filmed from the side is unusable (43-48 deg), filmed from the front it is 4-9 deg. The setup wizard must enforce the pack's view. (2) Visibility alone is not a safe confidence signal, matching Khanal and Zhou (2026). The gate behaves safely (it refuses rather than guesses) but is not yet useful.
+- **Next:** Build a richer confidence score (view match from shoulder/hip width ratio, landmark jitter, bone-length consistency, left/right agreement, DTW residual), fit it on train subjects, calibrate with `selective.py`, and report the risk-coverage curve against visibility alone. Compare the Full model on the same frames.
+
 <<<<<<< HEAD
 ## 2026-10-29 — Personal vs universal reference on REHAB26-ViewAngles (MediaPipe output)
 

@@ -19,7 +19,7 @@
     "dev:demo": "npm -w web run dev -- --host 127.0.0.1 --port 5174"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

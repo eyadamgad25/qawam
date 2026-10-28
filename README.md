@@ -30,7 +30,7 @@ tests/        fixtures, golden outputs, Python/JS tests
 
 ## Prerequisites
 
-- Node.js **20+** (this machine currently has 24.18.1; whether that is the current LTS is **UNVERIFIED** — check [nodejs.org](https://nodejs.org))
+- Node.js **22.12+** (Vitest 5 requires it) (this machine currently has 24.18.1; whether that is the current LTS is **UNVERIFIED** — check [nodejs.org](https://nodejs.org))
 - Python **3.14** for ML/eval (matches this machine’s `.venv` and CI). The original brief said 3.11; that was changed in Task 1a.
 - Git
 - MongoDB local or Atlas — not required until Task 5

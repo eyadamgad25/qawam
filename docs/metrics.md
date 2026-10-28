@@ -20,5 +20,6 @@ Train / validation subjects only; numbers from `docs/experiments.md` entries dat
 | Visibility-only gate at alpha 0.10 | abstains on all reps | abstains | abstains | — |
 | Side-view MediaPipe error after one-rep calibration (median, deg) | 3.1 | 4.7 | — | — |
 | View rule + one-rep calibration: false cues (wrong / spoken), held-out people | 3 / 88 | 3 / 52 | 1 / 26 | — |
+| Same with the Full model instead of Lite | 3 / 88 | 14 / 51 | 2 / 24 | — |
 
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

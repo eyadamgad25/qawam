@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-29 — Lite vs Full pose model, same frames and gate
+
+- **Question:** Does MediaPipe Pose Landmarker Full measure better than Lite, and does the view rule + one-rep calibration still hold with it?
+- **Setup:** Same as the gate entry below: `angle_eval.py --save-landmarks` on Ex4-6, both cameras, train + validation subjects, then `gate_eval.py` with both labels. Same 2-core cloud workspace.
+- **Result, angle error in the pack's view (frame MAE, train / validation, deg):** squat side 8.6 / 4.7 (Lite) vs **6.4 / 3.2** (Full); lunge side **5.8 / 6.0** (Lite) vs 9.6 / 3.1 (Full); leg abduction front **3.7 / 9.0** vs 3.8 / 8.8. Median inference 16.2 vs 19.3 ms per frame.
+- **Result, view rule + one-rep calibration (false cues among spoken reps):** Lite 7 / 166 = **4.2%** (upper bound 7.8%); Full 19 / 163 = 11.7% (16.6%). Squat is identical (3 / 88 for both). The difference is side-view lunge: Lite 3 / 52, Full 14 / 51, spread over three people (3, 5, 8), so Full's lunge error there is not a steady offset the calibration can remove. Not yet checked: whether Full swaps the front and back leg when they overlap in profile.
+- **Decision:** Keep Lite as the default model: faster, and the gate's guarantee holds with it. Full is not worth the cost for these packs.
+- **Next:** Plot side-view lunge curves for persons 3, 5, 8 under Full to confirm or rule out leg swapping before any model change.
+
 ## 2026-10-29 — Richer confidence gate: view match plus one-rep calibration
 
 - **Question:** Can the coach speak on some reps with a false-cue rate at or below 10%, where visibility alone abstained on everything?

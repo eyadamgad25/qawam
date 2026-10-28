@@ -18,5 +18,7 @@ Train / validation subjects only; numbers from `docs/experiments.md` entries dat
 | Incorrect-rep AUC, personal reference, REHAB24-6 mocap | 0.79 | 0.85 | 0.68 | — |
 | Incorrect-rep AUC, personal reference, REHAB26 MediaPipe (LOPO) | 0.93 | — | — | 0.76 |
 | Visibility-only gate at alpha 0.10 | abstains on all reps | abstains | abstains | — |
+| Side-view MediaPipe error after one-rep calibration (median, deg) | 3.1 | 4.7 | — | — |
+| View rule + one-rep calibration: false cues (wrong / spoken), held-out people | 3 / 88 | 3 / 52 | 1 / 26 | — |
 
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

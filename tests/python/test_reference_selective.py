@@ -102,3 +102,38 @@ def test_calibration_guarantee_holds_on_fresh_data():
 def test_apply_threshold_none_means_abstain():
     point = apply_threshold([0.5, 0.9], [0, 0], None)
     assert point.accepted == 0 and point.coverage == 0.0
+
+
+def test_fixed_sequence_certifies_where_bonferroni_cannot():
+    # 70 calibration reps: the 30 most confident hold 1 error, the rest are mostly wrong.
+    conf = np.linspace(1.0, 0.0, 70)
+    wrong = np.array([0] * 29 + [1] + [1, 0] * 20)
+    bonf = calibrate_threshold(conf, wrong, alpha=0.1, delta=0.1)
+    fixed = calibrate_threshold(conf, wrong, alpha=0.1, delta=0.1, procedure="fixed_sequence")
+    assert bonf.abstain_always
+    assert not fixed.abstain_always
+    assert fixed.empirical_risk <= 0.1
+    with pytest.raises(ValueError):
+        calibrate_threshold(conf, wrong, alpha=0.1, procedure="other")
+
+
+def test_fixed_sequence_keeps_its_guarantee_in_simulation():
+    rng = np.random.default_rng(7)
+    failures = 0
+    trials = 300
+    for _ in range(trials):
+        conf = rng.random(400)
+        wrong = (rng.random(400) < 0.4 * (1 - conf)).astype(int)
+        result = calibrate_threshold(conf, wrong, alpha=0.1, delta=0.1, procedure="fixed_sequence")
+        if result.threshold is not None:
+            true_risk = 0.4 * (1 - (1 + result.threshold) / 2)  # E[wrong | conf >= t]
+            failures += true_risk > 0.1
+    assert failures / trials <= 0.1 + 0.05
+
+
+def test_clopper_pearson_upper_matches_known_values():
+    from qawam_ml.selective import clopper_pearson_upper
+
+    assert clopper_pearson_upper(0, 29) == pytest.approx(1 - 0.05 ** (1 / 29), abs=1e-6)
+    assert 0.08 < clopper_pearson_upper(3, 88) < 0.09
+    assert clopper_pearson_upper(5, 5) == 1.0

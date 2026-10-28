@@ -79,3 +79,26 @@ py -3.14 ml\eval\rehab26_eval.py --root C:\path\to\rehab26
 ```
 
 `--root` holds `Segmentation.csv` and the unzipped `jointSequences-mediapipe.zip` under `mp/`. Leave-one-person-out; writes `data/derived/rehab26-eval/`.
+
+## gate_eval.py — richer confidence gate (2026-10-29)
+
+Needs `angle_eval.py ... --save-landmarks` first (adds `landmarks/*.npz`, one
+per recording and camera). Computes the quality features in
+`ml/qawam_ml/quality.py` per rep, compares visibility, a view-match score and
+learned logistic scores leave-one-person-out, calibrates thresholds with
+Learn-then-Test, and evaluates the view-match rule.
+
+```powershell
+py -3.14 ml\eval\angle_eval.py --exercises 6 5 4 --save-landmarks `
+  --dataset-root C:\Users\eyada\Grad_1\data\raw\rehab24-6 `
+  --model C:\Users\eyada\Grad_1\data\derived\models\pose_landmarker_lite.task
+py -3.14 ml\eval\gate_eval.py --angle-eval data\derived\angle-eval `
+  --dataset-root C:\Users\eyada\Grad_1\data\raw\rehab24-6 --label calibrated
+```
+
+`--label absolute` scores raw angle error; `--label calibrated` first removes
+the offset measured on the first rep of each recording (the clinic reference),
+which is how the app works. Writes `gate/` or `gate-calibrated/` inside the
+angle-eval folder: `summary.md`, `summary.json`, `units.csv`,
+`gate_model.json` (learned score, research only) and `view_rule.json` (the
+cut-offs the app uses).

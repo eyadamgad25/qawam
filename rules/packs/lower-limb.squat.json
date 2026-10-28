@@ -1,0 +1,67 @@
+{
+  "packId": "lower-limb.squat",
+  "version": 1,
+  "names": {
+    "ar": "سكوات (قرفصاء)",
+    "en": "Squat"
+  },
+  "bodyRegion": "lower-limb",
+  "view": "side",
+  "sides": "both",
+  "requiredLandmarks": [
+    "SIDE_SHOULDER",
+    "SIDE_HIP",
+    "SIDE_KNEE",
+    "SIDE_ANKLE"
+  ],
+  "angles": [
+    {
+      "name": "knee_flexion",
+      "triplet": [
+        "SIDE_HIP",
+        "SIDE_KNEE",
+        "SIDE_ANKLE"
+      ],
+      "transform": "flexion"
+    },
+    {
+      "name": "hip_flexion",
+      "triplet": [
+        "SIDE_SHOULDER",
+        "SIDE_HIP",
+        "SIDE_KNEE"
+      ],
+      "transform": "flexion"
+    }
+  ],
+  "primaryAngle": "knee_flexion",
+  "repCounter": {
+    "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL",
+    "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL"
+  },
+  "reference": {
+    "mode": "patient-recorded",
+    "fallback": "healthy-side"
+  },
+  "rules": [],
+  "datasetMapping": {
+    "rehab24_6_exercise_id": 6,
+    "rehab26_exercise_id": 6
+  },
+  "literatureGoals": [
+    {
+      "metric": "knee_flexion_max",
+      "value": 110,
+      "unit": "deg",
+      "use": "display-goal",
+      "population": "20 healthy older adults, mean age 67",
+      "citation": "Rowe PJ, Myles CM, Walker C, Nutton R. Knee joint kinematics in gait and other functional activities measured using flexible electrogoniometry: how much knee motion is sufficient for normal daily life? Gait & Posture 2000;12(2):143-155. Stairs and standard chairs needed 90-120 deg; the authors suggest 110 deg as a rehabilitation goal.",
+      "url": "https://strathprints.strath.ac.uk/id/eprint/13519"
+    }
+  ],
+  "notes": "Side view keeps knee and hip flexion in the image plane. Rules are added only with documented provenance.",
+  "status": "provisional",
+  "provenance": "default",
+  "approvedBy": null,
+  "approvedAt": null
+}

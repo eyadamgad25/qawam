@@ -15,7 +15,8 @@
     "test": "npm run test:web && npm run test:api",
     "test:web": "npm -w web test",
     "test:api": "npm -w api test",
-    "typecheck": "npm -w web run typecheck && npm -w api run typecheck"
+    "typecheck": "npm -w web run typecheck && npm -w api run typecheck",
+    "dev:demo": "npm -w web run dev -- --host 127.0.0.1 --port 5174"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qawam.local/schemas/exercise-pack.json",
+  "title": "Qawam exercise pack",
+  "description": "One exercise as configuration: which landmarks it needs, which camera view, which angles, how reps are counted, and which rules apply. Validated in Python by qawam_ml.packs.validate_pack.",
+  "type": "object",
+  "required": [
+    "packId",
+    "version",
+    "names",
+    "bodyRegion",
+    "view",
+    "sides",
+    "requiredLandmarks",
+    "angles",
+    "primaryAngle",
+    "repCounter",
+    "reference",
+    "rules",
+    "status",
+    "provenance",
+    "approvedBy",
+    "approvedAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "packId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "names": {
+      "type": "object",
+      "required": [
+        "ar",
+        "en"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ar": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "bodyRegion": {
+      "enum": [
+        "lower-limb",
+        "upper-limb",
+        "spine",
+        "full-body"
+      ]
+    },
+    "view": {
+      "enum": [
+        "side",
+        "front"
+      ]
+    },
+    "sides": {
+      "enum": [
+        "left",
+        "right",
+        "both",
+        "patient-selected"
+      ]
+    },
+    "requiredLandmarks": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "angles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "triplet",
+          "transform"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "triplet": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            },
+            "description": "Landmark names with a SIDE_ prefix replaced by the token SIDE, e.g. [\"SIDE_HIP\",\"SIDE_KNEE\",\"SIDE_ANKLE\"]. OTHER_ means the opposite side."
+          },
+          "transform": {
+            "enum": [
+              "interior",
+              "flexion",
+              "abduction"
+            ]
+          }
+        }
+      }
+    },
+    "primaryAngle": {
+      "type": "string"
+    },
+    "repCounter": {
+      "type": "object",
+      "required": [
+        "low",
+        "high"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "low": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "high": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "required": [
+        "mode",
+        "fallback"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "patient-recorded"
+          ]
+        },
+        "fallback": {
+          "enum": [
+            "healthy-side",
+            "none"
+          ]
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "datasetMapping": {
+      "type": "object",
+      "description": "Where this pack is evaluated, e.g. {\"rehab24_6_exercise_id\": 6}.",
+      "additionalProperties": {
+        "type": [
+          "integer",
+          "string"
+        ]
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "provisional",
+        "approved"
+      ]
+    },
+    "provenance": {
+      "enum": [
+        "default",
+        "literature",
+        "dataset-derived",
+        "clinician"
+      ]
+    },
+    "approvedBy": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approvedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "literatureGoals": {
+      "type": "array",
+      "description": "Published reference values shown to the physio as context (never used to judge a rep on their own). Each needs a citation and a link; the pack stays provisional until a named physiotherapist approves.",
+      "items": {
+        "type": "object",
+        "required": [
+          "metric",
+          "value",
+          "unit",
+          "use",
+          "citation",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "metric": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "unit": {
+            "type": "string"
+          },
+          "use": {
+            "enum": [
+              "display-goal",
+              "context"
+            ]
+          },
+          "population": {
+            "type": "string"
+          },
+          "citation": {
+            "type": "string",
+            "minLength": 10
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          }
+        }
+      }
+    }
+  }
+}

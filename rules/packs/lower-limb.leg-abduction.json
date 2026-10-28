@@ -1,0 +1,23 @@
+{
+  "packId": "lower-limb.leg-abduction",
+  "version": 1,
+  "names": { "ar": "رفع الرجل للجنب", "en": "Standing leg abduction" },
+  "bodyRegion": "lower-limb",
+  "view": "front",
+  "sides": "patient-selected",
+  "requiredLandmarks": ["SIDE_HIP", "SIDE_ANKLE", "OTHER_HIP", "SIDE_SHOULDER"],
+  "angles": [
+    { "name": "hip_abduction", "triplet": ["OTHER_HIP", "SIDE_HIP", "SIDE_ANKLE"], "transform": "abduction" },
+    { "name": "trunk_lean", "triplet": ["SIDE_SHOULDER", "SIDE_HIP", "OTHER_HIP"], "transform": "abduction" }
+  ],
+  "primaryAngle": "hip_abduction",
+  "repCounter": { "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL", "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL" },
+  "reference": { "mode": "patient-recorded", "fallback": "healthy-side" },
+  "rules": [],
+  "datasetMapping": { "rehab24_6_exercise_id": 4 },
+  "notes": "Front view keeps abduction in the image plane. SIDE is the moving leg (REHAB24-6 exercise_subtype left/right leg). Abduction = interior angle minus 90 degrees, so standing upright is about 0.",
+  "status": "provisional",
+  "provenance": "default",
+  "approvedBy": null,
+  "approvedAt": null
+}

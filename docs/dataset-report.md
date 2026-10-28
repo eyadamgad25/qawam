@@ -120,11 +120,89 @@ This pass also opened Camera18 (not in the owner bullet list, measured here):
 - Value ranges on this recording: c17 xy ≈ x∈[332.8, 1147.0], y∈[−14.69, 1019.9]; c18 xy ≈ x∈[202.5, 474.4], y∈[317.4, 1690.7].
 - 120 FPS npy: both cameras `(5215, 26, 2)`. 5215 / 1304 ≈ 3.999 (not an integer 4). How to index 120 FPS arrays from CSV 30 FPS frames is **UNVERIFIED**.
 
-## UNVERIFIED (verify in Task 1b overlay, do not code as truth)
+## Alignment checks (Camera18 PM_039 train sample)
 
-1. **Pixel convention / origin.** Zenodo text says the 2D GT is “pixel coordinates” from a pinhole projection. Local files do not state origin (top-left vs bottom-left) or that +y is down. Negative y on c17 joint min (−14.69) is compatible with “slightly out of frame” if origin is top-left on a 1080-tall image, but that is **not** proof. Treat “pixels, origin top-left” as **UNVERIFIED** until overlay.
-2. **Camera18 joints vs the “transposed” video.** Frame counts match (1304) and the y-range on this clip fits a 1920-tall frame better than 1080. That still does **not** prove the npy is in the same orientation as `*-Camera18-30fps-transposed.mp4`. Overlay in 1b.
-3. **26 joints → MediaPipe** (hypothesis table above). Overlay in 1b.
+On 2026-10-23, the authorized Camera18 train pair
+`Ex1/PM_039-Camera18-30fps-transposed.mp4` and
+`Ex1/PM_039-c18-30fps.npy` was checked at zero-based frames 94, 95, and 96.
+The video is 1080×1920 at 30 FPS with 3803 frames; the joint array is
+`(3803, 26, 2)`. The 26 labeled coordinates overlaid on the same-index video
+frames follow the visible person's head, trunk, arms, legs, and feet. Neighbor
+frames show consistent placement. For this recording, the coordinates fit
+the displayed portrait frame without swapping x/y, supporting the
+Camera18-transposed-video / same-index alignment hypothesis.
+
+This is a visual check of one training recording and three adjacent sampled
+frames, not a dataset-wide validation. The overlay's connecting lines follow
+the named joint hierarchy for readability; they do not establish a clinical
+or MediaPipe landmark mapping.
+
+MediaPipe Pose Landmarker Lite v1.1.1 was then run on those same three
+frames. In the annotated outputs, ground-truth joints/links are red/green
+with numeric joint indices; MediaPipe landmarks/links are cyan with `M`
+indices. Both skeletons are visually on the subject, but profile-view
+self-occlusion and close bilateral points make some correspondences
+ambiguous.
+
+Three explicit candidate assignments were compared using Euclidean
+ground-truth-to-MediaPipe point distance divided by the image diagonal,
+aggregated over 12 corresponding point pairs × 3 adjacent frames in each of
+two orientations of the same recording:
+
+| Camera18 view in train export | Existing hypothesis | Adjacent arm-joint shift | Existing hypothesis with left/right indices swapped |
+| --- | ---: | ---: | ---: |
+| Profile (frames 94–96) | 2.40% | 3.36% | 2.61% |
+| Half-profile (frames 2539–2541) | 1.41% | 3.98% | 8.31% |
+| Combined six-frame sample | 1.90% | 3.67% | 5.46% |
+
+The existing documented hypothesis maps `LeftArm`→left shoulder,
+`LeftForeArm`→left elbow, `LeftHand`→left wrist (mirrored right), and
+upper leg/leg/foot→hip/knee/ankle. The adjacent-arm candidate instead maps
+the shoulder marker→shoulder, `Arm`→elbow, and `ForeArm`→wrist, with the
+same lower-limb mapping.
+
+The existing hypothesis has the lowest mean in both sampled views, but all
+six frames are from one recording and a single half-profile repetition. The
+limited score is not a validated mapping or enough evidence to change
+production code. A second train recording was subsequently checked; see the
+PM_101 section below. Keep the 26-joint to MediaPipe correspondence
+**UNVERIFIED** pending authoritative joint-definition evidence and broader
+review. No coaching, threshold, or app behavior was changed.
+
+### Second train recording: PM_101 Camera18
+
+On 2026-10-24, the specifically authorized PM_101 Camera18 half-profile
+train pair was checked at zero-based frames 34–36. Its video has 1,307 frames
+while its 30 FPS joint array has 1,308 rows, so equal total lengths are not
+established. The selected same-index frames are within both files, and their
+overlay is visually plausible, but the one-row difference keeps full-clip
+synchronization **UNVERIFIED**.
+
+For the same 12 candidate point pairs, mean normalized image-diagonal
+distance on PM_101 frames 34–36 was 1.58% for the documented hypothesis,
+4.21% for the adjacent arm-joint shift, and 10.49% for the
+left/right-swapped hypothesis. Combined with the six PM_039 frames, across
+both clips/views (108 point/frame comparisons), means were 1.80%, 3.85%, and
+7.14%, respectively. This is cross-recording support for the existing
+candidate over these tested alternatives, not definitive anatomical
+ground-truth validation: the sample remains two people, two recordings, and
+three frames per PM_101 clip section. The PM_101 image shows generally
+plausible alignment, but medial/lateral limb distinctions and exact
+landmark semantics still require an authoritative skeleton definition and
+broader checks. Do not treat this as a fixed mapping or clinical result.
+
+Overlay script: `py -3.14 ml/eval/overlay_camera18_train.py`. It reads only
+the explicitly approved PM_039 and PM_101 files and the ignored Lite task
+model, and writes nine PNG comparison overlays under the gitignored
+`data/derived/overlay/`.
+Official task model source:
+https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+
+## Remaining UNVERIFIED items
+
+1. **Global pixel convention / origin.** On the checked PM_039 Camera18 sample, same-index coordinates fit the displayed 1080×1920 frame without swapping axes. Dataset-wide origin and axis convention remain **UNVERIFIED**.
+2. **General frame synchronization.** PM_039 has matching 3803-frame counts and visually plausible same-index overlays. PM_101 has 1307 video frames vs 1308 joint rows; only the authorized same-index frames 34–36 were compared. Dataset-wide and PM_101 end-of-sequence alignment remain **UNVERIFIED**.
+3. **26 joints → MediaPipe.** Candidate comparison across PM_039 and PM_101 favors the existing documented hypothesis over two tested alternatives, but the small sample does not establish a canonical correspondence. MediaPipe mapping remains **UNVERIFIED** pending authoritative joint definitions and broader checks.
 4. **`profile` vs `side`** in `Segmentation.txt` (above).
 5. **`extra_person_in_cam18` prose** pointing at camera17 (above).
 

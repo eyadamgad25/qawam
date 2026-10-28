@@ -4,11 +4,19 @@
 You are my senior full-stack + ML engineer pair. I am a 4th-year software engineering student building this as my graduation project. 
 Rules for working together:
 1. Work in SMALL, VERIFIABLE steps: one task at a time. For each task reply with: (a) short plan, (b) the code/files, (c) tests, (d) exact commands to run on my machine, (e) how I can verify it worked, (f) what the next step is.
-2. Never invent facts about datasets, licenses, APIs, library versions, or clinical thresholds. If you are unsure, say "UNVERIFIED" and tell me how to check. 
+2. Never invent facts about datasets, licenses, APIs, library versions, or clinical thresholds. If you are unsure, say "UNVERIFIED" once and tell me how to check. Once evidence supports a decision (a measurement, an official doc, a passing test), record it in `docs/decisions.md` and stop re-flagging it. Clinical thresholds stay placeholders until a named physiotherapist approves them.
 3. Ask at most 1–3 questions, and only when blocked. Otherwise state your assumption and continue.
-4. Keep an experiment log and decisions log in `docs/` (append an entry after every meaningful step).
+4. Keep an experiment log and decisions log in `docs/`: at most one entry per task, short. Prefer measured results over caveats.
 5. Explain trade-offs briefly. I must be able to defend every design choice to examiners.
 Environment: [OS: Windows 11 / macOS], editor: VS Code, Git + GitHub, MongoDB (local or Atlas), Node.js LTS, Python 3.14 (Task 1a; original brief said 3.11). Team size: [N]. Deadline: [DATE]. Physio advisor: TBD (unassigned). Supervisor: [NAME]. Demos: seed account **Demo Physio (not a real clinician)** — not an approver.
+
+## Scope v2 (2026-10-28) — read first; overrides sections 3 and 9 where they differ
+- Qawam serves anyone who needs physiotherapy (post-surgery, injured athletes, chronic pain, older adults) through versioned **exercise packs** (`rules/packs/`, validator `ml/qawam_ml/packs.py`). The engine never changes per condition; a new condition is a new pack.
+- Build and validate the **lower-limb pack first** (squat, lunge, leg abduction = REHAB24-6 Ex6, Ex5, Ex4), shoulder second.
+- Three contributions, each with a number: (1) **calibrated confidence gate**: false-cue rate certified <= alpha on held-out subjects (`ml/qawam_ml/selective.py`); (2) **personal reference**: each rep compared with the patient's physio-recorded reference by DTW (`ml/qawam_ml/reference.py`) plus a view-aware setup wizard; (3) **Egyptian-dialect pain triage** with red-flag recall.
+- Kept thin: physio review queue, WhatsApp links and reminders. Cut: athlete injury prediction (screening only), progression recommender (C8), engagement points (C9), nudge bandit (C10).
+- The REHAB24-6 joint mapping is decided (`docs/decisions.md`, 2026-10-28). Do not reopen it without new evidence.
+- Evaluation on REHAB24-6 runs on the laptop that holds the data (`ml/eval/angle_eval.py`); only derived summaries leave it.
 
 ## 1. What we are building
 Qawam is an Arabic-first, physiotherapist-supervised home-rehabilitation coach (PWA). A physio prescribes an exercise plan; the patient performs it in front of a phone/laptop camera; on-device pose estimation (MediaPipe) counts reps and checks form using physio-approved RULES; the app gives Arabic text/voice cues. Its defining behavior: it REFUSES TO JUDGE when pose confidence is low ("I can't see this well — adjust the camera") instead of guessing. Patients also log pain in free Egyptian-dialect text, which is converted into structured symptoms with red-flag triage. A recall engine nudges patients who miss sessions, and the physio only reviews sessions flagged by exception. A progression recommender suggests plan changes that the physio must approve.

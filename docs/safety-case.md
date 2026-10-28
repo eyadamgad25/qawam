@@ -26,17 +26,18 @@ Home exercise **support** under a physiotherapist's plan. Decision support for t
 - Autonomous plan changes
 - Auto-dialing emergency services
 
-## Control measures (to implement)
+## Control measures and implementation status
 
 | Hazard | Control | Status |
 | --- | --- | --- |
-| Guessing form from a bad camera | `cannot_assess` + reason code; no cue | not implemented |
-| ML softening a safety rule | Rules are source of truth; ML cannot edit rules/red flags | not implemented |
-| Missed red flag in pain text | Lexicon OR model; model cannot suppress lexicon | not implemented |
+| Prototype mistaken for clinician-approved care | First screen says the prototype is not clinically approved; demo decisions/results are explicitly described as simulated, not from a clinician | implemented on the first screen |
+| Guessing form from a bad camera | `cannot_assess` + reason code; no cue | experimental rep counter refuses to advance unless mapped shoulder/wrist/hip visibility meets its disclosed test cutoff; this cutoff and mapping are unvalidated; no form cue is generated |
+| ML softening a safety rule | Rules are source of truth; ML cannot edit rules/red flags | generic deterministic evaluator implemented; not connected to ML or UI |
+| Missed red flag in pain text | Lexicon OR model; model cannot suppress lexicon | generic configurable lexicon/model OR helper implemented with no bundled terms; not connected to user input, model, or notification |
 | Auto-progressing a patient | Recommendations `proposed` until physio approves | not implemented |
-| Video leaving the device | Default: keypoints/metrics only; clips need consent | not implemented |
-| Hardcoded clinical numbers | `PLACEHOLDER_NEEDS_PHYSIO_APPROVAL` plus evidence level (`default` / `dataset-derived` / `clinician`); no `approved` without a named human | schema only (Task 1a-4) |
-| Provisional cue looking clinical | Banner **Prototype, not clinically approved** when a provisional rule fires | not implemented |
+| Video leaving the device | Default: keypoints/metrics only; clips need consent | new browser pose demo uses a local object URL and does not upload video; the MediaPipe WASM/model assets are fetched from public CDNs; no session metrics are sent or saved |
+| Hardcoded clinical numbers | `PLACEHOLDER_NEEDS_PHYSIO_APPROVAL` plus evidence level (`default` / `dataset-derived` / `clinician`); no `approved` without a named human | experimental counter values are explicitly identified in the UI as test-only, unvalidated assumptions and not treatment targets |
+| Provisional cue looking clinical | Banner **Prototype, not clinically approved** when a provisional rule fires | evaluator returns a warning flag for provisional matches; no rule is configured or exposed in UI yet; first-screen disclaimer is an additional global notice |
 | Punitive engagement | Positive-only; red flag pauses rewards | not implemented |
 | Real patient data in git | `.gitignore` + `data/README.md`; synthetic seeds only | scaffolded |
 

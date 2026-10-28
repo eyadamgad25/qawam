@@ -1,0 +1,23 @@
+{
+  "packId": "lower-limb.lunge",
+  "version": 1,
+  "names": { "ar": "طعن (لانج)", "en": "Lunge" },
+  "bodyRegion": "lower-limb",
+  "view": "side",
+  "sides": "patient-selected",
+  "requiredLandmarks": ["SIDE_SHOULDER", "SIDE_HIP", "SIDE_KNEE", "SIDE_ANKLE", "OTHER_KNEE", "OTHER_ANKLE"],
+  "angles": [
+    { "name": "front_knee_flexion", "triplet": ["SIDE_HIP", "SIDE_KNEE", "SIDE_ANKLE"], "transform": "flexion" },
+    { "name": "trunk_hip_flexion", "triplet": ["SIDE_SHOULDER", "SIDE_HIP", "SIDE_KNEE"], "transform": "flexion" }
+  ],
+  "primaryAngle": "front_knee_flexion",
+  "repCounter": { "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL", "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL" },
+  "reference": { "mode": "patient-recorded", "fallback": "healthy-side" },
+  "rules": [],
+  "datasetMapping": { "rehab24_6_exercise_id": 5 },
+  "notes": "SIDE is the front leg. REHAB24-6 labels it in exercise_subtype (front leg left/right).",
+  "status": "provisional",
+  "provenance": "default",
+  "approvedBy": null,
+  "approvedAt": null
+}

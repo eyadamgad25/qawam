@@ -2,14 +2,14 @@
 
 Arabic-first, physiotherapist-supervised **home-rehabilitation coach** (PWA). Educational prototype — not a diagnostic or treatment-outcome product.
 
-A physio prescribes an exercise plan. The patient records a set in front of a camera. On-device pose estimation counts reps and checks form using **physio-approved rules**. The app gives Arabic text/voice cues. If pose confidence is low, Qawam **refuses to judge** instead of guessing.
+The long-term product goal is physiotherapist-supervised home rehabilitation. The current educational prototype can overlay MediaPipe pose landmarks on a selected local video and includes an experimental arm-raise counter. Its landmark mapping and thresholds are unvalidated test assumptions; it does not assess form or provide treatment advice.
 
 ## What this is / is not
 
 | Is | Is not |
 | --- | --- |
-| Exercise support and decision support | Diagnosis, injury prediction, autonomous treatment |
-| Rule-gated cues with `cannot_assess` | Guessing form when the camera is bad |
+| Local pose overlay and explicitly experimental counter | Diagnosis, injury prediction, autonomous treatment |
+| Test-only landmark/threshold details shown in the UI | Validated repetition counts or form assessment |
 | Physio must approve every plan change | Auto-progression of the patient |
 
 Safety principles (non-negotiable): `docs/safety-case.md`. Full brief: `docs/AI_BRIEF.md`.
@@ -51,7 +51,38 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm test
+npm run dev --workspace web
 ```
+
+The last command starts the web prototype in Vite; open the local URL printed
+in the terminal. To run this worktree's version without accidentally opening
+an older app already using the default port, use:
+
+```bash
+npm run dev:demo
+```
+
+Open the exact URL Vite prints in the terminal (it may choose a higher port
+if 5174 is already in use). In Visual Studio Code, first open this worktree's
+folder, not another checkout:
+`C:\Users\eyada\copilot-worktrees\Grad_1\eyadamgad25-silver-telegram`.
+On the page, select a short local video and choose **بدء تحليل الوضعية** to see
+MediaPipe landmarks over playback. The clip is processed in the browser and
+not uploaded; starting analysis requires downloading MediaPipe's WASM/model
+from public CDNs. Videos longer than two minutes are rejected. The experimental
+counter attempts one complete arm raise and return using the displayed
+MediaPipe landmarks and provisional thresholds; the displayed target of 8 is
+only a test target, not a prescription or a fabricated count. The mapping and
+thresholds have not been clinically or dataset validated. It does not assess
+form. While it runs, compare the tracked side, estimated angle, and minimum
+landmark visibility between front-facing and side-facing recordings; choose
+automatic, the person's left, or the person's right arm. Changing the choice
+resets the experimental count. The
+separate session examples remain simulations. When the clip ends, the page
+shows an unsaved, in-page summary of the count detected and clip duration;
+optionally enter your own manually observed repetition count beforehand to see
+the absolute count difference. This manual comparison is a test aid, not a
+validated benchmark. Replay the video to run the counter again.
 
 Python (PowerShell, from repo root):
 
@@ -64,7 +95,7 @@ Dataset files live in `data/raw/rehab24-6/` and are gitignored. License and layo
 
 ## Status
 
-Task 1a: dataset report + sealed subject-wise loader. No MediaPipe evaluation yet.
+Current state: dataset/split safeguards and exploratory pose evaluation are in place; the browser can overlay MediaPipe landmarks and run a visibly labeled experimental arm-raise counter with synthetic unit tests. There is not yet a validated exercise mapping, threshold set, form assessment, clinician-approved rule set, or clinical validation.
 
 ## License
 

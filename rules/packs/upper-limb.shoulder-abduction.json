@@ -1,0 +1,23 @@
+{
+  "packId": "upper-limb.shoulder-abduction",
+  "version": 1,
+  "names": { "ar": "رفع الذراع للجنب", "en": "Shoulder abduction" },
+  "bodyRegion": "upper-limb",
+  "view": "front",
+  "sides": "patient-selected",
+  "requiredLandmarks": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"],
+  "angles": [
+    { "name": "shoulder_abduction", "triplet": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW"], "transform": "interior" },
+    { "name": "elbow_flexion", "triplet": ["SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"], "transform": "flexion" }
+  ],
+  "primaryAngle": "shoulder_abduction",
+  "repCounter": { "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL", "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL" },
+  "reference": { "mode": "patient-recorded", "fallback": "healthy-side" },
+  "rules": [],
+  "datasetMapping": { "rehab24_6_exercise_id": 1, "rehab26_exercise_id": 1 },
+  "notes": "Front view keeps abduction in the image plane. Shoulder abduction = interior angle between the trunk (shoulder to hip) and the upper arm, so arm at the side is about 0.",
+  "status": "provisional",
+  "provenance": "default",
+  "approvedBy": null,
+  "approvedAt": null
+}

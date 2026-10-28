@@ -26,6 +26,7 @@ secrets/
 # Data — raw videos, skeletons, patient-like files stay local
 data/raw/
 data/processed/
+data/derived/
 data/cache/
 *.mp4
 *.avi

@@ -10,7 +10,11 @@ confidence >= t gives a coverage (share assessed) and a selective risk
 ``calibrate_threshold`` picks the most permissive t whose selective risk is
 certified <= alpha with probability >= 1 - delta, using an exact binomial
 test per candidate and a Bonferroni correction over the candidate grid
-(a Learn-then-Test procedure). The guarantee holds for new units that are
+(a Learn-then-Test procedure). ``procedure="fixed_sequence"`` instead tests
+candidates from strictest to most permissive at level delta each and stops at
+the first one it cannot certify; this also controls the error at delta and is
+far more powerful on small calibration sets, because selective risk usually
+grows as the threshold loosens. The guarantee holds for new units that are
 exchangeable with the calibration units, i.e. calibrate on held-out subjects
 and re-check when the setting changes (lab -> home).
 """
@@ -103,6 +107,7 @@ def calibrate_threshold(
     delta: float = 0.1,
     grid: int = 50,
     min_accepted: int = 10,
+    procedure: str = "bonferroni",
 ) -> CalibrationResult:
     """Most permissive threshold whose false-cue rate is certified <= alpha.
 
@@ -113,8 +118,12 @@ def calibrate_threshold(
     """
     if not 0 < alpha < 1 or not 0 < delta < 1:
         raise ValueError("alpha and delta must be in (0, 1)")
+    if procedure not in ("bonferroni", "fixed_sequence"):
+        raise ValueError("procedure must be 'bonferroni' or 'fixed_sequence'")
     conf, err = _arrays(confidence, wrong)
     levels = np.unique(np.quantile(conf, np.linspace(0.0, 1.0, grid)))
+    if procedure == "fixed_sequence":
+        return _fixed_sequence(conf, err, levels, alpha, delta, min_accepted)
     level = delta / len(levels)
     best: CalibrationResult | None = None
     for t in levels:
@@ -129,6 +138,43 @@ def calibrate_threshold(
     if best is None:
         return CalibrationResult(None, alpha, delta, len(levels), 0, 0, 0.0, math.nan, None)
     return best
+
+
+def _fixed_sequence(conf: np.ndarray, err: np.ndarray, levels: np.ndarray, alpha: float, delta: float, min_accepted: int) -> CalibrationResult:
+    # A test can only reject once n is large enough that zero errors would be
+    # significant: (1 - alpha)^n <= delta. Starting the sequence there depends
+    # only on n (fixed by the quantile grid), not on the error labels.
+    start_n = max(min_accepted, math.ceil(math.log(delta) / math.log1p(-alpha)))
+    best: CalibrationResult | None = None
+    for t in levels[::-1]:
+        mask = conf >= t
+        n = int(mask.sum())
+        if n < start_n:
+            continue
+        k = int(err[mask].sum())
+        p_value = binomial_cdf(k, n, alpha)
+        if p_value > delta:
+            break
+        best = CalibrationResult(float(t), alpha, delta, len(levels), n, k, n / conf.size, k / n, p_value)
+    if best is None:
+        return CalibrationResult(None, alpha, delta, len(levels), 0, 0, 0.0, math.nan, None)
+    return best
+
+
+def clopper_pearson_upper(k: int, n: int, confidence: float = 0.95) -> float:
+    """One-sided exact upper bound on a rate after k events in n trials."""
+    if n <= 0:
+        return 1.0
+    if k >= n:
+        return 1.0
+    lo, hi = k / n, 1.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if binomial_cdf(k, n, mid) > 1 - confidence:
+            lo = mid
+        else:
+            hi = mid
+    return hi
 
 
 def apply_threshold(

@@ -137,6 +137,20 @@ def mp_points(landmarks: Sequence[Any], width: int, height: int) -> tuple[dict[s
     return points, visibility, inside
 
 
+def landmark_array(landmarks: Sequence[Any], width: int, height: int) -> np.ndarray:
+    """33 x 5 array: x px, y px, z (MediaPipe depth scaled like x, px), visibility, presence."""
+    out = np.empty((len(landmarks), 5), dtype=np.float64)
+    for i, mark in enumerate(landmarks):
+        out[i] = (
+            float(mark.x) * width,
+            float(mark.y) * height,
+            float(getattr(mark, "z", 0.0) or 0.0) * width,
+            float(getattr(mark, "visibility", 0.0) or 0.0),
+            float(getattr(mark, "presence", 0.0) or 0.0),
+        )
+    return out
+
+
 def percentile(values: Sequence[float], q: float) -> float:
     return float(np.percentile(np.asarray(values, dtype=float), q)) if values else math.nan
 
@@ -270,6 +284,7 @@ def evaluate_video(
     reps: list[Repetition],
     packs: Mapping[str, Mapping[str, Any]],
     model: Path,
+    landmarks_dir: Path | None = None,
 ) -> list[FrameRow]:
     import cv2
 
@@ -284,6 +299,9 @@ def evaluate_video(
     frames = needed_frames(reps, min(n_video, joints.shape[0]))
     resolved: dict[tuple[str, str], ResolvedPack] = {}
     rows: list[FrameRow] = []
+    saved_frames: list[int] = []
+    saved_marks: list[np.ndarray] = []
+    width = height = 0
     mp, landmarker = _landmarker(model)
     try:
         last = max(frames) if frames else -1
@@ -305,6 +323,9 @@ def evaluate_video(
             detected = bool(result.pose_landmarks)
             if detected:
                 mp_pts, vis, inside = mp_points(result.pose_landmarks[0], width, height)
+            if landmarks_dir is not None:
+                saved_frames.append(index)
+                saved_marks.append(landmark_array(result.pose_landmarks[0], width, height) if detected else np.full((33, 5), np.nan))
             gt_pts = gt_points(joints[index])
             for rep in frames[index]:
                 pack = pack_for_exercise(packs, rep.exercise_id)
@@ -342,6 +363,14 @@ def evaluate_video(
     finally:
         landmarker.close()
         capture.release()
+    if landmarks_dir is not None and saved_frames:
+        landmarks_dir.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(
+            landmarks_dir / f"{first.video_id}_cam{camera}.npz",
+            frames=np.asarray(saved_frames, dtype=np.int32),
+            marks=np.stack(saved_marks).astype(np.float32),
+            size=np.asarray([width, height], dtype=np.int32),
+        )
     return rows
 
 
@@ -377,6 +406,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--tolerance-deg", type=float, default=10.0, help="evaluation-only: a rep whose mean angle error exceeds this counts as a wrong measurement")
     parser.add_argument("--alpha", type=float, default=0.1, help="target false-cue rate for the gate")
     parser.add_argument("--delta", type=float, default=0.1, help="allowed probability that the guarantee fails")
+    parser.add_argument("--save-landmarks", action="store_true", help="also save MediaPipe landmarks per video to <out>/landmarks/ for gate_eval.py")
     parser.add_argument("--max-videos", type=int, default=None, help="quick smoke run")
     parser.add_argument("--final", action="store_true", help="required to touch the sealed test split; access is logged")
     args = parser.parse_args(argv)
@@ -405,7 +435,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if args.max_videos is not None and videos_done >= args.max_videos:
                     break
                 started = time.perf_counter()
-                new_rows = evaluate_video(split, camera, video_reps, packs, args.model)
+                new_rows = evaluate_video(split, camera, video_reps, packs, args.model, args.out / "landmarks" if args.save_landmarks else None)
                 rows.extend(new_rows)
                 videos_done += 1
                 print(f"{split} cam{camera} {video_id}: {len(video_reps)} reps, {len(new_rows)} rows, {time.perf_counter() - started:.1f}s", flush=True)

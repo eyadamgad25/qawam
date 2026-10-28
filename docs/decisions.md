@@ -24,6 +24,20 @@ Append-only. Newest entry at the top. Each entry: date, task, decision, alternat
 - **Trade-off:** Packs keep the product inclusive while the evidence stays focused. A personal reference removes the dependency on universal thresholds that no advisor has signed. Competitor Limb (UAE, 2026) already offers Arabic camera feedback, so the edge is measured trust and Egyptian fit, not the camera.
 - **Reverse:** Packs can be removed one by one; the gate and reference modules do not depend on a specific pack.
 
+## 2026-10-29 — Gate design: view match plus one-rep calibration, learned score kept as research
+
+- **Decision:** The coach gives a measurement-based cue only when (1) the estimated camera view matches the view the exercise pack declares (frontalness cut-offs in `view_rule.json`, fitted from view labels only) and (2) the angle offset has been calibrated on the patient's clinic-recorded reference rep. Otherwise it says "I can't see you well" and the setup wizard asks for a better position. The learned logistic score (`quality.py`) is kept in the research pipeline, not in the app.
+- **Alternatives:** (1) Visibility threshold (certifies nothing at 10%). (2) Learned logistic score with a Learn-then-Test threshold (better ranking, AUROC 0.80, but thresholds unstable with 5 people). (3) Per-pack thresholds.
+- **Trade-off:** The rule has two numbers, needs no training on error labels, is easy to explain to a physio and to port to the phone, and reached 4.2% false cues (upper bound 7.8%) on held-out people. It accepts nothing in a wrong view, so coverage depends on the setup wizard. The calibration matches the product design, which already records a clinic reference.
+- **Reverse:** `gate_eval.py` reports all options side by side; switch when more people (REHAB26, own study) make a learned threshold stable.
+
+## 2026-10-29 — Fixed-sequence Learn-then-Test added
+
+- **Decision:** `calibrate_threshold(..., procedure="fixed_sequence")` tests thresholds from strictest to most permissive at level delta and stops at the first failure; Bonferroni stays the default.
+- **Alternatives:** Bonferroni only.
+- **Trade-off:** Far more power on small calibration sets (about 70 reps per pack) with the same error control when risk grows as the threshold loosens; fragile when errors sit among the most confident reps, which the gate report shows.
+- **Reverse:** Pass `procedure="bonferroni"` (the default).
+
 ## 2026-10-28 — REHAB24-6 joint mapping accepted
 
 - **Decision:** Use the documented hypothesis as the mapping: `LeftArm`→shoulder, `LeftForeArm`→elbow, `LeftHand`→wrist, `LeftUpLeg`→hip, `LeftLeg`→knee, `LeftFoot`→ankle (and Right mirrors). It is now code: `REHAB24_JOINT_FOR_LANDMARK` in `ml/qawam_ml/packs.py`.

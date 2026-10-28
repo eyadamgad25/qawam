@@ -4,7 +4,51 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
-<<<<<<< HEAD
+## 2026-10-29 — Lite vs Full pose model, same frames and gate
+
+- **Question:** Does MediaPipe Pose Landmarker Full measure better than Lite, and does the view rule + one-rep calibration still hold with it?
+- **Setup:** Same as the gate entry below: `angle_eval.py --save-landmarks` on Ex4-6, both cameras, train + validation subjects, then `gate_eval.py` with both labels. Same 2-core cloud workspace.
+- **Result, angle error in the pack's view (frame MAE, train / validation, deg):** squat side 8.6 / 4.7 (Lite) vs **6.4 / 3.2** (Full); lunge side **5.8 / 6.0** (Lite) vs 9.6 / 3.1 (Full); leg abduction front **3.7 / 9.0** vs 3.8 / 8.8. Median inference 16.2 vs 19.3 ms per frame.
+- **Result, view rule + one-rep calibration (false cues among spoken reps):** Lite 7 / 166 = **4.2%** (upper bound 7.8%); Full 19 / 163 = 11.7% (16.6%). Squat is identical (3 / 88 for both). The difference is side-view lunge: Lite 3 / 52, Full 14 / 51, spread over three people (3, 5, 8), so Full's lunge error there is not a steady offset the calibration can remove. Not yet checked: whether Full swaps the front and back leg when they overlap in profile.
+- **Decision:** Keep Lite as the default model: faster, and the gate's guarantee holds with it. Full is not worth the cost for these packs.
+- **Next:** Plot side-view lunge curves for persons 3, 5, 8 under Full to confirm or rule out leg swapping before any model change.
+
+## 2026-10-29 — Richer confidence gate: view match plus one-rep calibration
+
+- **Question:** Can the coach speak on some reps with a false-cue rate at or below 10%, where visibility alone abstained on everything?
+- **Setup:** `ml/eval/angle_eval.py --save-landmarks` (Lite, Ex4-6, both cameras, every frame, train + validation subjects 3, 4, 5, 6, 8; test 7, 9 untouched), then `ml/eval/gate_eval.py`. New per-rep features from the phone's own landmarks (`ml/qawam_ml/quality.py`): visibility, detection rate, frontalness (shoulder width / torso length), out-of-plane ratio, angle jitter, bone-length variation, left/right leg-length ratio, measured range. Everything leave-one-person-out. "Wrong" = rep mean angle error > 10 deg (evaluation tolerance only). Two labels: **absolute** (raw error) and **calibrated** (error after subtracting the offset measured on the first rep of the same recording, camera and side; that rep is then dropped), which simulates the clinic reference recording.
+- **Finding 1, the error is mostly a steady offset:** for squat and lunge, MediaPipe reads knee flexion 4-10 deg lower than motion capture on every rep of a person and view. After the one-rep calibration, side-view squat goes from 24% to 3% wrong reps (median error 7.1 to 3.1 deg) and side-view lunge from 8% to 6%. Half-profile squat does not improve (27%): there the error changes with the movement. Leg abduction from the side or half-profile stays unmeasurable.
+- **Finding 2, learned scores rank better but do not certify:** out-of-fold AUROC for telling right from wrong measurements, absolute label: visibility 0.67, new geometry features 0.79, combined 0.80 (gain +0.13, 95% CI 0.07 to 0.19, resampling people). Almost all of that gain is in leg abduction (view); within squat and lunge every score is near chance (0.50-0.60). With 5 people, Learn-then-Test thresholds on the learned scores were unstable (Bonferroni over 50 thresholds certifies nothing; fixed-sequence testing, added to `selective.py`, stops early when the most confident reps include errors).
+- **Finding 3, a fixed rule works:** "speak only when the estimated view matches the pack's view" (side packs: frontalness <= cut; front packs: frontalness >= cut; cut-offs set leave-one-person-out from the dataset's **view labels only**, never from error labels), together with the one-rep calibration:
+
+| Gate | Coverage (all reps, all views) | False-cue rate | Exact 95% upper bound |
+| --- | --- | --- | --- |
+| Visibility only, Learn-then-Test alpha 0.10 (previous entry) | 0% | — | — |
+| View rule, no calibration | 27.6% | 14.7% (27 / 184) | 19.7% |
+| **View rule + one-rep calibration** | **26.5%** | **4.2% (7 / 166)** | **7.8%** |
+
+  By pack (calibrated): squat 3 / 88 wrong (upper 8.6%), lunge 3 / 52 (14.2%), leg abduction 1 / 26 (17.0%). By held-out person: 0-10.8% false cues. Coverage is low only because the dataset films every exercise from every view on purpose; the rule accepts essentially all reps filmed in the pack's view, so in the product the setup wizard decides coverage. Frontalness separates profile from other views perfectly (<= 0.15 vs >= 0.16). Exported cut-offs: side packs frontalness <= 0.178, front packs >= 0.601 (`view_rule.json`).
+- **Caveats:** 5 healthy people performing deliberate errors; reps from one person are not independent, so the bounds are indicative; the calibration rep comes from the same session (the clinic-to-home gap is untested); the 10 deg tolerance is an evaluation choice, not a clinical one.
+- **Decision taken:** see `docs/decisions.md` (2026-10-29, gate design).
+- **Next:** Repeat on REHAB26-ViewAngles (3 cameras, 11 orientations) to place the view cut-offs more finely and check the oblique 20-35 deg view the reference study favoured; record a second-session reference in our own volunteer study.
+
+## 2026-10-29 — Full-frame MediaPipe angle baseline and visibility gate, REHAB24-6 lower limb
+
+- **Question:** How far are MediaPipe Pose Landmarker Lite angles from the REHAB24-6 2D ground truth on every frame, by camera view, and can landmark visibility alone certify a false-cue rate?
+- **Setup:** `ml/eval/angle_eval.py --exercises 6 5 4`, Lite model (float16 v1), VIDEO mode, every frame of every `gt_quality` repetition, train and validation subjects only (test 7, 9 untouched). Pack primary angles: squat and lunge knee flexion, leg abduction hip abduction. Gate unit = repetition x camera x side; "wrong" = rep mean error > 10 deg (evaluation tolerance, not clinical) or pose missing on half the frames. Run in the cloud workspace on the Zenodo copy, 2 CPU cores, median 20.3 ms per frame.
+- **Result, angle error (frame MAE in degrees, train / validation):**
+
+| Exercise | Declared view in pack | Declared view | Other views |
+| --- | --- | --- | --- |
+| Squat (Ex6) | side | 8.6 / 4.7 (cam18 profile) | front 6.0 / 2.4; half-profile 9.1-9.5 / 5.4-6.3 |
+| Lunge (Ex5) | side | 5.8 / 6.0 (cam18 profile) | front 5.6 / 3.0; half-profile 4.7-9.8 / 4.5-5.9 |
+| Leg abduction (Ex4) | front | 3.7 / 9.0 (cam17 front) | profile 43.2 / 48.0; half-profile 5.8-14.0 / 2.1-21.8 |
+
+  Pose was detected on 100% of frames. Per-subject rep MAE ranged 4.6-10.5 deg for squat and lunge and 15-21 deg for leg abduction pooled over views (the profile view dominates that number).
+- **Result, gate:** mean landmark visibility predicts a wrong measurement only weakly (AUC 0.66). At alpha = 0.10 (delta 0.10) no threshold can be certified, so the gate abstains on every rep (train wrong rate 29%, validation 14%). Restricting to the declared view lowers the wrong rate (squat 24%, lunge 7%, abduction 0%) but still certifies nothing at 0.10; at alpha = 0.20 it certifies 6-7% coverage.
+- **Interpretation:** (1) Camera view matters more than the model: leg abduction filmed from the side is unusable (43-48 deg), filmed from the front it is 4-9 deg. The setup wizard must enforce the pack's view. (2) Visibility alone is not a safe confidence signal, matching Khanal and Zhou (2026). The gate behaves safely (it refuses rather than guesses) but is not yet useful.
+- **Next:** Build a richer confidence score (view match from shoulder/hip width ratio, landmark jitter, bone-length consistency, left/right agreement, DTW residual), fit it on train subjects, calibrate with `selective.py`, and report the risk-coverage curve against visibility alone. Compare the Full model on the same frames.
+
 ## 2026-10-29 — Personal vs universal reference on REHAB26-ViewAngles (MediaPipe output)
 
 - **Question:** Does the REHAB24-6 mocap result hold on a second dataset, on real pose-estimator output, and at which camera angles?
@@ -315,7 +359,6 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 - **Result:** Added `docs/model-evaluation-roadmap.md` with the supplied preliminary normalized keypoint-error and visibility/coverage results, caveats, the Lite-vs-Full and localization-vs-separability distinction, and an ordered remaining-work roadmap. The immediate reproducibility rerun is blocked until its non-raw frame-level export is available; no threshold or clinical gate was selected.
 - **Caveats / UNVERIFIED:** Prior numerical summaries could not be independently reproduced or stratified by exercise/view from this checkout. REHAB26-ViewAngles' abstract reports relative separability gains (16.9% for optimal single-view vs frontal; up to 13.1% for two-view), not Qawam keypoint accuracy. No clinical significance is inferred.
 - **Next:** Reproduce item 1 of `docs/model-evaluation-roadmap.md` from an existing non-raw export, keeping train, validation, and test access distinct.
-=======
 ## 2026-10-23 — Task 1b-H — Train/validation camera-view robustness comparison
 
 - **Question:** Across front, half-profile, and profile views in Ex1/Ex5/Ex6, how often does MediaPipe Lite detect a pose, and how do selected 2D joints compare with projected GT?
@@ -428,7 +471,6 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 - **Data:** Ex1 `PM_039`, person 5, rep 1, frames 95–190, midpoint 142; same rep passes `gt_quality` for both cameras. Ex6 `PM_029`, person 3, rep 1, frames 70–200, midpoint 135; Camera18 `gt_quality`. Camera18 view for Ex6 is profile.
 - **Result:** Script saved 9 PNGs (one Camera17 + four Camera18 modes for each of the two samples) to gitignored `data/derived/overlay/`; prints each path, frame size, in-frame fraction, and coordinate min/max. In-frame fractions: Ex1 Camera17 1.000; Ex1 Camera18 asis 1.000, each transformed mode 0.615; Ex6 Camera18 asis 1.000, each transformed mode 0.500. Python tests: 14 passed.
 - **Caveats / UNVERIFIED:** Joint-to-landmark mapping and Camera18 coordinate mapping remain unverified; images are for owner inspection only. No clinical interpretation or MediaPipe run.
->>>>>>> origin/main
 
 ## 2026-10-23 — Task 1a-4 — Evidence levels and rule schema (docs only)
 

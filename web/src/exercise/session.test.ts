@@ -8,13 +8,7 @@ import {
 import { squatClip } from './testFrames';
 import { compareRep, dtwMeanAbs } from './referenceCompare';
 import { fillGaps, segmentReps } from './repSegmentation';
-import {
-  analyseClip,
-  assessSession,
-  chooseSide,
-  cueFor,
-  gateClip,
-} from './squatSession';
+import { analyseClip, assessSession, chooseSide, cueFor, gateClip } from './session';
 import { checkView, frontalness, VIEW_RULE } from './viewGate';
 
 describe('exercise pack', () => {
@@ -89,16 +83,20 @@ describe('reference comparison', () => {
     expect(result.depthDiffDeg).toBe(-5);
     expect(result.tempoRatio).toBeCloseTo(10 / 12);
     expect(dtwMeanAbs([1, 2, 3], [1, 2, 3])).toBe(0);
+    // a steady offset between recordings cancels when each has its own resting angle
+    const shifted = compareRep([20, 50, 110, 50, 20], [0, 30, 90, 30, 0], 20, 0);
+    expect(shifted.depthDiffDeg).toBe(0);
+    expect(shifted.dtwMeanAbsDeg).toBe(0);
     expect(() => dtwMeanAbs([1], [1, 2])).toThrow();
   });
 
   it('turns depth and path differences into cues using the physio tolerance', () => {
     const base = { tempoRatio: 1 };
     expect(cueFor({ ...base, depthDiffDeg: -25, dtwMeanAbsDeg: 12 }, 10)).toBe(
-      'SHALLOWER_THAN_REFERENCE',
+      'LESS_THAN_REFERENCE',
     );
     expect(cueFor({ ...base, depthDiffDeg: 25, dtwMeanAbsDeg: 12 }, 10)).toBe(
-      'DEEPER_THAN_REFERENCE',
+      'MORE_THAN_REFERENCE',
     );
     expect(cueFor({ ...base, depthDiffDeg: 2, dtwMeanAbsDeg: 12 }, 10)).toBe(
       'DIFFERENT_PATH',
@@ -114,12 +112,12 @@ describe('squat session', () => {
 
   it('gives per-rep feedback against the reference in the right view', () => {
     const home = analyseClip(squatClip([90, 55, 88]), SQUAT_PACK);
-    const result = assessSession(reference, 0, home, 10);
+    const result = assessSession(SQUAT_PACK, reference, 0, home, 10);
     expect(result.status).toBe('ASSESSED');
     if (result.status !== 'ASSESSED') return;
     expect(result.reps.map((r) => r.cue)).toEqual([
       'MATCHES_REFERENCE',
-      'SHALLOWER_THAN_REFERENCE',
+      'LESS_THAN_REFERENCE',
       'MATCHES_REFERENCE',
     ]);
     expect(result.reps[1]!.messageAr).toContain('أعمق');
@@ -132,7 +130,7 @@ describe('squat session', () => {
       squatClip([55, 55], { shoulderHalfWidth: 130 }),
       SQUAT_PACK,
     );
-    const result = assessSession(reference, 0, home, 10);
+    const result = assessSession(SQUAT_PACK, reference, 0, home, 10);
     expect(result).toMatchObject({
       status: 'CANNOT_ASSESS',
       reasons: ['VIEW_MISMATCH'],
@@ -151,17 +149,19 @@ describe('squat session', () => {
 
   it('applies a goniometer reading taken on the reference rep as an offset', () => {
     const home = analyseClip(squatClip([70]), SQUAT_PACK);
-    const result = assessSession(reference, 0, home, 10, 100);
+    const result = assessSession(SQUAT_PACK, reference, 0, home, 10, 100);
     if (result.status !== 'ASSESSED') throw new Error('expected assessed');
-    const refPeak = reference.reps[0]!.peakDeg;
     expect(result.reps[0]!.calibratedPeakDeg).toBeCloseTo(
-      home.reps[0]!.peakDeg + (100 - refPeak),
+      100 + result.reps[0]!.comparison.depthDiffDeg,
     );
+    expect(result.reps[0]!.comparison.depthDiffDeg).toBeLessThan(-15);
   });
 
   it('rejects an invalid tolerance or reference rep', () => {
     const home = analyseClip(squatClip([90]), SQUAT_PACK);
-    expect(() => assessSession(reference, 0, home, 0)).toThrow(/positive/);
-    expect(() => assessSession(reference, 5, home, 10)).toThrow(/reference rep/);
+    expect(() => assessSession(SQUAT_PACK, reference, 0, home, 0)).toThrow(/positive/);
+    expect(() => assessSession(SQUAT_PACK, reference, 5, home, 10)).toThrow(
+      /reference rep/,
+    );
   });
 });

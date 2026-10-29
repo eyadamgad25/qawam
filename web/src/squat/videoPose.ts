@@ -39,6 +39,29 @@ export function loadLandmarker(): Promise<Landmarker> {
 /** Monotonic timestamps across clips: VIDEO mode rejects going back in time. */
 let lastTimestampMs = 0;
 
+function nextTimestamp(): number {
+  lastTimestampMs = Math.max(lastTimestampMs + 1, Math.round(performance.now()));
+  return lastTimestampMs;
+}
+
+/** Pose of the frame the video element shows right now (live camera). */
+export function detectCurrentFrame(
+  landmarker: Landmarker,
+  video: HTMLVideoElement,
+  timeSeconds: number,
+): PoseFrame {
+  const result = landmarker.detectForVideo(video, nextTimestamp());
+  const marks = result.landmarks[0];
+  return {
+    timeSeconds,
+    width: video.videoWidth,
+    height: video.videoHeight,
+    landmarks: marks
+      ? marks.map((m) => ({ x: m.x, y: m.y, z: m.z, visibility: m.visibility }))
+      : null,
+  };
+}
+
 function waitFor(
   video: HTMLVideoElement,
   event: 'loadeddata' | 'seeked',
@@ -91,17 +114,7 @@ export async function extractPoseFrames(
       const seeked = waitFor(video, 'seeked');
       video.currentTime = time;
       await seeked;
-      lastTimestampMs = Math.max(lastTimestampMs + 1, Math.round(performance.now()));
-      const result = landmarker.detectForVideo(video, lastTimestampMs);
-      const marks = result.landmarks[0];
-      frames.push({
-        timeSeconds: time,
-        width: video.videoWidth,
-        height: video.videoHeight,
-        landmarks: marks
-          ? marks.map((m) => ({ x: m.x, y: m.y, z: m.z, visibility: m.visibility }))
-          : null,
-      });
+      frames.push(detectCurrentFrame(landmarker, video, time));
       onProgress((i + 1) / total);
     }
     return frames;

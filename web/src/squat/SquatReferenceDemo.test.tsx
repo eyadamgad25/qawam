@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import SquatReferenceDemo, {
   CurveChart,
@@ -11,17 +11,23 @@ import SquatReferenceDemo, {
 afterEach(cleanup);
 
 describe('squat reference screen', () => {
-  it('asks for the clinic reference first and keeps the home step locked', () => {
+  it('starts with the camera and keeps the home step locked until a reference exists', () => {
     render(<SquatReferenceDemo />);
     expect(
       screen.getByRole('heading', { name: /سكوات مقارنةً بتكرارك المرجعي/ }),
     ).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: 'شغّل الكاميرا' })).toHaveLength(1);
+    expect(screen.getByText(/سجّل فيديو مرجعيًا مناسبًا أولًا/)).toBeTruthy();
+    expect(screen.getByText(/غير معتمد سريريًا/)).toBeTruthy();
+    const [referenceFile, homeFile] = screen.getAllByRole('button', {
+      name: 'من ملف فيديو',
+    });
+    fireEvent.click(referenceFile!);
+    fireEvent.click(homeFile!);
     const reference = screen.getByLabelText('ملف فيديو المرجع') as HTMLInputElement;
     const home = screen.getByLabelText('ملف فيديو التمرين') as HTMLInputElement;
     expect(reference.disabled).toBe(false);
     expect(home.disabled).toBe(true);
-    expect(screen.getByText(/سجّل فيديو مرجعيًا مناسبًا أولًا/)).toBeTruthy();
-    expect(screen.getByText(/غير معتمد سريريًا/)).toBeTruthy();
   });
 
   it('parses physio-entered degrees and formats signed differences', () => {

@@ -106,6 +106,23 @@ export function segmentReps(
   }
   const enter = low + options.enterFraction * (high - low);
   const exit = low + options.exitFraction * (high - low);
+  return repsBetweenThresholds(curve, enter, exit, options.minFrames);
+}
+
+/**
+ * Reps in an already smoothed curve: a rep starts at the last frame at or
+ * below ``exit`` before the curve rises past ``enter``, and ends when it comes
+ * back to ``exit``. Live mode passes thresholds taken from the reference rep.
+ */
+export function repsBetweenThresholds(
+  curve: readonly (number | null)[],
+  enter: number,
+  exit: number,
+  minFrames: number,
+): Rep[] {
+  if (!(enter > exit)) {
+    throw new Error('enter must be above exit');
+  }
   const reps: Rep[] = [];
   let lastLow: number | null = null;
   let start: number | null = null;
@@ -124,7 +141,7 @@ export function segmentReps(
       }
     } else if (value <= exit) {
       const segment = curve.slice(start, i + 1) as number[];
-      if (segment.length >= options.minFrames) {
+      if (segment.length >= minFrames) {
         let peakOffset = 0;
         segment.forEach((v, k) => {
           if (v > segment[peakOffset]!) {

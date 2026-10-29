@@ -622,3 +622,100 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.secondary-button {
+  min-height: 2.75rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #176b50;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #176b50;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.secondary-button:focus-visible {
+  outline: 3px solid #8b5d00;
+  outline-offset: 3px;
+}
+
+.demo-run-button:disabled {
+  background: #9fb3a8;
+  cursor: not-allowed;
+}
+
+.demo-run-button.stop {
+  background: #a53d2d;
+}
+
+.live-controls,
+.live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-block: 0.75rem;
+}
+
+.live-controls .pain-demo-label {
+  margin: 0;
+}
+
+.live-controls select {
+  min-height: 2.75rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #87998f;
+  border-radius: 0.6rem;
+  background: #fff;
+  font: inherit;
+}
+
+.live-controls .pain-model-toggle {
+  margin: 0;
+}
+
+.pose-video-stage[hidden] {
+  display: none;
+}
+
+.pose-video-frame.mirrored video,
+.pose-video-frame.mirrored canvas {
+  transform: scaleX(-1);
+}
+
+.setup-banner {
+  position: absolute;
+  inset-inline: 0.75rem;
+  inset-block-start: 0.75rem;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.65rem;
+  background: rgb(165 61 45 / 92%);
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.setup-banner[data-state='READY'] {
+  background: rgb(23 107 80 / 92%);
+}
+
+.setup-banner strong {
+  font-size: 1.2rem;
+}
+
+.live-meter {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rep-feedback.live {
+  grid-template-columns: 1fr;
+}
+
+.rep-feedback[data-cue='NOT_ASSESSED'] {
+  border-inline-start-color: #87998f;
+  color: #52645a;
+}

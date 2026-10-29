@@ -16,6 +16,8 @@ export const SAMPLE_FPS = 15;
 type Landmarker = import('@mediapipe/tasks-vision').PoseLandmarker;
 
 let landmarkerPromise: Promise<Landmarker> | null = null;
+/** Which processor the pose model ended up on, for the diagnostics panel. */
+export let landmarkerDelegate: 'GPU' | 'CPU' | null = null;
 
 export function loadLandmarker(): Promise<Landmarker> {
   if (!landmarkerPromise) {
@@ -23,11 +25,22 @@ export function loadLandmarker(): Promise<Landmarker> {
       const { FilesetResolver, PoseLandmarker } =
         await import('@mediapipe/tasks-vision');
       const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
-      return PoseLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: MODEL_URL, delegate: 'CPU' },
-        runningMode: 'VIDEO',
-        numPoses: 1,
-      });
+      const create = (delegate: 'GPU' | 'CPU') =>
+        PoseLandmarker.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath: MODEL_URL, delegate },
+          runningMode: 'VIDEO',
+          numPoses: 1,
+        });
+      // The graphics card is several times faster; fall back to the CPU.
+      try {
+        const landmarker = await create('GPU');
+        landmarkerDelegate = 'GPU';
+        return landmarker;
+      } catch {
+        const landmarker = await create('CPU');
+        landmarkerDelegate = 'CPU';
+        return landmarker;
+      }
     })().catch((error: unknown) => {
       landmarkerPromise = null;
       throw error;

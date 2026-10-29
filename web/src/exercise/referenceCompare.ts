@@ -1,5 +1,5 @@
 /**
- * Compare a home repetition with the clinic reference repetition.
+ * Compare a repetition with the clinic reference repetition.
  *
  * Port of ml/qawam_ml/reference.py (DTW with absolute-difference cost and a
  * Sakoe-Chiba band). Both curves come from the same phone pipeline, so the
@@ -68,14 +68,24 @@ export function dtwMeanAbs(
   return cost[n]![m]! / length;
 }
 
+/**
+ * Compare a rep with the reference rep. ``repBaseDeg`` and ``refBaseDeg`` are
+ * each recording's resting angle: range of motion is measured from them, so a
+ * steady offset between the clinic and home camera set-ups cancels. With both
+ * bases 0 this is the plain comparison used in the research code.
+ */
 export function compareRep(
   rep: readonly number[],
   reference: readonly number[],
+  repBaseDeg = 0,
+  refBaseDeg = 0,
 ): RepComparison {
   const window = Math.floor(Math.max(rep.length, reference.length) / 3);
+  const repRel = rep.map((v) => v - repBaseDeg);
+  const refRel = reference.map((v) => v - refBaseDeg);
   return {
-    depthDiffDeg: Math.max(...rep) - Math.max(...reference),
-    dtwMeanAbsDeg: dtwMeanAbs(rep, reference, window),
+    depthDiffDeg: Math.max(...repRel) - Math.max(...refRel),
+    dtwMeanAbsDeg: dtwMeanAbs(repRel, refRel, window),
     tempoRatio: rep.length / reference.length,
   };
 }

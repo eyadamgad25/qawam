@@ -84,32 +84,39 @@ optionally enter your own manually observed repetition count beforehand to see
 the absolute count difference. This manual comparison is a test aid, not a
 validated benchmark. Replay the video to run the counter again.
 
-### Try the squat with a clinic reference
+### Try the live exercise coach
 
-At the top of the page, **سكوات مقارنةً بتكرارك المرجعي** compares home squats
-with a reference squat recorded with the physio. Each step can use the camera
-(**بالكاميرا الآن**) or a video file (**من ملف فيديو**).
+At the top of the page, **تمرينك مقارنةً بتكرارك المرجعي** coaches four
+exercises against a reference rep recorded with the physio: squat and lunge
+(camera at your side) and leg abduction and arm abduction (facing the camera).
+Each step can use the camera (**بالكاميرا الآن**) or a video file
+(**من ملف فيديو**).
 
-**With the laptop camera (live):**
+**Hands-free with the laptop camera:**
 
-1. Place the laptop so the camera sees you **from the side**, whole body from
-   shoulders to feet (about 2-3 m away). Press **شغّل الكاميرا** in step 1 and
-   allow the camera.
-2. Wait for the green **جاهز** banner. If it is red, follow its instruction
-   (step back, turn side-on). Press **ابدأ تسجيل المرجع**, do one or two good
-   squats, press **أنهِ التسجيل**.
-3. In step 2 press **شغّل الكاميرا**, wait for **جاهز**, press **ابدأ التمرين**
-   and squat. Each rep gets feedback (and a spoken cue if **إرشاد صوتي** is on)
-   when you stand back up. Try a shallower squat, and try facing the camera to
-   see it refuse.
+1. Choose the exercise under **التمرين** (and, for one-sided exercises, the leg
+   or arm, or leave **تلقائي**).
+2. Step 1: press **شغّل الكاميرا** and allow the camera. Stand where the
+   coach tells you (side-on or facing the camera, whole body visible). When
+   the banner turns green it counts down 3-2-1 aloud; do two good reps. It stops
+   by itself and shows the reference.
+3. Step 2: press **شغّل الكاميرا** again, stand in place, wait for the
+   countdown and exercise. After every rep it says the rep number and a cue
+   ("انزل أعمق قليلًا", "افرد ذراعك"...); a bar on the video shows how far you
+   are from the reference. It stops after the number of reps under
+   **عدد التكرارات** and reads out a summary.
+
+If the banner stays red, it names what it cannot see (for example your feet)
+and how to fix it. **تفاصيل تقنية** shows the frame rate and what the camera
+sees, which helps when reporting a problem.
 
 **With video files:** choose **من ملف فيديو** and pick short videos (under 2
-minutes) filmed from the side. Test clips made from REHAB24-6 can go in
-`data/derived/test-clips/` (gitignored).
+minutes). Test clips made from REHAB24-6 can go in `data/derived/test-clips/`
+(gitignored).
 
-The camera only works on `localhost` or an `https` address (a browser rule), so
-use the laptop for now. The tolerance (default 10 deg) is a test value for the
-physio to set, not a clinical value. Nothing is uploaded.
+The camera only works on `localhost` or an `https` address (a browser rule).
+The tolerance and rep count are test values for the physio to set, not
+clinical values. Nothing is uploaded.
 
 Python (PowerShell, from repo root):
 

@@ -719,3 +719,94 @@ body {
   border-inline-start-color: #87998f;
   color: #52645a;
 }
+
+.exercise-picker select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #87998f;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #17211d;
+  font: inherit;
+  font-weight: 700;
+}
+
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: clamp(4rem, 18vw, 9rem);
+  font-weight: 700;
+  text-shadow: 0 0.2rem 1rem rgb(0 0 0 / 60%);
+  pointer-events: none;
+}
+
+.range-meter {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  inset-block: 6rem 1rem;
+  width: 1.6rem;
+  overflow: visible;
+  border-radius: 0.8rem;
+  background: rgb(255 255 255 / 25%);
+}
+
+.range-fill {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  border-radius: 0.8rem;
+  background: #43e0b0;
+  transition: height 80ms linear;
+}
+
+.range-band {
+  position: absolute;
+  inset-inline: -0.2rem;
+  background: rgb(255 200 87 / 45%);
+  border-radius: 0.3rem;
+}
+
+.range-target {
+  position: absolute;
+  inset-inline: -0.4rem;
+  height: 3px;
+  background: #ffc857;
+}
+
+.range-label {
+  position: absolute;
+  inset-inline-end: 2rem;
+  bottom: calc(66% - 0.7rem);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 0.4rem rgb(0 0 0 / 80%);
+}
+
+.session-summary-card {
+  margin-block-start: 1rem;
+  padding: 1rem;
+  border-inline-start: 4px solid #176b50;
+  border-radius: 0.65rem;
+  background: #f1f6f2;
+}
+
+.session-summary-card h3 {
+  margin: 0 0 0.4rem;
+  color: #176b50;
+}
+
+.live-diagnostics {
+  margin-block-start: 0.75rem;
+  color: #52645a;
+  font-size: 0.85rem;
+}
+
+.live-diagnostics summary {
+  cursor: pointer;
+}

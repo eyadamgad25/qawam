@@ -87,20 +87,29 @@ validated benchmark. Replay the video to run the counter again.
 ### Try the squat with a clinic reference
 
 At the top of the page, **سكوات مقارنةً بتكرارك المرجعي** compares home squats
-with a reference squat recorded with the physio:
+with a reference squat recorded with the physio. Each step can use the camera
+(**بالكاميرا الآن**) or a video file (**من ملف فيديو**).
 
-1. Film two short videos (under 2 minutes each) **from the side**, whole body
-   visible from shoulders to feet: a reference with one or two good squats, and
-   a "home" video with a few squats (try some shallower or deeper ones).
-2. Under step 1, choose the reference video and wait for the analysis (it runs
-   on your computer; expect around 5 seconds of processing per second of video).
-3. Under step 2, choose the home video. Each rep gets an Arabic cue, its depth
-   difference from the reference, and a curve against the reference.
-4. Film the home video from the front to see the coach refuse and ask you to
-   turn side-on.
+**With the laptop camera (live):**
 
-The tolerance (default 10°) is a test value for the physio to set, not a
-clinical value. Nothing is uploaded.
+1. Place the laptop so the camera sees you **from the side**, whole body from
+   shoulders to feet (about 2-3 m away). Press **شغّل الكاميرا** in step 1 and
+   allow the camera.
+2. Wait for the green **جاهز** banner. If it is red, follow its instruction
+   (step back, turn side-on). Press **ابدأ تسجيل المرجع**, do one or two good
+   squats, press **أنهِ التسجيل**.
+3. In step 2 press **شغّل الكاميرا**, wait for **جاهز**, press **ابدأ التمرين**
+   and squat. Each rep gets feedback (and a spoken cue if **إرشاد صوتي** is on)
+   when you stand back up. Try a shallower squat, and try facing the camera to
+   see it refuse.
+
+**With video files:** choose **من ملف فيديو** and pick short videos (under 2
+minutes) filmed from the side. Test clips made from REHAB24-6 can go in
+`data/derived/test-clips/` (gitignored).
+
+The camera only works on `localhost` or an `https` address (a browser rule), so
+use the laptop for now. The tolerance (default 10 deg) is a test value for the
+physio to set, not a clinical value. Nothing is uploaded.
 
 Python (PowerShell, from repo root):
 

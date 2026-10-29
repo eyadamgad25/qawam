@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-29 — Live camera mode: setup check and per-rep feedback while exercising
+
+- **Question:** Can the coach check the camera position before the patient starts and judge each squat as it happens, with the same rules as the recorded-video flow?
+- **Change:** `web/src/squat/liveCoach.ts` (setup check: person present, full body visible on the near side, view matches the pack; `LiveSquatCoach`: rep thresholds from the reference rep, each rep judged when it ends, a rep is not judged if the person was missing on most of its frames or it was not filmed side-on) and `LiveCamera.tsx` (camera, skeleton overlay, setup banner, start button enabled only when ready, optional Arabic voice cue per rep). Both steps of the squat screen can now use the camera or a file; recording the reference with the camera produces the same reference as a file.
+- **Data:** Chromium fake camera playing the REHAB24-6 PM_043 clips from the previous entry (downscaled to 360x640, 15 fps), headless, WASM and model served locally.
+- **Result:** Reference recorded with the camera: 2 reps, 70 and 73 deg, same as the file. Live home exercise: setup reached "ready", each rep's feedback appeared when the rep ended; depth differences +21, +16, +38, +51, +51, -1 deg vs +21, +17, +40, +51, +52, -1 from the file analysis of the same reps (the camera loop started mid-clip). Front view: setup banner "change the phone angle", start button stayed disabled.
+- **Caveats:** Fake camera, one person; the camera must be opened from `localhost` or `https` (browser rule), so a phone on the same Wi-Fi needs an https setup; voice depends on the browser having an Arabic voice.
+- **Next:** Try on the laptop webcam and a phone; add lunge and leg abduction to the app with the same code.
+
 ## 2026-10-29 — Squat with a clinic reference, end to end in the browser
 
 - **Question:** Does the research pipeline (squat pack, view gate, personal reference) work as an app feature on real video?

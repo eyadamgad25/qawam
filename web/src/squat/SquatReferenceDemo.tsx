@@ -8,9 +8,40 @@ import {
   TEST_DEFAULT_TOLERANCE_DEG,
   type ClipAnalysis,
 } from './squatSession';
+import LiveCamera from './LiveCamera';
 import { extractPoseFrames } from './videoPose';
 
 type Stage = 'reference' | 'home';
+type Source = 'file' | 'camera';
+
+function SourcePicker({
+  value,
+  onChange,
+  label,
+}: {
+  value: Source;
+  onChange: (source: Source) => void;
+  label: string;
+}) {
+  return (
+    <div className="scenario-picker" role="group" aria-label={label}>
+      <button
+        type="button"
+        aria-pressed={value === 'camera'}
+        onClick={() => onChange('camera')}
+      >
+        بالكاميرا الآن
+      </button>
+      <button
+        type="button"
+        aria-pressed={value === 'file'}
+        onClick={() => onChange('file')}
+      >
+        من ملف فيديو
+      </button>
+    </div>
+  );
+}
 
 /** Parse a positive number typed by the physio; null if empty. */
 export function parseOptionalDegrees(value: string): number | null {
@@ -97,6 +128,8 @@ export default function SquatReferenceDemo() {
     String(TEST_DEFAULT_TOLERANCE_DEG),
   );
   const [goniometerText, setGoniometerText] = useState('');
+  const [referenceSource, setReferenceSource] = useState<Source>('camera');
+  const [homeSource, setHomeSource] = useState<Source>('camera');
 
   async function analyse(stage: Stage, file: File | undefined) {
     if (!file) {
@@ -212,18 +245,49 @@ export default function SquatReferenceDemo() {
         <p className="field-help">
           صوّر من الجنب، والجسم كله ظاهر، وأدِّ تكرارًا واحدًا على الأقل.
         </p>
-        <label className="pain-demo-label" htmlFor="squat-reference-video">
-          ملف فيديو المرجع
-        </label>
-        <input
-          id="squat-reference-video"
-          type="file"
-          accept="video/*"
-          disabled={busy !== null}
-          onChange={(event) =>
-            void analyse('reference', event.currentTarget.files?.[0])
-          }
+        <SourcePicker
+          value={referenceSource}
+          onChange={setReferenceSource}
+          label="طريقة تسجيل المرجع"
         />
+        {referenceSource === 'file' && (
+          <>
+            <label className="pain-demo-label" htmlFor="squat-reference-video">
+              ملف فيديو المرجع
+            </label>
+            <input
+              id="squat-reference-video"
+              type="file"
+              accept="video/*"
+              disabled={busy !== null}
+              onChange={(event) =>
+                void analyse('reference', event.currentTarget.files?.[0])
+              }
+            />
+          </>
+        )}
+        {referenceSource === 'camera' &&
+          (reference ? (
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => {
+                setReference(null);
+                setHome(null);
+              }}
+            >
+              سجّل مرجعًا جديدًا بالكاميرا
+            </button>
+          ) : (
+            <LiveCamera
+              mode="reference"
+              onReference={(frames) => {
+                setReference(analyseClip(frames, SQUAT_PACK));
+                setHome(null);
+                setReferenceRep(0);
+              }}
+            />
+          ))}
         {busy === 'reference' && <Progress value={progress} />}
         {reference && <ClipStatus clip={reference} />}
         {reference && referenceReady && (
@@ -284,20 +348,40 @@ export default function SquatReferenceDemo() {
       </div>
 
       <div className="squat-step" aria-disabled={!referenceReady}>
-        <h3>٢. فيديو التمرين في البيت</h3>
+        <h3>٢. التمرين في البيت</h3>
         {!referenceReady && (
           <p className="field-help">سجّل فيديو مرجعيًا مناسبًا أولًا.</p>
         )}
-        <label className="pain-demo-label" htmlFor="squat-home-video">
-          ملف فيديو التمرين
-        </label>
-        <input
-          id="squat-home-video"
-          type="file"
-          accept="video/*"
-          disabled={!referenceReady || busy !== null}
-          onChange={(event) => void analyse('home', event.currentTarget.files?.[0])}
+        <SourcePicker
+          value={homeSource}
+          onChange={setHomeSource}
+          label="طريقة التمرين"
         />
+        {homeSource === 'camera' &&
+          referenceReady &&
+          !('error' in settings) &&
+          referenceCurve.length > 1 && (
+            <LiveCamera
+              key={`${referenceRep}-${settings.tolerance}`}
+              mode="home"
+              referenceCurve={referenceCurve}
+              toleranceDeg={settings.tolerance}
+            />
+          )}
+        {homeSource === 'file' && (
+          <>
+            <label className="pain-demo-label" htmlFor="squat-home-video">
+              ملف فيديو التمرين
+            </label>
+            <input
+              id="squat-home-video"
+              type="file"
+              accept="video/*"
+              disabled={!referenceReady || busy !== null}
+              onChange={(event) => void analyse('home', event.currentTarget.files?.[0])}
+            />
+          </>
+        )}
         {busy === 'home' && <Progress value={progress} />}
         {home && <ClipStatus clip={home} />}
         {result?.status === 'CANNOT_ASSESS' && (

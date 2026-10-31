@@ -86,9 +86,10 @@ validated benchmark. Replay the video to run the counter again.
 
 ### Try the live exercise coach
 
-At the top of the page, **تمرينك مقارنةً بتكرارك المرجعي** coaches four
-exercises against a reference rep recorded with the physio: squat and lunge
-(camera at your side) and leg abduction and arm abduction (facing the camera).
+At the top of the page, **تمرينك مقارنةً بتكرارك المرجعي** coaches five
+exercises against a reference rep recorded with the physio: squat, lunge and
+forward arm raise (camera at your side) and leg abduction and arm abduction
+(facing the camera).
 Each step can use the camera (**بالكاميرا الآن**) or a video file
 (**من ملف فيديو**).
 

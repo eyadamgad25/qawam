@@ -31,7 +31,7 @@ describe('squat reference screen', () => {
     expect(home.disabled).toBe(true);
   });
 
-  it('offers all four exercises and asks for the limb on one-sided ones', () => {
+  it('offers all five exercises and asks for the limb on one-sided ones', () => {
     render(<ExerciseCoach />);
     const picker = screen.getByLabelText('التمرين') as HTMLSelectElement;
     expect([...picker.options].map((o) => o.value)).toEqual([
@@ -39,6 +39,7 @@ describe('squat reference screen', () => {
       'lower-limb.lunge',
       'lower-limb.leg-abduction',
       'upper-limb.shoulder-abduction',
+      'upper-limb.shoulder-flexion',
     ]);
     expect(screen.queryByLabelText(/التي تتمرن بها/)).toBeNull();
     fireEvent.change(picker, { target: { value: 'lower-limb.leg-abduction' } });

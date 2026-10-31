@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   EXERCISE_PACKS,
   packById,
@@ -7,6 +7,14 @@ import {
   type ExercisePack,
 } from './exercisePack';
 import LiveCamera from './LiveCamera';
+import ProgressReport from './ProgressReport';
+import {
+  newSessionId,
+  repsFromFile,
+  repsFromLive,
+  saveSession,
+  type StoredRep,
+} from './sessionStore';
 import type { LiveReference } from './liveCoach';
 import type { PoseFrame } from './poseFrames';
 import {
@@ -148,6 +156,25 @@ function ClipStatus({ clip, pack }: { clip: ClipAnalysis; pack: ExercisePack }) 
   );
 }
 
+const PATIENT_KEY = 'qawam.patient';
+const DEFAULT_PATIENT = 'مريض تجريبي';
+
+function readPatient(): string {
+  try {
+    return globalThis.localStorage?.getItem(PATIENT_KEY) || DEFAULT_PATIENT;
+  } catch {
+    return DEFAULT_PATIENT;
+  }
+}
+
+function writePatient(value: string): void {
+  try {
+    globalThis.localStorage?.setItem(PATIENT_KEY, value);
+  } catch {
+    // optional convenience
+  }
+}
+
 function Progress({ value }: { value: number }) {
   return (
     <p className="analysis-progress" role="status" aria-live="polite">
@@ -173,6 +200,9 @@ export default function ExerciseCoach() {
   );
   const [goniometerText, setGoniometerText] = useState('');
   const [repsText, setRepsText] = useState(String(TEST_DEFAULT_HOME_REPS));
+  const [patient, setPatient] = useState(readPatient);
+  const [savedCount, setSavedCount] = useState(0);
+  const savedHomes = useRef(new WeakSet<ClipAnalysis>());
   const [referenceSource, setReferenceSource] = useState<Source>('camera');
   const [homeSource, setHomeSource] = useState<Source>('camera');
 
@@ -256,6 +286,44 @@ export default function ExerciseCoach() {
     );
   }, [pack, reference, home, referenceReady, referenceRep, settings]);
 
+  const referenceRangeDeg =
+    chosenRep && reference ? chosenRep.peakDeg - reference.baseDeg : 0;
+
+  function store(mode: 'live' | 'file', reps: StoredRep[]) {
+    if (!reference || 'error' in settings) {
+      return;
+    }
+    saveSession({
+      id: newSessionId(),
+      patient: patient.trim() || DEFAULT_PATIENT,
+      packId,
+      dateIso: new Date().toISOString(),
+      mode,
+      side: reference.side,
+      toleranceDeg: settings.tolerance,
+      referenceRangeDeg,
+      goniometerDeg: settings.goniometer ?? null,
+      reps,
+    });
+    setSavedCount((n) => n + 1);
+  }
+
+  // a home video analysed from a file is saved once, when its result first appears
+  useEffect(() => {
+    if (result?.status === 'ASSESSED' && home && !savedHomes.current.has(home)) {
+      savedHomes.current.add(home);
+      store(
+        'file',
+        repsFromFile(
+          result.reps,
+          home.reps.map((r) => r.peakDeg),
+          referenceRangeDeg,
+        ),
+      );
+    }
+    // saving is keyed on the home clip; store reads the latest settings
+  }, [result, home]);
+
   const liveReference: LiveReference | null =
     reference && chosenRep && chosenRep.curve.length > 1
       ? {
@@ -274,317 +342,342 @@ export default function ExerciseCoach() {
   const referenceCurve = chosenRep?.curve ?? [];
 
   return (
-    <section
-      className="session-summary squat-demo"
-      aria-labelledby="exercise-coach-title"
-    >
-      <div className="summary-heading">
-        <div>
-          <p className="summary-kicker">مدرب تمارين مباشر · تجريبي</p>
-          <h2 id="exercise-coach-title">تمرينك مقارنةً بتكرارك المرجعي</h2>
+    <>
+      <section
+        className="session-summary squat-demo"
+        aria-labelledby="exercise-coach-title"
+      >
+        <div className="summary-heading">
+          <div>
+            <p className="summary-kicker">مدرب تمارين مباشر · تجريبي</p>
+            <h2 id="exercise-coach-title">تمرينك مقارنةً بتكرارك المرجعي</h2>
+          </div>
+          <span className="simulation-badge">الفيديو لا يُرفع</span>
         </div>
-        <span className="simulation-badge">الفيديو لا يُرفع</span>
-      </div>
-      <p>
-        يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن قوام كل تكرار في البيت
-        بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة،
-        يقول قوام إنه لا يراك جيدًا بدل أن يخمّن.
-      </p>
-
-      <div className="exercise-picker">
-        <label className="pain-demo-label" htmlFor="exercise-pack">
-          التمرين
-        </label>
-        <select
-          id="exercise-pack"
-          value={packId}
-          disabled={busy !== null}
-          onChange={(event) => {
-            setPackId(event.currentTarget.value);
-            setSide('auto');
-            reset();
-          }}
-        >
-          {EXERCISE_PACKS.map((item) => (
-            <option key={item.packId} value={item.packId}>
-              {item.names.ar}
-            </option>
-          ))}
-        </select>
-        <p className="field-help">
-          {copy.setupAr} {pack.view === 'side' ? '(تصوير جانبي)' : '(تصوير أمامي)'}
-        </p>
-        {pack.sides !== 'both' && (
-          <>
-            <label className="pain-demo-label" htmlFor="exercise-side">
-              {pack.packId.startsWith('upper-limb') ? 'الذراع' : 'الرجل'} التي تتمرن بها
-            </label>
-            <select
-              id="exercise-side"
-              value={side}
-              disabled={busy !== null}
-              onChange={(event) => {
-                const value = event.currentTarget.value;
-                setSide(value === 'left' || value === 'right' ? value : 'auto');
-                reset();
-              }}
-            >
-              <option value="auto">تلقائي: التي تتحرك أكثر</option>
-              <option value="left">اليسرى</option>
-              <option value="right">اليمنى</option>
-            </select>
-          </>
-        )}
-      </div>
-
-      <div className="cannot-assess-result" role="note">
-        <strong>تنبيه: نموذج بحثي غير معتمد سريريًا</strong>
         <p>
-          حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. النتائج للتجربة فقط ولا
-          تُستخدم لتغيير خطة العلاج.
+          يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن قوام كل تكرار في البيت
+          بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة،
+          يقول قوام إنه لا يراك جيدًا بدل أن يخمّن.
         </p>
-        <details>
-          <summary>ماذا يقيس قوام هنا؟</summary>
-          <ul>
-            <li>
-              {copy.measureAr} بالدرجات (زاوية ثنائية الأبعاد) من نقاط MediaPipe، للجهة{' '}
-              {pack.sides === 'both' ? 'الأقرب للكاميرا' : 'التي تتمرن بها'}.
-            </li>
-            <li>
-              يقبل التقييم فقط إذا كان التصوير{' '}
-              {pack.view === 'side'
-                ? 'من الجنب (نسبة عرض الكتفين إلى طول الجذع لا تتجاوز 0.178)'
-                : 'من الأمام (نسبة عرض الكتفين إلى طول الجذع 0.601 على الأقل)'}
-              ، وهي قيمة بحثية من بيانات REHAB24-6.
-            </li>
-            <li>
-              لكل تكرار: فرق المدى عن المرجع مقاسًا من وضع راحتك، ومتوسط فرق المسار بعد
-              محاذاة الزمن (DTW).
-            </li>
-            <li>{copy.evidenceAr}</li>
-          </ul>
-        </details>
-      </div>
 
-      <div className="squat-step">
-        <h3>١. التكرار المرجعي — يُسجَّل مع الأخصائي في العيادة</h3>
-        <p className="field-help">
-          {copy.setupAr} أدِّ تكرارين صحيحين ببطء؛ يتوقف التسجيل بالكاميرا تلقائيًا
-          بعدهما.
-        </p>
-        <SourcePicker
-          value={referenceSource}
-          onChange={setReferenceSource}
-          label="طريقة تسجيل المرجع"
-        />
-        {referenceSource === 'file' && (
-          <>
-            <label className="pain-demo-label" htmlFor="squat-reference-video">
-              ملف فيديو المرجع
-            </label>
-            <input
-              id="squat-reference-video"
-              type="file"
-              accept="video/*"
-              disabled={busy !== null}
-              onChange={(event) =>
-                void analyse('reference', event.currentTarget.files?.[0])
-              }
-            />
-          </>
-        )}
-        {referenceSource === 'camera' &&
-          (reference ? (
-            <button className="secondary-button" type="button" onClick={reset}>
-              سجّل مرجعًا جديدًا بالكاميرا
-            </button>
-          ) : (
-            <LiveCamera
-              key={`ref-${packId}-${side}`}
-              pack={pack}
-              mode="reference"
-              targetReps={REFERENCE_REPS}
-              onReference={(frames) => {
-                setReference(analyseClip(frames, pack, side));
-                setHome(null);
-                setReferenceRep(0);
-              }}
-            />
-          ))}
-        {busy === 'reference' && <Progress value={progress} />}
-        {reference && <ClipStatus clip={reference} pack={pack} />}
-        {reference && referenceReady && (
-          <div className="squat-settings">
-            <label className="pain-demo-label" htmlFor="squat-reference-rep">
-              التكرار المرجعي
-            </label>
-            <select
-              id="squat-reference-rep"
-              value={referenceRep}
-              onChange={(event) => setReferenceRep(Number(event.currentTarget.value))}
-            >
-              {reference.reps.map((rep, index) => (
-                <option key={rep.start} value={index}>
-                  تكرار {index + 1} — مدى الحركة{' '}
-                  {formatDegrees(rep.peakDeg - reference.baseDeg)}
-                </option>
-              ))}
-            </select>
-            <label className="pain-demo-label" htmlFor="squat-tolerance">
-              هامش السماح بالدرجات (يحدده الأخصائي)
-            </label>
-            <input
-              id="squat-tolerance"
-              type="number"
-              min="1"
-              max="45"
-              inputMode="decimal"
-              value={toleranceText}
-              onChange={(event) => setToleranceText(event.currentTarget.value)}
-            />
-            <p className="field-help">
-              القيمة الافتراضية {TEST_DEFAULT_TOLERANCE_DEG}° قيمة اختبار فقط، وليست
-              قيمة سريرية.
-            </p>
-            <label className="pain-demo-label" htmlFor="exercise-reps">
-              عدد التكرارات في البيت (يحدده الأخصائي)
-            </label>
-            <input
-              id="exercise-reps"
-              type="number"
-              min="1"
-              max="30"
-              inputMode="numeric"
-              value={repsText}
-              onChange={(event) => setRepsText(event.currentTarget.value)}
-            />
-            <p className="field-help">
-              القيمة الافتراضية {TEST_DEFAULT_HOME_REPS} للتجربة فقط؛ ينتهي التمرين
-              بالكاميرا تلقائيًا عند بلوغها.
-            </p>
-            <label className="pain-demo-label" htmlFor="squat-goniometer">
-              قراءة الجونيوميتر لـ{copy.measureAr} في التكرار المرجعي (اختياري)
-            </label>
-            <input
-              id="squat-goniometer"
-              type="number"
-              min="1"
-              max="179"
-              inputMode="decimal"
-              value={goniometerText}
-              onChange={(event) => setGoniometerText(event.currentTarget.value)}
-            />
-            <p className="field-help">
-              إذا أدخلها الأخصائي، يعرض قوام الزاوية بالدرجات الحقيقية بعد تصحيح فرق
-              الكاميرا.
-            </p>
-            {'error' in settings && (
-              <p className="pose-error" role="alert">
-                {settings.error}
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="squat-step" aria-disabled={!referenceReady}>
-        <h3>٢. التمرين في البيت</h3>
-        {!referenceReady && (
-          <p className="field-help">سجّل تكرارًا مرجعيًا مناسبًا أولًا.</p>
-        )}
-        <SourcePicker
-          value={homeSource}
-          onChange={setHomeSource}
-          label="طريقة التمرين"
-        />
-        {homeSource === 'camera' && referenceReady && !liveRangeOk && (
-          <p className="pose-error" role="alert">
-            التكرار المرجعي المختار يكاد لا يحتوي على حركة. اختر تكرارًا آخر أو سجّل
-            المرجع من جديد.
+        <div className="exercise-picker">
+          <label className="pain-demo-label" htmlFor="patient-label">
+            المريض (اسم أو رمز، يُحفظ على هذا الجهاز فقط)
+          </label>
+          <input
+            id="patient-label"
+            type="text"
+            value={patient}
+            onChange={(event) => {
+              setPatient(event.currentTarget.value);
+              writePatient(event.currentTarget.value);
+            }}
+          />
+          <label className="pain-demo-label" htmlFor="exercise-pack">
+            التمرين
+          </label>
+          <select
+            id="exercise-pack"
+            value={packId}
+            disabled={busy !== null}
+            onChange={(event) => {
+              setPackId(event.currentTarget.value);
+              setSide('auto');
+              reset();
+            }}
+          >
+            {EXERCISE_PACKS.map((item) => (
+              <option key={item.packId} value={item.packId}>
+                {item.names.ar}
+              </option>
+            ))}
+          </select>
+          <p className="field-help">
+            {copy.setupAr} {pack.view === 'side' ? '(تصوير جانبي)' : '(تصوير أمامي)'}
           </p>
-        )}
-        {homeSource === 'camera' &&
-          referenceReady &&
-          liveReference &&
-          liveRangeOk &&
-          !('error' in settings) && (
-            <LiveCamera
-              key={`home-${packId}-${referenceRep}-${settings.tolerance}-${settings.reps}`}
-              pack={pack}
-              mode="home"
-              reference={liveReference}
-              toleranceDeg={settings.tolerance}
-              targetReps={settings.reps}
-            />
+          {pack.sides !== 'both' && (
+            <>
+              <label className="pain-demo-label" htmlFor="exercise-side">
+                {pack.packId.startsWith('upper-limb') ? 'الذراع' : 'الرجل'} التي تتمرن
+                بها
+              </label>
+              <select
+                id="exercise-side"
+                value={side}
+                disabled={busy !== null}
+                onChange={(event) => {
+                  const value = event.currentTarget.value;
+                  setSide(value === 'left' || value === 'right' ? value : 'auto');
+                  reset();
+                }}
+              >
+                <option value="auto">تلقائي: التي تتحرك أكثر</option>
+                <option value="left">اليسرى</option>
+                <option value="right">اليمنى</option>
+              </select>
+            </>
           )}
-        {homeSource === 'file' && (
-          <>
-            <label className="pain-demo-label" htmlFor="squat-home-video">
-              ملف فيديو التمرين
-            </label>
-            <input
-              id="squat-home-video"
-              type="file"
-              accept="video/*"
-              disabled={!referenceReady || busy !== null}
-              onChange={(event) => void analyse('home', event.currentTarget.files?.[0])}
-            />
-          </>
-        )}
-        {busy === 'home' && <Progress value={progress} />}
-        {homeSource === 'file' && home && <ClipStatus clip={home} pack={pack} />}
-        {homeSource === 'file' && result?.status === 'CANNOT_ASSESS' && (
-          <div className="cannot-assess-result" role="status">
-            <h3>لا أراك جيدًا</h3>
-            <p>{result.messageAr}</p>
-            <span className="reason-code" dir="ltr">
-              {result.reasons.join(', ')}
-            </span>
-          </div>
-        )}
-        {homeSource === 'file' &&
-          result?.status === 'ASSESSED' &&
-          home &&
-          reference && (
-            <div className="pose-session-result" role="status" aria-live="polite">
-              <h3>{result.summaryAr}</h3>
-              <p className="curve-legend">
-                <span className="legend-reference">المرجع</span>
-                <span className="legend-rep">هذا التكرار</span>
-              </p>
-              <ol className="rep-feedback-list">
-                {result.reps.map((rep) => (
-                  <li key={rep.index} className="rep-feedback" data-cue={rep.cue}>
-                    <div>
-                      <strong>
-                        تكرار {rep.index + 1} ({rep.startSeconds.toFixed(1)}–
-                        {rep.endSeconds.toFixed(1)} ث)
-                      </strong>
-                      <p>{rep.messageAr}</p>
-                      <p className="rep-numbers">
-                        فرق المدى {formatDegrees(rep.comparison.depthDiffDeg, true)} ·
-                        فرق المسار {formatDegrees(rep.comparison.dtwMeanAbsDeg)}
-                        {rep.calibratedPeakDeg !== null &&
-                          ` · الزاوية المصححة ${formatDegrees(rep.calibratedPeakDeg)}`}
-                      </p>
-                    </div>
-                    <CurveChart
-                      reference={referenceCurve.map((v) => v - reference.baseDeg)}
-                      rep={(home.reps[rep.index]?.curve ?? []).map(
-                        (v) => v - home.baseDeg,
-                      )}
-                    />
-                  </li>
+        </div>
+
+        <div className="cannot-assess-result" role="note">
+          <strong>تنبيه: نموذج بحثي غير معتمد سريريًا</strong>
+          <p>
+            حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. النتائج للتجربة فقط ولا
+            تُستخدم لتغيير خطة العلاج.
+          </p>
+          <details>
+            <summary>ماذا يقيس قوام هنا؟</summary>
+            <ul>
+              <li>
+                {copy.measureAr} بالدرجات (زاوية ثنائية الأبعاد) من نقاط MediaPipe،
+                للجهة {pack.sides === 'both' ? 'الأقرب للكاميرا' : 'التي تتمرن بها'}.
+              </li>
+              <li>
+                يقبل التقييم فقط إذا كان التصوير{' '}
+                {pack.view === 'side'
+                  ? 'من الجنب (نسبة عرض الكتفين إلى طول الجذع لا تتجاوز 0.178)'
+                  : 'من الأمام (نسبة عرض الكتفين إلى طول الجذع 0.601 على الأقل)'}
+                ، وهي قيمة بحثية من بيانات REHAB24-6.
+              </li>
+              <li>
+                لكل تكرار: فرق المدى عن المرجع مقاسًا من وضع راحتك، ومتوسط فرق المسار
+                بعد محاذاة الزمن (DTW).
+              </li>
+              <li>{copy.evidenceAr}</li>
+            </ul>
+          </details>
+        </div>
+
+        <div className="squat-step">
+          <h3>١. التكرار المرجعي — يُسجَّل مع الأخصائي في العيادة</h3>
+          <p className="field-help">
+            {copy.setupAr} أدِّ تكرارين صحيحين ببطء؛ يتوقف التسجيل بالكاميرا تلقائيًا
+            بعدهما.
+          </p>
+          <SourcePicker
+            value={referenceSource}
+            onChange={setReferenceSource}
+            label="طريقة تسجيل المرجع"
+          />
+          {referenceSource === 'file' && (
+            <>
+              <label className="pain-demo-label" htmlFor="squat-reference-video">
+                ملف فيديو المرجع
+              </label>
+              <input
+                id="squat-reference-video"
+                type="file"
+                accept="video/*"
+                disabled={busy !== null}
+                onChange={(event) =>
+                  void analyse('reference', event.currentTarget.files?.[0])
+                }
+              />
+            </>
+          )}
+          {referenceSource === 'camera' &&
+            (reference ? (
+              <button className="secondary-button" type="button" onClick={reset}>
+                سجّل مرجعًا جديدًا بالكاميرا
+              </button>
+            ) : (
+              <LiveCamera
+                key={`ref-${packId}-${side}`}
+                pack={pack}
+                mode="reference"
+                targetReps={REFERENCE_REPS}
+                onReference={(frames) => {
+                  setReference(analyseClip(frames, pack, side));
+                  setHome(null);
+                  setReferenceRep(0);
+                }}
+              />
+            ))}
+          {busy === 'reference' && <Progress value={progress} />}
+          {reference && <ClipStatus clip={reference} pack={pack} />}
+          {reference && referenceReady && (
+            <div className="squat-settings">
+              <label className="pain-demo-label" htmlFor="squat-reference-rep">
+                التكرار المرجعي
+              </label>
+              <select
+                id="squat-reference-rep"
+                value={referenceRep}
+                onChange={(event) => setReferenceRep(Number(event.currentTarget.value))}
+              >
+                {reference.reps.map((rep, index) => (
+                  <option key={rep.start} value={index}>
+                    تكرار {index + 1} — مدى الحركة{' '}
+                    {formatDegrees(rep.peakDeg - reference.baseDeg)}
+                  </option>
                 ))}
-              </ol>
+              </select>
+              <label className="pain-demo-label" htmlFor="squat-tolerance">
+                هامش السماح بالدرجات (يحدده الأخصائي)
+              </label>
+              <input
+                id="squat-tolerance"
+                type="number"
+                min="1"
+                max="45"
+                inputMode="decimal"
+                value={toleranceText}
+                onChange={(event) => setToleranceText(event.currentTarget.value)}
+              />
+              <p className="field-help">
+                القيمة الافتراضية {TEST_DEFAULT_TOLERANCE_DEG}° قيمة اختبار فقط، وليست
+                قيمة سريرية.
+              </p>
+              <label className="pain-demo-label" htmlFor="exercise-reps">
+                عدد التكرارات في البيت (يحدده الأخصائي)
+              </label>
+              <input
+                id="exercise-reps"
+                type="number"
+                min="1"
+                max="30"
+                inputMode="numeric"
+                value={repsText}
+                onChange={(event) => setRepsText(event.currentTarget.value)}
+              />
+              <p className="field-help">
+                القيمة الافتراضية {TEST_DEFAULT_HOME_REPS} للتجربة فقط؛ ينتهي التمرين
+                بالكاميرا تلقائيًا عند بلوغها.
+              </p>
+              <label className="pain-demo-label" htmlFor="squat-goniometer">
+                قراءة الجونيوميتر لـ{copy.measureAr} في التكرار المرجعي (اختياري)
+              </label>
+              <input
+                id="squat-goniometer"
+                type="number"
+                min="1"
+                max="179"
+                inputMode="decimal"
+                value={goniometerText}
+                onChange={(event) => setGoniometerText(event.currentTarget.value)}
+              />
+              <p className="field-help">
+                إذا أدخلها الأخصائي، يعرض قوام الزاوية بالدرجات الحقيقية بعد تصحيح فرق
+                الكاميرا.
+              </p>
+              {'error' in settings && (
+                <p className="pose-error" role="alert">
+                  {settings.error}
+                </p>
+              )}
             </div>
           )}
-      </div>
-      {error && (
-        <p className="pose-error" role="alert">
-          {error}
-        </p>
-      )}
-    </section>
+        </div>
+
+        <div className="squat-step" aria-disabled={!referenceReady}>
+          <h3>٢. التمرين في البيت</h3>
+          {!referenceReady && (
+            <p className="field-help">سجّل تكرارًا مرجعيًا مناسبًا أولًا.</p>
+          )}
+          <SourcePicker
+            value={homeSource}
+            onChange={setHomeSource}
+            label="طريقة التمرين"
+          />
+          {homeSource === 'camera' && referenceReady && !liveRangeOk && (
+            <p className="pose-error" role="alert">
+              التكرار المرجعي المختار يكاد لا يحتوي على حركة. اختر تكرارًا آخر أو سجّل
+              المرجع من جديد.
+            </p>
+          )}
+          {homeSource === 'camera' &&
+            referenceReady &&
+            liveReference &&
+            liveRangeOk &&
+            !('error' in settings) && (
+              <LiveCamera
+                key={`home-${packId}-${referenceRep}-${settings.tolerance}-${settings.reps}`}
+                pack={pack}
+                mode="home"
+                reference={liveReference}
+                toleranceDeg={settings.tolerance}
+                targetReps={settings.reps}
+                onSessionComplete={(reps) =>
+                  store('live', repsFromLive(reps, referenceRangeDeg))
+                }
+              />
+            )}
+          {homeSource === 'file' && (
+            <>
+              <label className="pain-demo-label" htmlFor="squat-home-video">
+                ملف فيديو التمرين
+              </label>
+              <input
+                id="squat-home-video"
+                type="file"
+                accept="video/*"
+                disabled={!referenceReady || busy !== null}
+                onChange={(event) =>
+                  void analyse('home', event.currentTarget.files?.[0])
+                }
+              />
+            </>
+          )}
+          {busy === 'home' && <Progress value={progress} />}
+          {homeSource === 'file' && home && <ClipStatus clip={home} pack={pack} />}
+          {homeSource === 'file' && result?.status === 'CANNOT_ASSESS' && (
+            <div className="cannot-assess-result" role="status">
+              <h3>لا أراك جيدًا</h3>
+              <p>{result.messageAr}</p>
+              <span className="reason-code" dir="ltr">
+                {result.reasons.join(', ')}
+              </span>
+            </div>
+          )}
+          {homeSource === 'file' &&
+            result?.status === 'ASSESSED' &&
+            home &&
+            reference && (
+              <div className="pose-session-result" role="status" aria-live="polite">
+                <h3>{result.summaryAr}</h3>
+                <p className="curve-legend">
+                  <span className="legend-reference">المرجع</span>
+                  <span className="legend-rep">هذا التكرار</span>
+                </p>
+                <ol className="rep-feedback-list">
+                  {result.reps.map((rep) => (
+                    <li key={rep.index} className="rep-feedback" data-cue={rep.cue}>
+                      <div>
+                        <strong>
+                          تكرار {rep.index + 1} ({rep.startSeconds.toFixed(1)}–
+                          {rep.endSeconds.toFixed(1)} ث)
+                        </strong>
+                        <p>{rep.messageAr}</p>
+                        <p className="rep-numbers">
+                          فرق المدى {formatDegrees(rep.comparison.depthDiffDeg, true)} ·
+                          فرق المسار {formatDegrees(rep.comparison.dtwMeanAbsDeg)}
+                          {rep.calibratedPeakDeg !== null &&
+                            ` · الزاوية المصححة ${formatDegrees(rep.calibratedPeakDeg)}`}
+                        </p>
+                      </div>
+                      <CurveChart
+                        reference={referenceCurve.map((v) => v - reference.baseDeg)}
+                        rep={(home.reps[rep.index]?.curve ?? []).map(
+                          (v) => v - home.baseDeg,
+                        )}
+                      />
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+        </div>
+        {error && (
+          <p className="pose-error" role="alert">
+            {error}
+          </p>
+        )}
+      </section>
+      <ProgressReport
+        patient={patient.trim() || DEFAULT_PATIENT}
+        packId={packId}
+        refreshKey={savedCount}
+      />
+    </>
   );
 }

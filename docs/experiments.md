@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-31 — Physio progress report, WhatsApp summary and CSV export
+
+- **Question:** Can the demo show a physio what a clinic would buy (progress without watching videos), and export the data the goniometer study needs?
+- **Change:** `web/src/exercise/sessionStore.ts` saves every finished home session (live or video) in the browser per patient: reps, cue, range of motion from the session's resting angle, measured peak angle, posture flags. `ProgressReport.tsx` shows sessions, adherence (sessions in the last 7 days), a chart of mean range per session against the reference range, a table, a WhatsApp link with an Arabic summary (wa.me, optional physio number), a print/PDF view that prints only the report, a per-rep CSV download, and a delete button. Storage is per device (localStorage, guarded); a server comes later with consent.
+- **Data:** Headless Chromium, fake camera playing REHAB24-6 PM_043 (side view), reference from file, two live rounds of 3 reps.
+- **Result:** Both rounds saved; the report showed 2 sessions, 2 chart points, the WhatsApp text named the patient and sessions in the last 7 days; the CSV had one row per rep with range, peak angle and reference range; the print PDF contained only the report. 76 web tests pass.
+- **Caveats:** Data lives in one browser; range is a 2D camera angle, not a clinical measurement, until the goniometer study.
+- **Next:** Run the interviews with this demo; then the goniometer study using the CSV export.
+
 ## 2026-10-29 — Live coach v2: hands-free, all four exercises, posture cues
 
 - **Question:** The first laptop test of live mode gave no rep feedback and only one spoken word ("start"); the only messages were about distance. Why, and can the live coach work for every pack and coach more?

@@ -110,6 +110,8 @@ If the banner stays red, it names what it cannot see (for example your feet)
 and how to fix it. **تفاصيل تقنية** shows the frame rate and what the camera
 sees, which helps when reporting a problem.
 
+**Progress report for the physio:** type the patient's name or code at the top. Every finished session is saved on this device and shown under the coach: sessions per week, a range-of-motion chart against the reference, a WhatsApp summary button, a print/PDF report and a CSV download of every rep.
+
 **With video files:** choose **من ملف فيديو** and pick short videos (under 2
 minutes). Test clips made from REHAB24-6 can go in `data/derived/test-clips/`
 (gitignored).

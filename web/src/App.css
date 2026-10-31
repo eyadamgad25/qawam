@@ -810,3 +810,132 @@ body {
 .live-diagnostics summary {
   cursor: pointer;
 }
+
+.physio-report #physio-phone,
+.exercise-picker input[type='text'] {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #87998f;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #17211d;
+  font: inherit;
+}
+
+.report-subtitle {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+  color: #17211d;
+}
+
+.progress-chart {
+  width: 100%;
+  height: auto;
+  direction: ltr;
+}
+
+.progress-chart .grid {
+  stroke: #e3ebe6;
+}
+
+.progress-chart .axis {
+  fill: #52645a;
+  font-size: 12px;
+}
+
+.progress-chart .reference-line {
+  stroke: #b07d2b;
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+
+.progress-chart .reference-label {
+  fill: #8b5d00;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.progress-chart .progress-line {
+  fill: none;
+  stroke: #176b50;
+  stroke-width: 3;
+}
+
+.progress-chart .progress-dot {
+  fill: #176b50;
+}
+
+.report-table {
+  width: 100%;
+  margin-block-start: 1rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.report-table th,
+.report-table td {
+  padding: 0.45rem 0.5rem;
+  border-block-end: 1px solid #e3ebe6;
+  text-align: start;
+}
+
+.report-table th {
+  color: #52645a;
+  font-weight: 700;
+}
+
+.report-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block: 0.9rem;
+}
+
+.whatsapp-button {
+  display: inline-flex;
+  align-items: center;
+  background: #1f8f4e;
+  text-decoration: none;
+}
+
+.secondary-button.danger {
+  border-color: #a53d2d;
+  color: #a53d2d;
+}
+
+.secondary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.whatsapp-preview {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: #f1f6f2;
+  white-space: pre-wrap;
+  font: inherit;
+  line-height: 1.7;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .physio-report,
+  .physio-report * {
+    visibility: visible;
+  }
+
+  .physio-report {
+    position: absolute;
+    inset: 0 0 auto;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .physio-report .no-print {
+    display: none;
+  }
+}

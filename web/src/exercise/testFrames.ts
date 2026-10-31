@@ -183,3 +183,67 @@ const MARK: Record<string, number> = {
   LEFT_ANKLE: 27,
   RIGHT_ANKLE: 28,
 };
+
+/**
+ * Synthetic side-view forward arm raise (shoulder flexion): both arms rise in
+ * front of the body to the given angles (deg). The near side is more visible.
+ */
+export function forwardRaiseClip(
+  angles: number[],
+  {
+    nearSide = 'left' as 'left' | 'right',
+    shoulderHalfWidth = 8,
+    framesPerRep = 30,
+  } = {},
+): PoseFrame[] {
+  const frames: PoseFrame[] = [];
+  let t = 0;
+  const pushFrame = (deg: number) => {
+    const marks: PoseLandmark[] = Array.from({ length: 33 }, () => ({
+      x: 0.5,
+      y: 0.5,
+      visibility: 0.2,
+    }));
+    const raise = (deg * Math.PI) / 180;
+    for (const side of ['left', 'right'] as const) {
+      const dx = side === 'left' ? -shoulderHalfWidth : shoulderHalfWidth;
+      const vis = side === nearSide ? 0.95 : 0.6;
+      const shoulder = [360 + dx, 380];
+      const hip = [360 + dx / 2, 680];
+      // facing image-right: the arm swings from straight down toward +x
+      const elbow = [
+        shoulder[0]! + 140 * Math.sin(raise),
+        shoulder[1]! + 140 * Math.cos(raise),
+      ];
+      const wrist = [
+        shoulder[0]! + 270 * Math.sin(raise),
+        shoulder[1]! + 270 * Math.cos(raise),
+      ];
+      const knee = [hip[0]!, hip[1]! + 220];
+      const ankle = [hip[0]!, hip[1]! + 440];
+      const set = (name: string, p: number[]) => {
+        marks[MARK[`${side.toUpperCase()}_${name}`]!] = {
+          x: p[0]! / W,
+          y: p[1]! / H,
+          visibility: vis,
+        };
+      };
+      set('SHOULDER', shoulder);
+      set('HIP', hip);
+      set('KNEE', knee);
+      set('ANKLE', ankle);
+      set('ELBOW', elbow);
+      set('WRIST', wrist);
+    }
+    frames.push({ timeSeconds: t, width: W, height: H, landmarks: marks });
+    t += 1 / 15;
+  };
+  for (let i = 0; i < 8; i += 1) pushFrame(0);
+  for (const angle of angles) {
+    for (let f = 0; f < framesPerRep; f += 1) {
+      pushFrame(angle * Math.sin((Math.PI * f) / (framesPerRep - 1)));
+    }
+    for (let i = 0; i < 6; i += 1) pushFrame(0);
+  }
+  return frames;
+}

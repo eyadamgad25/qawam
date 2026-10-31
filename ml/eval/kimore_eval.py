@@ -203,15 +203,74 @@ def report(root: Path, results: dict[int, dict], scores: dict[str, dict[str, flo
     return "\n".join(out)
 
 
+def auc(pos: np.ndarray, neg: np.ndarray) -> float:
+    """Probability a random healthy person has a larger range than a random patient."""
+    diff = pos[:, None] - neg[None, :]
+    return float(np.mean(diff > 0) + 0.5 * np.mean(diff == 0))
+
+
+def auc_ci(pos: np.ndarray, neg: np.ndarray, n: int = 2000, seed: int = 0) -> tuple[float, float]:
+    rng = np.random.default_rng(seed)
+    vals = [auc(rng.choice(pos, len(pos)), rng.choice(neg, len(neg))) for _ in range(n)]
+    return float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
+
+
+def healthy_report(patients: dict[int, dict], healthy: dict[int, dict]) -> str:
+    out = [
+        "## Healthy control group (KIMORE CG) and patients vs healthy",
+        "",
+        ("Same pipeline on KIMORE's healthy volunteers (experts and non-experts), to check the findings "
+        "hold outside the patient group and that a phone range measure still tells patients from healthy people."),
+        "",
+        ("| Exercise | Recordings | Side-on error · cue agrees | Facing error · cue agrees "
+        "| Gate: wrong cues accepted vs rejected |"),
+        "|---|---|---|---|---|",
+    ]
+    for ex, r in healthy.items():
+        side_e, side_a = np.median(r["rom_err"][(90, 0.0)]), np.mean(r["agree"][(90, 0.0)])
+        fr_e, fr_a = np.median(r["rom_err"][(0, 0.0)]), np.mean(r["agree"][(0, 0.0)])
+        rows = np.array(r["gate_rows"])
+        acc = rows[:, 0] <= SIDE_MAX
+        wrong = rows[:, 3] == 0
+        out.append(
+            f"| {r['spec']['name']} | {r['n_rec']} | {side_e:.1f}° · {100 * side_a:.1f}% | "
+            f"{fr_e:.1f}° · {100 * fr_a:.1f}% | {fmt_ci(int((wrong & acc).sum()), int(acc.sum()))} vs "
+            f"{100 * wrong[~acc].mean():.1f}% |"
+        )
+    out += [
+        "",
+        ("**Known-groups check** — AUC for telling healthy people from patients by mean rep range "
+        "(0.5 = chance, 1 = perfect; 95% bootstrap CI):"),
+        "",
+    ]
+    for ex in patients:
+        p, h = patients[ex]["per_subject"], healthy[ex]["per_subject"]
+        line = [f"- {patients[ex]['spec']['name']} ({len(h)} healthy, {len(p)} patients):"]
+        for key, label in (("plane", "Kinect in-plane"), ("2d_90", "phone side-on"), ("2d_0", "phone facing")):
+            hv = np.array([np.mean(d[key]) for d in h.values() if d.get(key)])
+            pv = np.array([np.mean(d[key]) for d in p.values() if d.get(key)])
+            lo, hi = auc_ci(hv, pv)
+            line.append(f"{label} {auc(hv, pv):.2f} [{lo:.2f}, {hi:.2f}] "
+                        f"(median {np.median(hv):.0f}° vs {np.median(pv):.0f}°)")
+        out.append(" ".join(line[:1]) + " " + "; ".join(line[1:]) + ".")
+    out.append("")
+    return "\n".join(out)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--root", type=Path, default=REPO / "data/raw/kimore")
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--json", type=Path, default=None, help="optional aggregate numbers as JSON")
     args = parser.parse_args()
-    scores = read_scores(args.root)
-    results = {ex: analyse(args.root, ex, pitches=(0.0, 20.0)) for ex in EXERCISES}
-    text = report(args.root, results, scores)
+    gpp = args.root / "GPP" if (args.root / "GPP").is_dir() else args.root
+    scores = read_scores(gpp)
+    results = {ex: analyse(gpp, ex, pitches=(0.0, 20.0)) for ex in EXERCISES}
+    text = report(gpp, results, scores)
+    cg = args.root / "CG"
+    if cg.is_dir():
+        healthy = {ex: analyse(cg, ex, pitches=(0.0,)) for ex in EXERCISES}
+        text += "\n" + healthy_report(results, healthy)
     if args.out:
         args.out.write_text(text + "\n")
     print(text)

@@ -4,6 +4,22 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-31 — KIMORE: one phone camera on real patients (external validation)
+
+- **Question:** KIMORE work so far scores patients from a 3D Kinect. Qawam uses one 2D phone camera. On real patients: how wrong is a phone angle at each placement, do Qawam's self-referenced cues survive that error, does the view gate fitted on healthy REHAB24-6 volunteers still catch bad placements, and does phone range of motion track the clinicians' score?
+- **Setup:** `ml/qawam_ml/kimore.py` (loader, Kinect v2 joint map, body-yaw removal, pinhole virtual camera, goniometer-style in-plane ground truth), `ml/eval/kimore_eval.py`. Ground truth = body-aligned skeleton projected orthographically onto the sagittal plane (what a goniometer measures). Virtual phone 2.5 m away at chest height, yaw 0–90° in 15° steps, pitch 0° and 20°. Reps segmented on the ground truth; cue = rep range vs the patient's first rep at 10°. Gate thresholds unchanged from `rules/gate/view-rule.json`.
+- **Command:** `python ml/eval/kimore_eval.py --root data/raw/kimore --out docs/kimore-study.md`
+- **Data:** KIMORE GPP (34 patients; 33 squat and 34 arm-lift recordings with ≥2 reps, 314 and 352 rep-sides: 16 Parkinson's, 10 stroke, 8 low-back pain), Kinect JointPosition + clinical scores only; depth videos not used. Es5 squat (knee flexion), Es1 arm lift (measured: elbow travels mostly forward, so shoulder flexion, a side-view movement). Kept local; only aggregates in the repo.
+- **Result (pitch 0°, full table in `docs/kimore-study.md`):**
+  - Squat, side-on: range error median 1.7° (p90 4.8°), cue agreement 97.6%. Facing the camera: 36.2° error, 65.6% agreement.
+  - Arm lift, side-on: 0.7° (p90 2.6°), 99.3%. Facing: 25.6°, 85.9%.
+  - Self-referencing absorbs much of the error: the arm lift at 45° has 19° absolute error yet still 89.1% cue agreement, because the bias is the same on every rep of a recording.
+  - **The view gate transfers without refitting.** Squat: accepted placements give 3.3% wrong cues (95% upper bound 5.0%) vs 24.0% rejected. Arm lift: 2.6% (upper 4.2%) vs 11.3%. It accepts 100% of side-on and 74–84% of 75° placements and 0% at 60° or less.
+  - Clinical signal: arm-lift range vs clinicians' TS1, phone side-on ρ = 0.52 [0.22, 0.72], same as the Kinect (0.50–0.51); facing 0.45. Squat range vs TS5 is weak for every sensor (ρ ≈ 0.2, CI spans 0): the squat score is about more than depth.
+- **Contribution:** First evaluation, to our knowledge, of single-phone-camera placement and a view-quality gate on KIMORE's clinical population; evidence that a gate trained on healthy people transfers to patients; evidence that patient-relative cues tolerate placement bias.
+- **Caveats / UNVERIFIED:** Geometry only, from Kinect skeletons (Kinect itself is noisy on knees, ~2–22% of joints "inferred"). No MediaPipe on KIMORE video yet (GPP has only depth video; CG may have RGB, pending). Rep-1 is the reference, not a physio-recorded one. Squat arms-forward posture in KIMORE differs from Qawam's squat. Not a clinical claim.
+- **Next:** CG group (healthy; if RGB, run MediaPipe for detector + geometry together). Add a shoulder-flexion side-view pack.
+
 ## 2026-10-31 — Physio progress report, WhatsApp summary and CSV export
 
 - **Question:** Can the demo show a physio what a clinic would buy (progress without watching videos), and export the data the goniometer study needs?

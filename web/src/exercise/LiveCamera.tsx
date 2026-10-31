@@ -30,6 +30,8 @@ type Props =
       reference: LiveReference;
       toleranceDeg: number;
       targetReps: number;
+      /** called once when a home session ends, with every rep's feedback */
+      onSessionComplete?: (reps: LiveRepFeedback[]) => void;
     };
 
 /** Frames used for the live setup check (about one second). */
@@ -378,8 +380,12 @@ export default function LiveCamera(props: Props) {
       current.onReference(frames);
       return;
     }
-    const result = summarise(coachRef.current?.reps ?? [], current.pack);
+    const finished = [...(coachRef.current?.reps ?? [])];
+    const result = summarise(finished, current.pack);
     setSummary(result);
+    if (finished.length > 0) {
+      current.onSessionComplete?.(finished);
+    }
     window.setTimeout(() => say(result.spokenAr, false), 1200);
   }
 

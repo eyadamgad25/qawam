@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-02 — API core: data model, access policy, idempotent sync (no database yet)
+
+- **Question:** Can the GP2 backend's rules be pinned down and tested before Express and MongoDB exist, so the review's architecture points (tenant isolation, prescription vs pack, references with approval, duplicate-free offline sync, consent, audit) are code, not slides?
+- **Change:** `api/src` replaces the placeholder: `domain/model.ts` (types), `domain/access.ts` (clinic-first role rules), `domain/validate.ts` (field-by-field upload validation that refuses unknown fields, canonical content hash), `store/ports.ts` + `store/memory.ts`, `app/sync.ts` (batch upload: accepted, duplicate, rejected per item; review flags), `app/clinical.ts` (approve reference with retirement, prescribe, consent, history, review queue; every write and read audited). Design: `docs/architecture.md`.
+- **Result:** 23 tests pass: physios of another clinic or unassigned physios are refused; other clinics' patients read as not found; system admin sees no clinical data; a resend is a duplicate and stores nothing; an id reused with different content is refused and the stored session unchanged; withdrawn consent stops uploads; an older pack version or retired reference is accepted with a review flag; landmarks in an upload are refused; the audit log ignores mutation of read copies. Typecheck and lint clean.
+- **Not done:** HTTP layer, authentication, MongoDB adapter, the phone-side outbox (GP2 build order in `docs/architecture.md`).
+
+---
+
 ## 2026-11-02 — Review response: person-level interval, hidden-joint guard, session provenance
 
 - **Question:** An outside review of the project brief raised three technical points: (1) the 4.2% false-cue bound treats 166 reps from 5 people as independent; (2) a correct camera view does not prove the measured joints were seen; (3) saved sessions do not say which rules produced them.

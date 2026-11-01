@@ -12,17 +12,17 @@ The long-term product goal is physiotherapist-supervised home rehabilitation. Th
 | Test-only landmark/threshold details shown in the UI | Validated repetition counts or form assessment |
 | Physio must approve every plan change | Auto-progression of the patient |
 
-Safety principles (non-negotiable): `docs/safety-case.md`. Full brief: `docs/AI_BRIEF.md`.
+Safety principles (non-negotiable): `docs/safety-case.md`. Full brief: `docs/AI_BRIEF.md`. System architecture: `docs/architecture.md`.
 
 ## Repo layout
 
 ```
-docs/         product brief, decisions, experiments, metrics, safety case
+docs/         architecture, product brief, decisions, experiments, metrics, safety case
 data/         README only — raw videos/skeletons are never committed
 notebooks/    feasibility spikes
 ml/           pose, angles, rules, eval, nlp (Python)
 web/          React + Vite + TypeScript PWA (Task 3+)
-api/          Express + MongoDB (Task 5+)
+api/          API core: data model, access policy, offline sync (tested); Express + MongoDB in GP2
 rules/        versioned JSON exercise rules
 tests/        fixtures, golden outputs, Python/JS tests
 .github/      CI

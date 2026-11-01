@@ -13,6 +13,7 @@ import {
   repsFromFile,
   repsFromLive,
   saveSession,
+  COACH_ENGINE_VERSION,
   type StoredRep,
 } from './sessionStore';
 import type { LiveReference } from './liveCoach';
@@ -297,6 +298,8 @@ export default function ExerciseCoach() {
       id: newSessionId(),
       patient: patient.trim() || DEFAULT_PATIENT,
       packId,
+      packVersion: pack.version,
+      engineVersion: COACH_ENGINE_VERSION,
       dateIso: new Date().toISOString(),
       mode,
       side: reference.side,

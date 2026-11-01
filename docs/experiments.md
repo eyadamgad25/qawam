@@ -4,6 +4,19 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-02 — Review response: person-level interval, hidden-joint guard, session provenance
+
+- **Question:** An outside review of the project brief raised three technical points: (1) the 4.2% false-cue bound treats 166 reps from 5 people as independent; (2) a correct camera view does not prove the measured joints were seen; (3) saved sessions do not say which rules produced them.
+- **Change 1, statistics:** `gate_eval.py` now adds `person_rate_interval()`: a 95% interval from resampling people (pooled rate per resample, 5000 rounds) and the worst single person's rate, printed next to the exact binomial bound. Re-run on the same calibrated Lite landmarks, identical inputs.
+- **Result 1:** false-cue rate 4.2% (7 / 166, coverage 26.5%, unchanged). Exact binomial upper bound 7.8% (reps independent, optimistic). **Person-resampled 95% interval 0.7% to 7.9%.** Per held-out person: 0 / 26, 2 / 40, 0 / 36, 1 / 27, **4 / 37 (10.8%)**. So the pooled rate meets the 10% target but one of five people did not; with 5 people the person-level interval is itself rough. The sealed test people (7, 9) are still untouched and are the clean final check once the rules are frozen.
+- **Change 2, hidden-joint guard (live coach):** after the detection check and before the view check, a rep is not judged when any joint of the measured angle was "seen" (setup rule: visibility >= 0.35 and not cut off at the image edge) in fewer than half the rep's frames (`MIN_DETECTION_RATE`). New reason `JOINTS_HIDDEN`, spoken "<n>، لم أرَ <part>". No new threshold. File-mode analysis keeps its clip-level gate (unchanged). Why a guard and not a score: visibility predicts angle error only weakly on REHAB24-6 (AUROC 0.67, earlier entry), so it is not used to rank reps; it is only used to refuse reps where the joint was effectively absent, a case REHAB24-6 barely contains.
+- **Check 2:** unit test with both ankles hidden while view and detection pass (both reps abstain; the same reps with ankles visible are judged as before). Offline end-to-end run on REHAB24-6 squat video through real MediaPipe: 3 / 3 reps still judged, no spurious `JOINTS_HIDDEN`.
+- **Change 3, provenance:** each saved session stores `packVersion` and `engineVersion` (`COACH_ENGINE_VERSION`, bumped when coaching logic changes) and gets a UUID id; the CSV adds `session_id`, `pack_version`, `engine_version`. Older sessions load and export with empty cells.
+- **Tests:** web 84 passed (3 new), Python gate tests pass (1 new), typecheck and lint clean.
+- **Not changed, with reason:** coverage was already reported (26.5%); every pack already had a `version` and a schema; the goniometer plan already reports mean error, Bland-Altman limits and ICC.
+
+---
+
 ## 2026-11-01 — Demo works without internet
 
 - **Question:** Can the coach run in a clinic interview with no Wi-Fi? It downloaded the WASM runtime from jsdelivr and the model from Google Storage on every start.

@@ -95,6 +95,35 @@ export function missingParts(frame: PoseFrame, pack: ExercisePack): string[] {
   return [...new Set(left.length <= right.length ? left : right)];
 }
 
+/**
+ * The joint of the measured (primary) angle that was seen least during a rep,
+ * or null when every joint was seen in enough frames. "Seen" is the setup
+ * check's rule (visibility and not cut off at the image edge), so no new
+ * threshold is introduced. Returned as a body part, e.g. ANKLE.
+ */
+export function hiddenJoint(
+  frames: readonly PoseFrame[],
+  pack: ExercisePack,
+  side: Side,
+): string | null {
+  const [primary] = resolveAngles(pack, side);
+  if (!primary || frames.length === 0) {
+    return null;
+  }
+  let worst: { name: string; seen: number } | null = null;
+  for (const name of primary.landmarks) {
+    const seen = frames.filter(
+      (f) => f.landmarks !== null && landmarkSeen(f, name),
+    ).length;
+    if (worst === null || seen < worst.seen) {
+      worst = { name, seen };
+    }
+  }
+  return worst !== null && worst.seen < frames.length * MIN_DETECTION_RATE
+    ? worst.name.replace(/^(LEFT|RIGHT)_/, '')
+    : null;
+}
+
 function placementHint(parts: readonly string[]): string {
   if (parts.some((p) => p === 'ANKLE' || p === 'KNEE')) {
     return 'ابتعد عن الكاميرا أو اخفضها قليلًا حتى تظهر قدماك.';
@@ -195,7 +224,13 @@ export type LiveRepFeedback =
   | {
       index: number;
       assessed: false;
-      reason: 'VIEW_MISMATCH' | 'LOW_DETECTION';
+      /**
+       * LOW_DETECTION: no person in too many frames; JOINTS_HIDDEN: a joint of
+       * the measured angle was hidden or cut off in too many frames (the view
+       * can be right while the angle is still guessed); VIEW_MISMATCH: wrong
+       * camera angle for this exercise.
+       */
+      reason: 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'JOINTS_HIDDEN';
       messageAr: string;
       spokenAr: string;
     };
@@ -387,6 +422,21 @@ export class LiveCoach {
         reason: 'LOW_DETECTION',
         messageAr: 'لم أرك بوضوح في هذا التكرار، فلن أقيّمه.',
         spokenAr: `${number}، لم أرك جيدًا`,
+      };
+    }
+    const hidden = hiddenJoint(
+      detected,
+      this.pack,
+      this.side ?? chooseSide(this.frames, this.pack),
+    );
+    if (hidden !== null) {
+      const part = PART_AR[hidden] ?? '';
+      return {
+        index,
+        assessed: false,
+        reason: 'JOINTS_HIDDEN',
+        messageAr: `لم أرَ ${part} بوضوح في هذا التكرار، فلن أقيّمه.`,
+        spokenAr: `${number}، لم أرَ ${part}`,
       };
     }
     const view = checkView(detected, this.pack.view);

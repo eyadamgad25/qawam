@@ -286,7 +286,35 @@ def view_rule_gate(units: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 
     by_pack = {pack: summarise([d for d in decided if d[0]["pack_id"] == pack]) for pack in sorted({u["pack_id"] for u in units})}
     by_person = {person: summarise([d for d in decided if d[0]["person_id"] == person]) for person in cuts}
-    return {"overall": summarise(decided), "by_pack": by_pack, "by_person": by_person, "cuts": cuts}
+    overall = summarise(decided)
+    overall.update(person_rate_interval([(v["wrong_accepted"], v["accepted"]) for v in by_person.values()]))
+    return {"overall": overall, "by_pack": by_pack, "by_person": by_person, "cuts": cuts}
+
+
+def person_rate_interval(counts: Sequence[tuple[int, int]], rounds: int = 5000, seed: int = 20261102) -> dict[str, Any]:
+    """False-cue rate uncertainty that respects people as the unit.
+
+    Reps of one person share body shape, camera and habits, so the exact
+    binomial bound (which treats every rep as independent) is optimistic.
+    ``counts`` holds (wrong, accepted) per person. Returns a 95% interval from
+    resampling people with replacement (pooled rate in each resample) and the
+    worst single person's rate. With few people the percentile interval is
+    itself rough; report it next to the per-person range, not instead of it.
+    """
+    usable = [(k, n) for k, n in counts if n > 0]
+    if not usable:
+        return {"person_ci95": None, "worst_person_rate": None, "people": 0}
+    rng = np.random.default_rng(seed)
+    k = np.asarray([c[0] for c in usable], dtype=float)
+    n = np.asarray([c[1] for c in usable], dtype=float)
+    picks = rng.integers(0, len(usable), size=(rounds, len(usable)))
+    rates = k[picks].sum(axis=1) / n[picks].sum(axis=1)
+    lo, hi = np.percentile(rates, [2.5, 97.5])
+    return {
+        "person_ci95": [round(float(lo), 3), round(float(hi), 3)],
+        "worst_person_rate": round(float(np.max(k / n)), 3),
+        "people": len(usable),
+    }
 
 
 def person_bootstrap(units: Sequence[Mapping[str, Any]], a: np.ndarray, b: np.ndarray, rounds: int = 2000, seed: int = 20261029) -> dict[str, Any]:
@@ -314,7 +342,7 @@ def _markdown(rows: Sequence[Mapping[str, Any]]) -> str:
         return "_none_\n"
     keys = list(rows[0])
     lines = ["| " + " | ".join(keys) + " |", "|" + " --- |" * len(keys)]
-    lines += ["| " + " | ".join("" if r[k] is None else str(r[k]) for k in keys) + " |" for r in rows]
+    lines += ["| " + " | ".join("" if r.get(k) is None else str(r[k]) for k in keys) + " |" for r in rows]
     return "\n".join(lines) + "\n"
 
 
@@ -427,7 +455,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "coverage = share of reps the coach speaks on; false_cue_rate = wrong measurements among those.\n",
         _markdown(gate_rows),
         "## View-match rule (no learning; cut-offs from view labels, leave-one-person-out)\n",
-        "Speak only when the estimated camera view (frontalness) matches the view the exercise pack asks for. upper95 = exact one-sided 95% upper bound on the false-cue rate.\n",
+        "Speak only when the estimated camera view (frontalness) matches the view the exercise pack asks for. upper95 = exact one-sided 95% upper bound on the false-cue rate, treating reps as independent (optimistic). "
+        f"Resampling people instead gives a 95% interval of {rule['overall']['person_ci95']} over {rule['overall']['people']} people; worst single person {rule['overall']['worst_person_rate']}.\n",
         _markdown([{"scope": "all", **rule["overall"]}] + [{"scope": k.split(".")[-1], **v} for k, v in rule["by_pack"].items()]),
         "Per held-out person:\n",
         _markdown([{"person_id": k, **v} for k, v in rule["by_person"].items()]),

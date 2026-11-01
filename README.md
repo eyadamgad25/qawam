@@ -68,8 +68,16 @@ folder, not another checkout:
 `C:\Users\eyada\copilot-worktrees\Grad_1\eyadamgad25-silver-telegram`.
 On the page, select a short local video and choose **بدء تحليل الوضعية** to see
 MediaPipe landmarks over playback. The clip is processed in the browser and
-not uploaded; starting analysis requires downloading MediaPipe's WASM/model
-from public CDNs. Videos longer than two minutes are rejected. The experimental
+not uploaded.
+
+**Works without internet.** `npm run dev` (and `dev:demo`, `build`) first runs
+`web/scripts/prepare-offline.mjs`, which copies MediaPipe's WASM runtime from
+`node_modules` and the pose model into `web/public/` (git-ignored). The model is
+taken from `data/derived/models/pose_landmarker_lite.task` if you have it,
+otherwise downloaded once. After that the coach needs no network: start the
+demo once with internet, then it runs offline (for example in a clinic). If
+the files are missing the app falls back to the public CDN as before. The
+diagnostics panel shows `model offline copy` or `model cdn`. Videos longer than two minutes are rejected. The experimental
 counter attempts one complete arm raise and return using the displayed
 MediaPipe landmarks and provisional thresholds; the displayed target of 8 is
 only a test target, not a prescription or a fabricated count. The mapping and

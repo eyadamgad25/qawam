@@ -1,0 +1,42 @@
+{
+  "packId": "upper-limb.shoulder-flexion",
+  "version": 1,
+  "names": {
+    "ar": "رفع الذراع للأمام",
+    "en": "Shoulder flexion (arm raise forward)"
+  },
+  "bodyRegion": "upper-limb",
+  "view": "side",
+  "sides": "patient-selected",
+  "requiredLandmarks": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"],
+  "angles": [
+    {
+      "name": "shoulder_flexion",
+      "triplet": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW"],
+      "transform": "interior"
+    },
+    {
+      "name": "elbow_flexion",
+      "triplet": ["SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"],
+      "transform": "flexion"
+    }
+  ],
+  "primaryAngle": "shoulder_flexion",
+  "repCounter": {
+    "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL",
+    "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL"
+  },
+  "reference": {
+    "mode": "patient-recorded",
+    "fallback": "healthy-side"
+  },
+  "rules": [],
+  "datasetMapping": {
+    "kimore_exercise_id": 1
+  },
+  "notes": "Side view keeps forward arm elevation (sagittal plane) in the image plane. KIMORE Es1 (arm lift) moves mostly forward; on KIMORE skeletons projected to a side-on phone the range error was 0.7 deg median against a goniometer-style in-plane angle (docs/kimore-study.md). The patient turns the side to be measured toward the camera.",
+  "status": "provisional",
+  "provenance": "default",
+  "approvedBy": null,
+  "approvedAt": null
+}

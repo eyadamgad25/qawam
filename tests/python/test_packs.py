@@ -22,7 +22,12 @@ def _squat():
 
 def test_shipped_packs_are_valid():
     packs = load_packs()
-    assert {"lower-limb.squat", "lower-limb.lunge", "lower-limb.leg-abduction"} <= set(packs)
+    assert {
+        "lower-limb.squat",
+        "lower-limb.lunge",
+        "lower-limb.leg-abduction",
+        "upper-limb.shoulder-flexion",
+    } <= set(packs)
 
 
 def test_shipped_packs_are_provisional_with_placeholders():

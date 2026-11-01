@@ -3,6 +3,7 @@ import {
   LEG_ABDUCTION_PACK,
   LUNGE_PACK,
   SHOULDER_ABDUCTION_PACK,
+  SHOULDER_FLEXION_PACK,
   SQUAT_PACK,
   type ExercisePack,
 } from './exercisePack';
@@ -16,7 +17,7 @@ import {
 } from './liveCoach';
 import type { PoseFrame } from './poseFrames';
 import { analyseClip, chooseSide, repPosture } from './session';
-import { abductionClip, squatClip } from './testFrames';
+import { abductionClip, forwardRaiseClip, squatClip } from './testFrames';
 
 function referenceFrom(frames: PoseFrame[], pack: ExercisePack): LiveReference {
   const clip = analyseClip(frames, pack);
@@ -159,6 +160,32 @@ describe('live coach', () => {
     );
     expect(cues(coach)).toEqual(['MATCHES_REFERENCE', 'LESS_THAN_REFERENCE']);
     expect(coach.reps[1]!.messageAr).toContain('ذراعك');
+  });
+
+  it('works for shoulder flexion filmed from the side', () => {
+    const ref = referenceFrom(forwardRaiseClip([120]), SHOULDER_FLEXION_PACK);
+    expect(ref.side).toBe('left');
+    const { coach } = runLive(
+      SHOULDER_FLEXION_PACK,
+      ref,
+      forwardRaiseClip([120, 80, 160]),
+    );
+    expect(cues(coach)).toEqual([
+      'MATCHES_REFERENCE',
+      'LESS_THAN_REFERENCE',
+      'MORE_THAN_REFERENCE',
+    ]);
+    expect(coach.reps[1]!.spokenAr).toContain('ارفع ذراعك');
+  });
+
+  it('does not coach shoulder flexion when the patient faces the camera', () => {
+    const ref = referenceFrom(forwardRaiseClip([120]), SHOULDER_FLEXION_PACK);
+    const { coach } = runLive(
+      SHOULDER_FLEXION_PACK,
+      ref,
+      forwardRaiseClip([120, 80], { shoulderHalfWidth: 110 }),
+    );
+    expect(cues(coach).some((c) => c === 'LESS_THAN_REFERENCE')).toBe(false);
   });
 
   it('flags a bent elbow during arm abduction even when the height is right', () => {

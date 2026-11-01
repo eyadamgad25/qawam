@@ -9,6 +9,7 @@ import legAbductionPackJson from '../../../rules/packs/lower-limb.leg-abduction.
 import lungePackJson from '../../../rules/packs/lower-limb.lunge.json';
 import squatPackJson from '../../../rules/packs/lower-limb.squat.json';
 import shoulderAbductionPackJson from '../../../rules/packs/upper-limb.shoulder-abduction.json';
+import shoulderFlexionPackJson from '../../../rules/packs/upper-limb.shoulder-flexion.json';
 import { angleDegrees, type Point2D } from '../anglePipeline';
 
 export type Side = 'left' | 'right';
@@ -66,6 +67,7 @@ export const LUNGE_PACK = lungePackJson as unknown as ExercisePack;
 export const LEG_ABDUCTION_PACK = legAbductionPackJson as unknown as ExercisePack;
 export const SHOULDER_ABDUCTION_PACK =
   shoulderAbductionPackJson as unknown as ExercisePack;
+export const SHOULDER_FLEXION_PACK = shoulderFlexionPackJson as unknown as ExercisePack;
 
 /** Exercises available in the app, in menu order. */
 export const EXERCISE_PACKS: readonly ExercisePack[] = [
@@ -73,6 +75,7 @@ export const EXERCISE_PACKS: readonly ExercisePack[] = [
   LUNGE_PACK,
   LEG_ABDUCTION_PACK,
   SHOULDER_ABDUCTION_PACK,
+  SHOULDER_FLEXION_PACK,
 ];
 
 /** Arabic wording per exercise. Coaching text only; no clinical thresholds. */
@@ -131,6 +134,16 @@ export const PACK_COPY: Readonly<Record<string, PackCopy>> = {
     spokenLessAr: 'لا ترفع ذراعك أعلى من المرجع',
     evidenceAr:
       'لم نقِس بعد دقة البوابة لهذا التمرين؛ المقارنة بالمرجع الشخصي ميّزت الأخطاء جيدًا في بيانات REHAB26 (AUC 0.76).',
+  },
+  'upper-limb.shoulder-flexion': {
+    measureAr: 'رفع الذراع للأمام',
+    setupAr: 'قف بجانبك للكاميرا، والذراع المقاسة ناحية الكاميرا، والورك ظاهر.',
+    moreAr: 'رفعت ذراعك أقل من المرجع. ارفعها قليلًا أعلى إن لم تشعر بألم.',
+    lessAr: 'رفعت ذراعك أعلى من المرجع. التزم بالارتفاع الذي حدده أخصائيك.',
+    spokenMoreAr: 'ارفع ذراعك أعلى قليلًا',
+    spokenLessAr: 'لا ترفع ذراعك أعلى من المرجع',
+    evidenceAr:
+      'على هياكل 34 مريضًا من بيانات KIMORE، كان خطأ مدى الحركة من الجنب أقل من درجة واحدة، واتفق التوجيه مع القياس المرجعي في 99% من التكرارات (هندسة الكاميرا فقط، دون فيديو حقيقي).',
   },
 };
 

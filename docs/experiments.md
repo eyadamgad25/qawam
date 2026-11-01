@@ -4,6 +4,16 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-10-31 — Shoulder flexion (forward arm raise) pack
+
+- **Question:** KIMORE's arm lift is shoulder flexion, best seen from the side, and Qawam had only a front-view arm abduction. Can the app coach it?
+- **Change:** `rules/packs/upper-limb.shoulder-flexion.json` (side view, hip–shoulder–elbow angle, elbow straightness as the posture check), Arabic wording and evidence line in `exercisePack.ts`, picker now lists five exercises.
+- **Data:** Synthetic side-view skeletons only (`forwardRaiseClip`); evidence line quotes the KIMORE geometry study, not a video test.
+- **Result:** Unit tests: reps at 120°/80°/160° against a 120° reference give matches/less/more; facing the camera, the view gate stops the cues. 78 web tests and all Python tests pass.
+- **Caveats / UNVERIFIED:** No real-video end-to-end run yet (no RGB forward-raise clip in REHAB24-6). Thresholds stay physio-owned.
+
+---
+
 ## 2026-10-31 — KIMORE: one phone camera on real patients (external validation)
 
 - **Question:** KIMORE work so far scores patients from a 3D Kinect. Qawam uses one 2D phone camera. On real patients: how wrong is a phone angle at each placement, do Qawam's self-referenced cues survive that error, does the view gate fitted on healthy REHAB24-6 volunteers still catch bad placements, and does phone range of motion track the clinicians' score?

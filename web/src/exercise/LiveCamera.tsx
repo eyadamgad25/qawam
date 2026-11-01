@@ -15,7 +15,12 @@ import {
 } from './liveCoach';
 import type { PoseFrame } from './poseFrames';
 import { analyseClip } from './session';
-import { detectCurrentFrame, landmarkerDelegate, loadLandmarker } from './videoPose';
+import {
+  detectCurrentFrame,
+  landmarkerDelegate,
+  loadLandmarker,
+  poseAssetSource,
+} from './videoPose';
 
 type Props =
   | {
@@ -620,8 +625,10 @@ export default function LiveCamera(props: Props) {
         <details className="live-diagnostics">
           <summary>تفاصيل تقنية (للتجربة)</summary>
           <p dir="ltr">
-            {fps} fps · {landmarkerDelegate ?? '—'} · state {setup?.state ?? '—'} ·
-            frontalness {setup?.frontalness?.toFixed(2) ?? '—'} · missing{' '}
+            {fps} fps · {landmarkerDelegate ?? '—'} · model{' '}
+            {poseAssetSource === 'local' ? 'offline copy' : (poseAssetSource ?? '—')} ·
+            state {setup?.state ?? '—'} · frontalness{' '}
+            {setup?.frontalness?.toFixed(2) ?? '—'} · missing{' '}
             {setup?.missingParts.join(',') || '—'} · angle{' '}
             {angle === null ? '—' : angle.toFixed(0)} · progress{' '}
             {progress === null ? '—' : progress.toFixed(2)}

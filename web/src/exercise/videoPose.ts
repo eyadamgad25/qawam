@@ -1,7 +1,8 @@
 /**
  * Run MediaPipe Pose Landmarker over a local video file, frame by frame, in
- * the browser. The video never leaves the device; only the model and WASM
- * runtime are downloaded.
+ * the browser. The video never leaves the device. The model and WASM runtime
+ * are served from this app when `prepare-offline` copied them into public/
+ * (works with no internet), otherwise from the public CDN.
  */
 import type { PoseFrame } from './poseFrames';
 
@@ -9,6 +10,52 @@ export const WASM_URL =
   'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm';
 export const MODEL_URL =
   'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+const BASE = import.meta.env.BASE_URL ?? '/';
+export const LOCAL_WASM_URL = `${BASE}mediapipe/wasm`;
+export const LOCAL_MODEL_URL = `${BASE}models/pose_landmarker_lite.task`;
+/** Smallest plausible model file; a dev server answers unknown paths with index.html. */
+const MIN_MODEL_BYTES = 1_000_000;
+
+export type AssetSource = 'local' | 'cdn';
+
+export interface PoseAssets {
+  wasmUrl: string;
+  modelUrl: string;
+  source: AssetSource;
+}
+
+/** True when the response is the real file, not a dev server's HTML fallback. */
+export function looksLikeAsset(
+  response: Pick<Response, 'ok' | 'headers'>,
+  minBytes = 0,
+): boolean {
+  if (!response.ok) return false;
+  const type = response.headers.get('content-type') ?? '';
+  if (type.includes('text/html')) return false;
+  const length = Number(response.headers.get('content-length') ?? NaN);
+  return Number.isNaN(length) ? true : length >= minBytes;
+}
+
+/** Prefer the copies served by this app; fall back to the CDN. */
+export async function resolvePoseAssets(
+  fetcher: typeof fetch = globalThis.fetch.bind(globalThis),
+): Promise<PoseAssets> {
+  try {
+    const [wasm, model] = await Promise.all([
+      fetcher(`${LOCAL_WASM_URL}/vision_wasm_internal.wasm`, { method: 'HEAD' }),
+      fetcher(LOCAL_MODEL_URL, { method: 'HEAD' }),
+    ]);
+    if (looksLikeAsset(wasm) && looksLikeAsset(model, MIN_MODEL_BYTES)) {
+      return { wasmUrl: LOCAL_WASM_URL, modelUrl: LOCAL_MODEL_URL, source: 'local' };
+    }
+  } catch {
+    // no local copy: use the CDN
+  }
+  return { wasmUrl: WASM_URL, modelUrl: MODEL_URL, source: 'cdn' };
+}
+
+/** Where the pose files came from, for the diagnostics panel. */
+export let poseAssetSource: AssetSource | null = null;
 export const MAX_SECONDS = 120;
 /** Frames analysed per second of video. */
 export const SAMPLE_FPS = 15;
@@ -24,10 +71,12 @@ export function loadLandmarker(): Promise<Landmarker> {
     landmarkerPromise = (async () => {
       const { FilesetResolver, PoseLandmarker } =
         await import('@mediapipe/tasks-vision');
-      const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
+      const assets = await resolvePoseAssets();
+      poseAssetSource = assets.source;
+      const fileset = await FilesetResolver.forVisionTasks(assets.wasmUrl);
       const create = (delegate: 'GPU' | 'CPU') =>
         PoseLandmarker.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: MODEL_URL, delegate },
+          baseOptions: { modelAssetPath: assets.modelUrl, delegate },
           runningMode: 'VIDEO',
           numPoses: 1,
         });

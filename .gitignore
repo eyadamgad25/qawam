@@ -54,3 +54,7 @@ Thumbs.db
 npm-debug.log*
 !logs/
 !logs/test_access.jsonl
+
+# Offline pose assets copied by web/scripts/prepare-offline.mjs
+web/public/mediapipe/
+web/public/models/

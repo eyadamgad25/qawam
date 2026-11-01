@@ -4,6 +4,16 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-01 — Demo works without internet
+
+- **Question:** Can the coach run in a clinic interview with no Wi-Fi? It downloaded the WASM runtime from jsdelivr and the model from Google Storage on every start.
+- **Change:** `web/scripts/prepare-offline.mjs` runs before `dev` and `build`: copies `@mediapipe/tasks-vision/wasm` into `web/public/mediapipe/wasm` and the Lite model into `web/public/models` (from `data/derived/models`, else one download). `resolvePoseAssets()` in `videoPose.ts` uses those copies when the dev server really serves them (rejects its HTML fallback and files under 1 MB) and falls back to the CDN otherwise. The diagnostics panel shows which one was used.
+- **Data:** Headless Chromium, fake camera playing REHAB24-6 squat clips, **every request outside 127.0.0.1 blocked**.
+- **Result:** Reference recorded from file (2 reps), live home round counted 3/3 reps with cues and spoken Arabic, summary shown. The only outside request attempted was MediaPipe's own usage log (`odml.pa.googleapis.com`), which failed without effect. 3 new unit tests; all web tests pass.
+- **Caveats:** The first `npm run dev` still needs the model once (or the copy in `data/derived/models`). Browser fonts and speech voices come from the operating system.
+
+---
+
 ## 2026-10-31 — Shoulder flexion (forward arm raise) pack
 
 - **Question:** KIMORE's arm lift is shoulder flexion, best seen from the side, and Qawam had only a front-view arm abduction. Can the app coach it?

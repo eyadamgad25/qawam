@@ -4,6 +4,13 @@ Append-only. Newest entry at the top. Each entry: date, task, decision, alternat
 
 ---
 
+## 2026-11-02 — GP2 architecture: modular monolith, ports, offline-first sync
+
+- **Decision:** (1) The API is one Express + MongoDB service with the domain, use cases and storage adapters kept apart (`api/src/domain`, `app`, `store`); use cases depend on a `Store` interface, tested now in memory, backed by MongoDB in GP2. (2) An exercise pack (what the software knows) and a prescription (what a physio asked one patient to do) are separate records, each versioned. (3) References are retired, never overwritten. (4) Sessions are uploaded from an on-device outbox in batches; the device-made UUID is the idempotency key, a resend is a `duplicate`, reuse with different content is refused. (5) Sessions measured with an older pack or a retired reference are accepted and flagged for the physio, not rejected. (6) Patients of another clinic are answered as not found. (7) Pose inference moves to a Web Worker only if a frame-rate benchmark on target phones shows the need. Full design: `docs/architecture.md`.
+- **Alternatives:** Microservices (too much operations work for two people); server-side processing of video (privacy, cost, needs connectivity); rejecting version-mismatched sessions (loses real work done offline); a Worker now (complexity before evidence).
+- **Trade-off:** One deployable keeps GP2 achievable; the ports keep the core testable without a database and replaceable later. Flag-not-reject puts more items in the review queue in exchange for never losing a patient's session.
+- **Reverse:** Split a module into a service only if load or team size demands it; the ports already mark the seams.
+
 ## 2026-11-02 — Shipped view thresholds come from non-commercial data
 
 - **Decision:** The frontalness cut-offs in the app (0.178 side, 0.601 front) were fitted on REHAB24-6, which is licensed for non-commercial research only. They stay in the GP1/GP2 academic prototype. Before any paid or commercial use, they are re-derived from data we own (the MSA volunteer study, then pilot recordings under consent) and REHAB24-6 is kept for comparison only. The same applies to anything tuned on REHAB26-ViewAngles (CC BY-NC).

@@ -129,3 +129,13 @@ def test_view_rule_uses_view_labels_and_pack_view():
     assert rule["overall"]["false_cue_rate"] == 0.0
     assert rule["overall"]["coverage"] == pytest.approx(1 / 3, abs=0.01)
     assert rule["cuts"][0] == (0.25, 0.575)
+
+
+def test_person_interval_is_wider_than_pooled_and_reports_worst_person():
+    counts = [(0, 26), (2, 40), (0, 36), (1, 27), (4, 37)]
+    out = gate_eval.person_rate_interval(counts, rounds=2000)
+    lo, hi = out["person_ci95"]
+    assert lo <= 7 / 166 <= hi
+    assert out["worst_person_rate"] == round(4 / 37, 3)
+    assert out["people"] == 5
+    assert gate_eval.person_rate_interval([(0, 0)])["person_ci95"] is None

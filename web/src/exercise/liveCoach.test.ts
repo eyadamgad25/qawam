@@ -122,6 +122,24 @@ describe('live coach', () => {
     expect(coach.reps[0]!.spokenAr).toContain('استدر للجنب');
   });
 
+  it('stays silent when the view is right but a measured joint is hidden', () => {
+    // The false-confidence case: side view passes, person detected, yet both
+    // ankles are hidden (e.g. a chair in front), so the knee angle is a guess.
+    const hideAnkles = (frames: PoseFrame[]) =>
+      frames.map((f) => ({
+        ...f,
+        landmarks: f.landmarks!.map((m, i) =>
+          i === 27 || i === 28 ? { ...m, visibility: 0.1 } : m,
+        ),
+      }));
+    const { coach } = runLive(SQUAT_PACK, squatRef, hideAnkles(squatClip([90, 55])));
+    expect(cues(coach)).toEqual(['JOINTS_HIDDEN', 'JOINTS_HIDDEN']);
+    expect(coach.reps[0]!.spokenAr).toBe('واحد، لم أرَ قدميك');
+    // the same reps with the ankles visible are judged as usual
+    const { coach: seen } = runLive(SQUAT_PACK, squatRef, squatClip([90, 55]));
+    expect(cues(seen)).toEqual(['MATCHES_REFERENCE', 'LESS_THAN_REFERENCE']);
+  });
+
   it('works for the lunge, measured on the side view', () => {
     const ref = referenceFrom(squatClip([80]), LUNGE_PACK);
     const { coach } = runLive(LUNGE_PACK, ref, squatClip([80, 45]));

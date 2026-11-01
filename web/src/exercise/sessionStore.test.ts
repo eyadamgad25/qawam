@@ -4,6 +4,7 @@ import {
   loadSessions,
   saveSession,
   sessionStats,
+  newSessionId,
   sessionsCsv,
   sessionsFor,
   sessionsInLastDays,
@@ -112,5 +113,29 @@ describe('session store', () => {
     expect(csv).toHaveLength(3);
     expect(csv[1]).toContain('lower-limb.squat');
     expect(csv[1]!.split(',')).toHaveLength(csv[0]!.split(',').length);
+  });
+
+  it('records which pack and engine version produced each session', () => {
+    const versioned = {
+      ...session('a', 18, [50]),
+      packVersion: 1,
+      engineVersion: 'coach-test',
+    };
+    const [header, row] = sessionsCsv([versioned]).trim().split('\n');
+    const cols = header!.split(',');
+    const cells = row!.split(',');
+    expect(cells[cols.indexOf('pack_version')]).toBe('1');
+    expect(cells[cols.indexOf('engine_version')]).toBe('coach-test');
+    expect(cells[cols.indexOf('session_id')]).toBe(versioned.id);
+    // sessions saved before versioning still export, with empty cells
+    const [, old] = sessionsCsv([session('b', 18, [50])])
+      .trim()
+      .split('\n');
+    expect(old!.split(',')).toHaveLength(cols.length);
+  });
+
+  it('gives every session a distinct id', () => {
+    const ids = new Set(Array.from({ length: 50 }, () => newSessionId()));
+    expect(ids.size).toBe(50);
   });
 });

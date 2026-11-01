@@ -4,6 +4,20 @@ Append-only. Newest entry at the top. Each entry: date, task, decision, alternat
 
 ---
 
+## 2026-11-02 — Shipped view thresholds come from non-commercial data
+
+- **Decision:** The frontalness cut-offs in the app (0.178 side, 0.601 front) were fitted on REHAB24-6, which is licensed for non-commercial research only. They stay in the GP1/GP2 academic prototype. Before any paid or commercial use, they are re-derived from data we own (the MSA volunteer study, then pilot recordings under consent) and REHAB24-6 is kept for comparison only. The same applies to anything tuned on REHAB26-ViewAngles (CC BY-NC).
+- **Alternatives:** (1) Ask the dataset owners for a commercial licence. (2) Hand-set thresholds from geometry alone (the KIMORE study shows the geometry, but not detector noise).
+- **Trade-off:** Re-deriving costs a recording session but removes a legal dependency and checks the rule on Egyptian participants and phones, which the public data cannot.
+- **Reverse:** Not needed for academic use; a licence from the owners would also settle it.
+
+## 2026-11-02 — Report the gate per person, not only pooled
+
+- **Decision:** Every false-cue figure we present carries its person-level interval and worst person next to the pooled rate and exact bound: "4.2% (95% interval by person 0.7-7.9%; one of five people 10.8%)".
+- **Alternatives:** Pooled rate with the exact binomial bound only (optimistic: reps of one person are correlated).
+- **Trade-off:** A less tidy headline in exchange for a claim a committee cannot knock down.
+- **Reverse:** With many more people (own study, pilot) a cluster-robust interval becomes tight enough to lead with.
+
 ## 2026-10-29 — No advisor yet: literature-backed values, synthetic data labelled as such
 
 - **Decision:** Until a named physiotherapist approves, numbers enter packs only as (1) placeholders, (2) dataset-derived values (train subjects, checked on validation), or (3) **literature goals**: a published value with full citation and https link in `literatureGoals`, used as display goals or context, never alone to judge a rep. Synthetic patients, pain notes or sessions may be generated for tests and demos, always marked `synthetic` and never described as clinical data or as advice from a doctor. First literature goal: knee flexion 110 deg (Rowe et al., Gait & Posture 2000).

@@ -24,10 +24,21 @@ export interface StoredRep {
   endSeconds: number | null;
 }
 
+/**
+ * Version of the coaching logic (rep detection, gates, comparison). Bump it
+ * whenever a change could alter a session's numbers, so old reports stay
+ * interpretable next to new ones.
+ */
+export const COACH_ENGINE_VERSION = 'coach-2026-11-02';
+
 export interface StoredSession {
+  /** unique per session on any device; a future sync uses it to ignore duplicates */
   id: string;
   patient: string;
   packId: string;
+  /** pack version and engine version that produced the numbers (absent in sessions saved before 2026-11-02) */
+  packVersion?: number;
+  engineVersion?: string;
   dateIso: string;
   mode: 'live' | 'file';
   side: string;
@@ -98,7 +109,10 @@ export function sessionsFor(patient: string, packId?: string): StoredSession[] {
 }
 
 export function newSessionId(now = new Date()): string {
-  return `${now.getTime().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const uuid = globalThis.crypto?.randomUUID?.();
+  return (
+    uuid ?? `${now.getTime().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  );
 }
 
 export function repsFromLive(
@@ -252,6 +266,9 @@ const CSV_HEADER = [
   'end_s',
   'tolerance_deg',
   'goniometer_reference_deg',
+  'session_id',
+  'pack_version',
+  'engine_version',
 ];
 
 function csvCell(value: unknown): string {
@@ -288,6 +305,9 @@ export function sessionsCsv(sessions: readonly StoredSession[]): string {
           r.endSeconds,
           s.toleranceDeg,
           s.goniometerDeg,
+          s.id,
+          s.packVersion,
+          s.engineVersion,
         ]
           .map(csvCell)
           .join(','),

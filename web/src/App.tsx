@@ -6,12 +6,14 @@ import {
 import { evaluatePainTriage, type PainTriageResult } from './painTriage';
 import LocalVideoPoseDemo from './LocalVideoPoseDemo';
 import ExerciseCoach from './exercise/ExerciseCoach';
+import { DEMO_DEFAULTS, PAIN_RED_FLAGS, sourceOf } from './demoDefaults';
+import LiteratureNote from './LiteratureNote';
 
 export const SAFETY_NOTICE = {
   arabic:
-    'هذا نموذج تعليمي أولي غير معتمد سريريًا. أمثلة الجلسات محاكاة، وعدّاد الفيديو نتيجة خوارزمية تجريبية غير متحقق منها وليست صادرة عن طبيب أو أخصائي علاج طبيعي. قد يكون العدد خاطئًا؛ لا تستخدمه لاتخاذ قرارات صحية أو لتغيير خطة علاجك.',
+    'هذا نموذج تعليمي أولي غير معتمد سريريًا. أمثلة الجلسات محاكاة، وعدّاد الفيديو نتيجة خوارزمية تجريبية غير متحقق منها وليست صادرة عن طبيب أو أخصائي علاج طبيعي. قد يكون العدد خاطئًا؛ لا تستخدمه لاتخاذ قرارات صحية أو لتغيير خطة علاجك. القيم الافتراضية (هامش السماح، عدد التكرارات، الأهداف، علامات الخطر) مأخوذة من دراسات وإرشادات منشورة، والمصدر مكتوب بجانب كل قيمة، ولم يراجعها أخصائي علاج طبيعي بعد.',
   english:
-    'This is an educational prototype and is not clinically approved. Session examples are simulated; the video counter is an unvalidated experimental algorithm, not a result from a doctor or physiotherapist, and may be wrong. Do not use it to make health decisions or change a care plan.',
+    'This is an educational prototype and is not clinically approved. Session examples are simulated; the video counter is an unvalidated experimental algorithm, not a result from a doctor or physiotherapist, and may be wrong. Do not use it to make health decisions or change a care plan. Default values (tolerance, rep count, goals, red-flag words) come from published studies and guidelines, cited next to each value, and have not yet been reviewed by a physiotherapist.',
 } as const;
 
 export type DemoScenario = 'completed' | 'cannot-assess';
@@ -191,17 +193,19 @@ export default function App() {
       <section className="session-summary" aria-labelledby="pain-demo-title">
         <div className="summary-heading">
           <div>
-            <p className="summary-kicker">اختبار برمجي ببيانات مصطنعة</p>
-            <h2 id="pain-demo-title">تجربة تطبيع النص العربي</h2>
+            <p className="summary-kicker">تجربة · قائمة من مصادر منشورة</p>
+            <h2 id="pain-demo-title">فحص علامات الخطر في وصف الألم</h2>
           </div>
-          <span className="simulation-badge">لا توجد قائمة طبية</span>
+          <span className="simulation-badge">لم يراجعها أخصائي</span>
         </div>
         <p>
-          هذه تجربة تقنية فقط بعبارة اختبار غير طبية. لا تكتب معلومات صحية أو شخصية؛
-          النص يبقى داخل الصفحة ولا يُحفظ أو يُرسل.
+          اكتب بالعامية كيف تشعر. نبحث عن {PAIN_RED_FLAGS.length} عبارة خطر مأخوذة من
+          إرشادات NHS بعد تغيير مفصل الركبة ومن قائمة المشروع. عدم وجود إشارة لا يعني
+          أنك بخير. النص يبقى داخل الصفحة ولا يُحفظ أو يُرسل.{' '}
+          <LiteratureNote source={sourceOf('nhsKnee')} />
         </p>
         <label className="pain-demo-label" htmlFor="pain-demo-text">
-          عبارة الاختبار
+          صف ما تشعر به
         </label>
         <textarea
           id="pain-demo-text"
@@ -209,7 +213,7 @@ export default function App() {
           onChange={(event) => setPainDemoText(event.target.value)}
           dir="rtl"
           rows={3}
-          placeholder="مثال: كلمة اختبار"
+          placeholder="مثال: عندي سخونية والجرح بينز"
         />
         <label className="pain-model-toggle">
           <input
@@ -226,28 +230,40 @@ export default function App() {
             setPainDemoResult(
               evaluatePainTriage({
                 text: painDemoText,
-                lexicon: [{ ruleId: 'TEST_ONLY', phrase: 'كلمة اختبار' }],
+                lexicon: PAIN_RED_FLAGS,
                 modelFlag: painModelFlag,
               }),
             )
           }
         >
-          اختبر العبارة المصطنعة
+          افحص العبارة
         </button>
         {painDemoResult && (
           <div className="pipeline-demo-result" aria-live="polite">
             <p role="status" dir="ltr">
               {painDemoResult.status}
             </p>
+            {painDemoResult.status === 'ESCALATE_FOR_REVIEW' && (
+              <p role="alert">
+                <strong>
+                  توقف عن التمرين الآن وتواصل مع أخصائيك. إذا كان عندك ألم في الصدر أو
+                  صعوبة في التنفس فاتصل بالإسعاف {DEMO_DEFAULTS.emergencyNumber.value}.
+                </strong>{' '}
+                التطبيق لا يتصل بأحد تلقائيًا.
+              </p>
+            )}
             <p>
               رموز النتيجة:{' '}
               {painDemoResult.reasonCodes.length > 0
-                ? painDemoResult.reasonCodes.join(', ')
-                : 'لا توجد إشارة في عبارة الاختبار'}
+                ? [
+                    ...painDemoResult.reasonCodes,
+                    ...painDemoResult.matchedRuleIds,
+                  ].join(', ')
+                : 'لا توجد عبارة خطر من القائمة'}
             </p>
             <p>
-              هذه نتيجة تقنية للعبارة التجريبية فقط. عدم وجود إشارة لا يعني أن أي نص صحي
-              آمن.
+              هذه نتيجة تجريبية من قائمة لم يراجعها أخصائي. عدم وجود إشارة لا يعني أنك
+              بخير؛ إذا قلقت فتواصل مع أخصائيك.
             </p>
           </div>
         )}

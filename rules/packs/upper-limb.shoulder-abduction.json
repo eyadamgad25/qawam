@@ -7,14 +7,36 @@
   "sides": "patient-selected",
   "requiredLandmarks": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"],
   "angles": [
-    { "name": "shoulder_abduction", "triplet": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW"], "transform": "interior" },
-    { "name": "elbow_flexion", "triplet": ["SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"], "transform": "flexion" }
+    {
+      "name": "shoulder_abduction",
+      "triplet": ["SIDE_HIP", "SIDE_SHOULDER", "SIDE_ELBOW"],
+      "transform": "interior"
+    },
+    {
+      "name": "elbow_flexion",
+      "triplet": ["SIDE_SHOULDER", "SIDE_ELBOW", "SIDE_WRIST"],
+      "transform": "flexion"
+    }
   ],
   "primaryAngle": "shoulder_abduction",
-  "repCounter": { "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL", "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL" },
+  "repCounter": {
+    "low": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL",
+    "high": "PLACEHOLDER_NEEDS_PHYSIO_APPROVAL"
+  },
   "reference": { "mode": "patient-recorded", "fallback": "healthy-side" },
   "rules": [],
   "datasetMapping": { "rehab24_6_exercise_id": 1, "rehab26_exercise_id": 1 },
+  "literatureGoals": [
+    {
+      "metric": "shoulder_abduction_max",
+      "value": 128,
+      "unit": "deg",
+      "use": "display-goal",
+      "population": "40 shoulders of 20 volunteers without shoulder problems",
+      "citation": "Namdari S, Yagnik G, Ebaugh DD, Nagda S, Ramsey ML, Williams GR, Mehta S. Defining functional shoulder range of motion for activities of daily living. J Shoulder Elbow Surg. 2012;21(9):1177-1183. Ten daily tasks needed 128 +/- 7.9 deg of abduction; the authors still call full motion a reasonable goal.",
+      "url": "https://doi.org/10.1016/j.jse.2011.07.032"
+    }
+  ],
   "notes": "Front view keeps abduction in the image plane. Shoulder abduction = interior angle between the trunk (shoulder to hip) and the upper arm, so arm at the side is about 0.",
   "status": "provisional",
   "provenance": "default",

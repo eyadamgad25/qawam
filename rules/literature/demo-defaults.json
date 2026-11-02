@@ -1,0 +1,183 @@
+{
+  "status": "provisional",
+  "provenance": "literature",
+  "reviewedBy": null,
+  "notes": "Demo defaults taken from published sources while no physiotherapist is assigned. Each value names its source; the app labels them 'from a published study, not reviewed by a physiotherapist'. A named physiotherapist must review them before any patient use.",
+  "sources": {
+    "hancock2018": {
+      "citation": "Hancock GE, Hepworth T, Wembridge K. Accuracy and reliability of knee goniometry methods. J Exp Orthop. 2018;5:46. doi:10.1186/s40634-018-0161-5",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6195503/"
+    },
+    "acsm2009": {
+      "citation": "American College of Sports Medicine. Position stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009;41(3):687-708. doi:10.1249/MSS.0b013e3181915670",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19204579/"
+    },
+    "nhsKnee": {
+      "citation": "NHS. Complications of a knee replacement. nhs.uk, page last reviewed 9 September 2026.",
+      "url": "https://www.nhs.uk/tests-and-treatments/knee-replacement/complications/"
+    },
+    "brief": {
+      "citation": "Qawam project brief (docs/AI_BRIEF.md), section 2: red flags named in the brief (sharp pain, numbness, dizziness, chest pain). Not a published source.",
+      "url": "https://github.com/eyadamgad25/qawam/blob/main/docs/AI_BRIEF.md"
+    },
+    "egyptAmbulance": {
+      "citation": "Egypt ambulance number 123, as listed by the American University in Cairo emergency contacts and an ITU numbering document.",
+      "url": "https://www.aucegypt.edu/faculty-and-staff/housing/emergencies"
+    }
+  },
+  "toleranceDeg": {
+    "value": 14,
+    "source": "hancock2018",
+    "finding": "Visual estimation and a short-arm goniometer could only tell knee angles apart when they differed by about 14 deg (1.96 x SD), so smaller gaps from the reference rep are not cued."
+  },
+  "homeReps": {
+    "value": 8,
+    "source": "acsm2009",
+    "finding": "For novices the ACSM recommends loads matching an 8-12 repetition range; the demo uses the low end."
+  },
+  "emergencyNumber": {
+    "value": "123",
+    "source": "egyptAmbulance",
+    "finding": "Egypt's ambulance number. The app shows it; it never dials."
+  },
+  "painRedFlags": [
+    {
+      "ruleId": "NHS-KNEE-CHEST-01",
+      "phrase": "صدري",
+      "source": "nhsKnee",
+      "symptom": "chest pain"
+    },
+    {
+      "ruleId": "NHS-KNEE-CHEST-02",
+      "phrase": "ألم في الصدر",
+      "source": "nhsKnee",
+      "symptom": "chest pain"
+    },
+    {
+      "ruleId": "NHS-KNEE-BREATH-01",
+      "phrase": "مش قادر أتنفس",
+      "source": "nhsKnee",
+      "symptom": "difficulty breathing"
+    },
+    {
+      "ruleId": "NHS-KNEE-BREATH-02",
+      "phrase": "نفسي مقطوع",
+      "source": "nhsKnee",
+      "symptom": "difficulty breathing"
+    },
+    {
+      "ruleId": "NHS-KNEE-BREATH-03",
+      "phrase": "ضيق في النفس",
+      "source": "nhsKnee",
+      "symptom": "difficulty breathing"
+    },
+    {
+      "ruleId": "NHS-KNEE-BREATH-04",
+      "phrase": "نهجان",
+      "source": "nhsKnee",
+      "symptom": "difficulty breathing"
+    },
+    {
+      "ruleId": "NHS-KNEE-CALF-01",
+      "phrase": "سمانة رجلي",
+      "source": "nhsKnee",
+      "symptom": "throbbing or cramping pain in the leg"
+    },
+    {
+      "ruleId": "NHS-KNEE-CALF-02",
+      "phrase": "بطن رجلي",
+      "source": "nhsKnee",
+      "symptom": "throbbing or cramping pain in the leg"
+    },
+    {
+      "ruleId": "NHS-KNEE-CALF-03",
+      "phrase": "شد في رجلي",
+      "source": "nhsKnee",
+      "symptom": "throbbing or cramping pain in the leg"
+    },
+    {
+      "ruleId": "NHS-KNEE-FEVER-01",
+      "phrase": "سخونية",
+      "source": "nhsKnee",
+      "symptom": "high temperature"
+    },
+    {
+      "ruleId": "NHS-KNEE-FEVER-02",
+      "phrase": "حرارتي عالية",
+      "source": "nhsKnee",
+      "symptom": "high temperature"
+    },
+    {
+      "ruleId": "NHS-KNEE-FEVER-03",
+      "phrase": "رعشة",
+      "source": "nhsKnee",
+      "symptom": "feeling hot, cold or shivery"
+    },
+    {
+      "ruleId": "NHS-KNEE-WOUND-01",
+      "phrase": "صديد",
+      "source": "nhsKnee",
+      "symptom": "oozing or pus from the wound"
+    },
+    {
+      "ruleId": "NHS-KNEE-WOUND-02",
+      "phrase": "الجرح بينز",
+      "source": "nhsKnee",
+      "symptom": "oozing from the wound"
+    },
+    {
+      "ruleId": "NHS-KNEE-SWELL-01",
+      "phrase": "ركبتي وارمة",
+      "source": "nhsKnee",
+      "symptom": "knee swelling not getting better"
+    },
+    {
+      "ruleId": "NHS-KNEE-SWELL-02",
+      "phrase": "ركبتي حمرا",
+      "source": "nhsKnee",
+      "symptom": "knee redness not getting better"
+    },
+    {
+      "ruleId": "NHS-KNEE-SWELL-03",
+      "phrase": "الورم بيزيد",
+      "source": "nhsKnee",
+      "symptom": "swelling getting worse"
+    },
+    {
+      "ruleId": "BRIEF-NUMB-01",
+      "phrase": "تنميل",
+      "source": "brief",
+      "symptom": "numbness"
+    },
+    {
+      "ruleId": "BRIEF-NUMB-02",
+      "phrase": "منمل",
+      "source": "brief",
+      "symptom": "numbness"
+    },
+    {
+      "ruleId": "BRIEF-DIZZY-01",
+      "phrase": "دوخة",
+      "source": "brief",
+      "symptom": "dizziness"
+    },
+    {
+      "ruleId": "BRIEF-DIZZY-02",
+      "phrase": "دايخ",
+      "source": "brief",
+      "symptom": "dizziness"
+    },
+    {
+      "ruleId": "BRIEF-SHARP-01",
+      "phrase": "ألم حاد",
+      "source": "brief",
+      "symptom": "sharp pain"
+    },
+    {
+      "ruleId": "BRIEF-SHARP-02",
+      "phrase": "زي السكينة",
+      "source": "brief",
+      "symptom": "sharp (stabbing) pain"
+    }
+  ]
+}

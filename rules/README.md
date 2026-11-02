@@ -8,7 +8,7 @@ Every clinical number must be a string or value tagged `PLACEHOLDER_NEEDS_PHYSIO
 
 1. **Provisional default** — `status: provisional`, `provenance: default`. Engineering placeholder, demo only.
 2. **Data-derived** — `status: provisional`, `provenance: dataset-derived`. Chosen from REHAB24-6 **training** people only, checked on **validation** people; still provisional (healthy lab adults). Do not use the sealed test split to pick thresholds.
-2b. **Literature** — `status: provisional`, `provenance: literature` or a `literatureGoals` entry: a published value with a full citation and an https link. Shown to the physio as context or a display goal; never used on its own to judge a rep, and never presented as approval.
+2b. **Literature** — `status: provisional`, `provenance: literature` or a `literatureGoals` entry: a published value with a full citation and an https link. Shown to the physio as context or a display goal, and, while no physiotherapist is assigned, used as demo defaults (`literature/demo-defaults.json`: cue tolerance, home reps, red-flag phrases). Every such value is shown in the app with its citation and the label "not reviewed by a physiotherapist"; never presented as approval.
 3. **Clinician-approved** — `status: approved`, `provenance: clinician`, `approvedBy` a named human, `approvedAt` set.
 
 No rule may be marked `approved` without that named human. The UI must show **Prototype, not clinically approved** whenever a provisional rule fired.

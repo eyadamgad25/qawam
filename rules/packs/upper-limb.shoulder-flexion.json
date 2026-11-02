@@ -34,6 +34,17 @@
   "datasetMapping": {
     "kimore_exercise_id": 1
   },
+  "literatureGoals": [
+    {
+      "metric": "shoulder_flexion_max",
+      "value": 121,
+      "unit": "deg",
+      "use": "display-goal",
+      "population": "40 shoulders of 20 volunteers without shoulder problems",
+      "citation": "Namdari S, Yagnik G, Ebaugh DD, Nagda S, Ramsey ML, Williams GR, Mehta S. Defining functional shoulder range of motion for activities of daily living. J Shoulder Elbow Surg. 2012;21(9):1177-1183. Ten daily tasks needed 121 +/- 6.7 deg of flexion; the authors still call full motion a reasonable goal.",
+      "url": "https://doi.org/10.1016/j.jse.2011.07.032"
+    }
+  ],
   "notes": "Side view keeps forward arm elevation (sagittal plane) in the image plane. KIMORE Es1 (arm lift) moves mostly forward; on KIMORE skeletons projected to a side-on phone the range error was 0.7 deg median against a goniometer-style in-plane angle (docs/kimore-study.md). The patient turns the side to be measured toward the camera.",
   "status": "provisional",
   "provenance": "default",

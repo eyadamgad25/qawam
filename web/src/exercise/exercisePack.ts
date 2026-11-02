@@ -33,6 +33,18 @@ export interface ExercisePack {
   status: string;
   provenance: string;
   approvedBy: string | null;
+  /** published reference values, shown with their citation; never physio-reviewed */
+  literatureGoals?: LiteratureGoal[];
+}
+
+export interface LiteratureGoal {
+  metric: string;
+  value: number | string;
+  unit: string;
+  use: 'display-goal' | 'context';
+  population?: string;
+  citation: string;
+  url: string;
 }
 
 export interface ResolvedAngle {

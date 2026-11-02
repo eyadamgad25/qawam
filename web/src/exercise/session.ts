@@ -27,11 +27,12 @@ import { percentile, pixelPoints, visibilityOf, type PoseFrame } from './poseFra
 import { compareRep, type RepComparison } from './referenceCompare';
 import { fillGaps, segmentReps, type Rep } from './repSegmentation';
 import { checkView, viewAdviceAr, type ViewCheck } from './viewGate';
+import { DEMO_DEFAULTS } from '../demoDefaults';
 
 /** Below this share of frames with a pose, the clip is not assessed (test value). */
 export const MIN_DETECTION_RATE = 0.5;
-/** Prototype default for the physio-set tolerance; not clinically chosen. */
-export const TEST_DEFAULT_TOLERANCE_DEG = 10;
+/** Default for the physio-set tolerance, from a published study; not physio-reviewed. */
+export const TEST_DEFAULT_TOLERANCE_DEG = DEMO_DEFAULTS.toleranceDeg.value;
 
 export type SideChoice = Side | 'auto';
 

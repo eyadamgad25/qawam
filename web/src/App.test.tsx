@@ -127,28 +127,29 @@ describe('simulated session scenarios', () => {
     expect(screen.getByText('لا يستخدم الكاميرا')).toBeTruthy();
   });
 
-  it('demonstrates Arabic lexicon matching with a test-only phrase', () => {
+  it('flags an Egyptian-dialect red flag from the cited list and shows the stop prompt', () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText('عبارة الاختبار'), {
-      target: { value: 'كلمة اختبَار' },
+    fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
+      target: { value: 'عندي سُخونية من امبارح' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'اختبر العبارة المصطنعة' }));
+    fireEvent.click(screen.getByRole('button', { name: 'افحص العبارة' }));
 
     expect(screen.getByText('ESCALATE_FOR_REVIEW')).toBeTruthy();
-    expect(screen.getByText(/LEXICON_FLAG/)).toBeTruthy();
-    expect(screen.getByText(/لا توجد قائمة طبية/)).toBeTruthy();
+    expect(screen.getByText(/LEXICON_FLAG, NHS-KNEE-FEVER-01/)).toBeTruthy();
+    expect(screen.getByText(/فاتصل بالإسعاف 123/)).toBeTruthy();
+    expect(screen.getByText('لم يراجعها أخصائي')).toBeTruthy();
   });
 
   it('demonstrates that a simulated model flag cannot be suppressed', () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText('عبارة الاختبار'), {
+    fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
       target: { value: 'عبارة لا تطابق' },
     });
     fireEvent.click(screen.getByLabelText('محاكاة إشارة نموذج إيجابية (للاختبار فقط)'));
-    fireEvent.click(screen.getByRole('button', { name: 'اختبر العبارة المصطنعة' }));
+    fireEvent.click(screen.getByRole('button', { name: 'افحص العبارة' }));
 
     expect(screen.getByText('ESCALATE_FOR_REVIEW')).toBeTruthy();
     expect(screen.getByText(/MODEL_FLAG/)).toBeTruthy();
-    expect(screen.getByText(/عدم وجود إشارة لا يعني/)).toBeTruthy();
+    expect(screen.getByText(/إذا قلقت فتواصل مع أخصائيك/)).toBeTruthy();
   });
 });

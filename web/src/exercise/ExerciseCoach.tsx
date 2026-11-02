@@ -28,12 +28,14 @@ import {
   type SideChoice,
 } from './session';
 import { extractPoseFrames } from './videoPose';
+import { DEMO_DEFAULTS, sourceOf } from '../demoDefaults';
+import LiteratureNote from '../LiteratureNote';
 
 type Stage = 'reference' | 'home';
 type Source = 'file' | 'camera';
 
-/** Test defaults for the number of reps; the physio sets the real plan. */
-export const TEST_DEFAULT_HOME_REPS = 8;
+/** Default number of reps, from a published guideline; the physio sets the real plan. */
+export const TEST_DEFAULT_HOME_REPS = DEMO_DEFAULTS.homeReps.value;
 const REFERENCE_REPS = 2;
 
 function SourcePicker({
@@ -425,9 +427,17 @@ export default function ExerciseCoach() {
         <div className="cannot-assess-result" role="note">
           <strong>تنبيه: نموذج بحثي غير معتمد سريريًا</strong>
           <p>
-            حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. النتائج للتجربة فقط ولا
-            تُستخدم لتغيير خطة العلاج.
+            حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. القيم الافتراضية هنا
+            مأخوذة من دراسات وإرشادات منشورة (المصدر بجانب كل قيمة) ولم يراجعها أخصائي
+            بعد. النتائج للتجربة فقط ولا تُستخدم لتغيير خطة العلاج.
           </p>
+          {pack.literatureGoals?.map((goal) => (
+            <p key={goal.metric} className="field-help">
+              هدف من دراسة منشورة لـ{copy.measureAr}: {goal.value}°
+              {goal.population ? ` (${goal.population})` : ''}.{' '}
+              <LiteratureNote source={goal} />
+            </p>
+          ))}
           <details>
             <summary>ماذا يقيس قوام هنا؟</summary>
             <ul>
@@ -528,8 +538,10 @@ export default function ExerciseCoach() {
                 onChange={(event) => setToleranceText(event.currentTarget.value)}
               />
               <p className="field-help">
-                القيمة الافتراضية {TEST_DEFAULT_TOLERANCE_DEG}° قيمة اختبار فقط، وليست
-                قيمة سريرية.
+                القيمة الافتراضية {TEST_DEFAULT_TOLERANCE_DEG}°: بهذا الفرق تقريبًا
+                يستطيع التقدير بالعين أو الجونيوميتر القصير التمييز بين زاويتين، فلا
+                ننبّه على فرق أصغر.{' '}
+                <LiteratureNote source={sourceOf(DEMO_DEFAULTS.toleranceDeg.source)} />
               </p>
               <label className="pain-demo-label" htmlFor="exercise-reps">
                 عدد التكرارات في البيت (يحدده الأخصائي)
@@ -544,8 +556,9 @@ export default function ExerciseCoach() {
                 onChange={(event) => setRepsText(event.currentTarget.value)}
               />
               <p className="field-help">
-                القيمة الافتراضية {TEST_DEFAULT_HOME_REPS} للتجربة فقط؛ ينتهي التمرين
-                بالكاميرا تلقائيًا عند بلوغها.
+                القيمة الافتراضية {TEST_DEFAULT_HOME_REPS} (أقل المدى الموصى به
+                للمبتدئين 8–12)؛ ينتهي التمرين بالكاميرا تلقائيًا عند بلوغها.{' '}
+                <LiteratureNote source={sourceOf(DEMO_DEFAULTS.homeReps.source)} />
               </p>
               <label className="pain-demo-label" htmlFor="squat-goniometer">
                 قراءة الجونيوميتر لـ{copy.measureAr} في التكرار المرجعي (اختياري)

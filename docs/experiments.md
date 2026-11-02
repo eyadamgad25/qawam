@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-02 — Public HTTPS demo on GitHub Pages; hidden-joint guard checked on cropped video
+
+- **Question:** Can physios try the coach on their own phones during interviews? Phones only allow the camera on HTTPS, and the demo only ran on localhost.
+- **Change:** `.github/workflows/pages.yml` builds the web app with `QAWAM_BASE=/qawam/` (new `base` in `vite.config.ts`; the model and WASM loaders already use `import.meta.env.BASE_URL`), checks the bundle holds the model and WASM runtime, and deploys to https://eyadamgad25.github.io/qawam/ on every push to `main`.
+- **Check:** the Pages build served locally under `/qawam/`, phone-sized viewport (390 x 844, touch), all outside requests blocked: reference recorded, live round counted 3 / 3 reps, summary shown.
+- **Finding, hidden-joint guard:** in that run rep 1 was skipped with "لم أرَ قدميك" on some runs. Logging inside the browser showed why: Chromium's fake camera crops the 360 x 640 portrait clip to 360 x 480, so the ankle sits at 96-102% of the frame height, at or past the bottom edge, and MediaPipe extrapolates it. The guard refuses exactly that (the setup check's own edge rule); replaying the uncropped clip through the coach at 8 different start points never triggers it. Behaviour is correct; it does mean a patient whose feet touch the bottom edge will hear "move back" more often, which the setup wizard already asks for.
+
+---
+
 ## 2026-11-02 — API core: data model, access policy, idempotent sync (no database yet)
 
 - **Question:** Can the GP2 backend's rules be pinned down and tested before Express and MongoDB exist, so the review's architecture points (tenant isolation, prescription vs pack, references with approval, duplicate-free offline sync, consent, audit) are code, not slides?

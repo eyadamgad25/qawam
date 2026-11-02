@@ -1,0 +1,64 @@
+name: Deploy demo to GitHub Pages
+
+# Publishes the patient app as a static site at
+# https://eyadamgad25.github.io/qawam/ on every push to main.
+# HTTPS is required for the camera on phones. Everything runs in the visitor's
+# browser: no server, no data collected. The pose model and WASM runtime are
+# bundled by web/scripts/prepare-offline.mjs, so the page needs no CDN.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (bundles the pose model and WASM runtime)
+        env:
+          QAWAM_BASE: /qawam/
+        run: npm -w web run build
+
+      - name: Check the bundle has the offline model
+        run: |
+          test -s web/dist/models/pose_landmarker_lite.task
+          test -s web/dist/mediapipe/wasm/vision_wasm_internal.wasm
+          touch web/dist/.nojekyll
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

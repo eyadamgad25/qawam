@@ -78,3 +78,66 @@ The PPTX next to the PDF has only 23 slides, so it is an older version. Edit the
 23. *How is it tested?* 110 JS tests and 128 Python tests run in GitHub Actions CI, the sealed test split is logged, and the fake-camera end-to-end run is in `experiments.md`.
 24. *How does it work offline?* The pose model and WASM are bundled, and the service worker caches them after the first visit.
 25. *Two people: who did what?* Slide 30. Have a commit history ready if asked.
+
+## 6. Discussion prep: data, models, and what we add over existing work
+
+### The data
+
+**Q: What data do you have, and how did you split it?**
+Four public datasets and synthetic test fixtures; no real patient data.
+
+| Dataset | People | What we use it for | Split |
+| --- | --- | --- | --- |
+| REHAB24-6 [4] | 10 healthy adults, 1,072 physio-labelled reps, 2 RGB cameras + motion capture | Angle error by camera view, the view gate, personal reference | By person: train 6 people (592 reps), validation 2 (238), test 2 (people 7 and 9, 242 reps) sealed; the code refuses to open them without `--final` and logs every access |
+| REHAB26-ViewAngles [5] | 5, 3 cameras x 11 orientations, MediaPipe skeletons | Personal vs universal reference at every viewing angle | Leave-one-person-out |
+| KIMORE [2] | 78 (34 patients) | Geometry check on patients: Kinect skeletons projected into simulated phones | Gate fitted on REHAB24-6, applied unchanged |
+| UCOPhyRehab++ | 27, 1,837 reps scored 1-5 by a physiotherapist | External check of the rep counter and of score agreement | Nothing fitted on it |
+
+**Q: Isn't 10 healthy people too few?**
+Yes for a clinical claim, which we do not make. That is why every number is per person with a person-level interval, the worst person is reported (10.8%), results are repeated on three other datasets, and the goniometer study (20 volunteers) is in the plan.
+
+### The models
+
+**Q: What model did you train?**
+We did not train a deep model, by choice. Pose comes from Google's pretrained **MediaPipe Pose Landmarker Lite** (BlazePose [1]), unchanged, running in the browser. What we fit is small and explainable:
+1. two view thresholds (shoulder width / torso length: side <= 0.178, front >= 0.601), fitted on REHAB24-6 train + validation view labels;
+2. a one-rep offset per session, calibrated on the physio-recorded reference rep;
+3. the gate's certification: an exact binomial test (Learn-then-Test style [8]) that the wrong-cue rate is <= 10%.
+The personal reference is dynamic time warping against one rep: no training at all.
+
+**Q: Why not deep learning?**
+(1) 10 people cannot train a model that generalises; (2) deep models collapse under the shift from lab 3D to phone 2D: Khanal & Zhou 2026 report 63.2% -> 1.6% accuracy, and even with uncertainty scores 99.6% of decisions were wrong at 50% coverage; (3) a physio must be able to see why a cue was given; (4) it must run offline on a cheap phone. We did test learned confidence scores: AUROC 0.79-0.80 vs 0.67 for visibility, but with 5 people their thresholds could not be certified, so the shipped gate uses the rule.
+
+**Q: Why Lite and not Full?**
+Measured: Lite gave fewer wrong cues on held-out people (4.2% vs 11.7%) and is faster on phones.
+
+**Q: How did you test?**
+Split by person, leave-one-person-out, sealed test people, exact 95% bounds and person-resampled intervals, and external datasets with nothing tuned on them. 131 Python and 110 JavaScript tests run in CI.
+
+### How good is the contribution, compared with existing studies?
+
+Say it as: *existing work makes the assessment more accurate; we make the feedback safe to trust, on one phone, and we measure how often it is wrong.*
+
+| Study | What they show | What we add (measured) |
+| --- | --- | --- |
+| Khanghah et al. 2023 (Kinect, 3D CNN) | 83.8% accuracy, F1 60.6% across people; always answers; needs a depth sensor | Phone camera only; speaks on 26.5% of reps with 4.2% wrong (95% upper 7.8%) and stays silent on the rest |
+| Jánošová et al. 2026 (REHAB26) | The right camera angle improves separability by 16.9% (offline) | We turn that into a live rule that enforces the view: wrong cues fall from 14.7% to 4.2% |
+| Khanal & Zhou 2026 | Uncertainty scores do not make decisions safe | Same finding for visibility (it certifies nothing), so we bound the wrong-cue rate itself |
+| BlazePose 2020 | Per-image keypoint accuracy | Angle error per view: leg abduction 43-48 deg off side-on, 4-9 deg facing; squat side view 3.1 deg after calibration |
+| Liao et al. 2020, KIMORE 2019 | One model or template for everyone, offline | Personal reference: AUC 0.79-0.93 vs 0.53-0.69 universal on deliberate errors |
+| Live RGB rep counter (Sci. Rep. 2025) | MAE 1.45 reps on KIMORE | MAE 0.56 reps on UCOPhyRehab++ (motion capture, different data: context, not a head-to-head) |
+| Limb, Sword/Kaia | Products, no published wrong-cue rate | A published, per-person false-cue number |
+
+In one search we found no study that puts a guaranteed bound on wrong cues for rehab exercise feedback. Say "we found none", not "none exists".
+
+**Admit these before they are asked:**
+- The personal reference catches deliberate errors, but on UCOPhyRehab++ no method (ours included) tracks graded quality (4 vs 5): Spearman 0.14-0.22. So the claim is "flags clear mistakes", not "grades like a physio".
+- Mostly healthy adults; motion-capture results are upper bounds; no home phone study yet; no physio has approved a value.
+
+### Making the niche sharper (from what the studies show)
+
+1. **Lead with trust, as a number.** Nobody publishes how often their coach is wrong. Show the physio a weekly line: "41 cues spoken, estimated wrong-cue rate <= 8%". That is the edge, and it is measurable.
+2. **Start with knee rehabilitation.** The data supports it: on UCOPhyRehab++ the counter is almost perfect on seated and supine knee exercises (error 0-0.2 reps), where one in-plane angle carries the movement. Post-surgery knee patients (knee replacement, ACL) are a clear group with a surgeon and a physio to refer them.
+3. **Check the joint, not only the view.** Half the UCOPhyRehab++ exercises move a joint other than the one measured, and the app correctly refused to count them. Make it a setup rule: the reference rep must move the pack's angle by at least 10 deg, or the physio is told to pick another pack.
+4. **Physio grades, the app flags.** Because no method grades 4 vs 5, keep review-by-exception: the app flags clear errors and range drops, and the physio judges quality. This is also the safer regulatory position.
+5. **Own data is the moat, with a clean licence.** Most public data is non-commercial (REHAB24-6, Fit3D). Use CC BY sets (UCOPhyRehab++, IntelliRehabDS) for anything commercial, and collect Egyptian home recordings under consent; no public dataset covers them.

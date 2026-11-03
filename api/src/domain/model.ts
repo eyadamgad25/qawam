@@ -95,7 +95,7 @@ export interface Prescription {
 }
 
 /** Why a rep was not judged (mirrors the web coach's reasons). */
-export type AbstainReason = 'LOW_DETECTION' | 'JOINTS_HIDDEN' | 'VIEW_MISMATCH';
+export type AbstainReason = 'LOW_DETECTION' | 'JOINTS_HIDDEN' | 'VIEW_MISMATCH' | 'NOT_CERTIFIED';
 
 export interface RepRecord {
   index: number;

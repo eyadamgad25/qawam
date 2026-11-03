@@ -263,9 +263,10 @@ export type LiveRepFeedback =
        * LOW_DETECTION: no person in too many frames; JOINTS_HIDDEN: a joint of
        * the measured angle was hidden or cut off in too many frames (the view
        * can be right while the angle is still guessed); VIEW_MISMATCH: wrong
-       * camera angle for this exercise.
+       * camera angle for this exercise; NOT_CERTIFIED: the pack counts reps
+       * only (correctionCues false).
        */
-      reason: 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'JOINTS_HIDDEN';
+      reason: 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'JOINTS_HIDDEN' | 'NOT_CERTIFIED';
       messageAr: string;
       spokenAr: string;
     };
@@ -501,6 +502,18 @@ export class LiveCoach {
         ),
       };
     }
+    if (this.pack.correctionCues === false) {
+      return {
+        index,
+        assessed: false,
+        reason: 'NOT_CERTIFIED',
+        messageAr: tr(
+          'حسبت هذا التكرار. لا أصحّح هذا التمرين بعد.',
+          'I counted this rep. I do not correct this exercise yet.',
+        ),
+        spokenAr: number,
+      };
+    }
     const curve = this.smoothed.slice(start, end + 1);
     const comparison = compareRep(
       curve,
@@ -590,7 +603,9 @@ export function summarise(
     'أداء قريب من المرجع، استمر هكذا.',
     'Close to your reference, keep it up.',
   );
-  if (postureIssues.length > matches && postureIssues.length >= Math.max(less, more)) {
+  if (pack.correctionCues === false) {
+    advice = copy.evidenceAr;
+  } else if (postureIssues.length > matches && postureIssues.length >= Math.max(less, more)) {
     advice = postureIssues[0]!.posture!.messageAr;
   } else if (less > matches && less >= more) {
     advice = copy.moreAr;

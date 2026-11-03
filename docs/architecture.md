@@ -72,7 +72,7 @@ flowchart LR
 
 Modules (`web/src/exercise/`): `videoPose` (model loading, offline-first), `liveCoach` (frame loop, rep state, observation checks, judging), `viewGate`, `referenceCompare`, `repSegmentation`, `session` (file analysis), `sessionStore` (local history, CSV, WhatsApp text), `exercisePack`, and the screens `LiveCamera`, `ExerciseCoach`, `ProgressReport`.
 
-Abstain reasons recorded per rep: `LOW_DETECTION` (person missing in most frames), `JOINTS_HIDDEN` (a joint of the measured angle hidden or cut off in most frames), `VIEW_MISMATCH` (wrong camera angle). The thresholds and how they were set are in `docs/experiments.md`.
+Abstain reasons recorded per rep: `LOW_DETECTION` (person missing in most frames), `JOINTS_HIDDEN` (a joint of the measured angle hidden or cut off in most frames), `VIEW_MISMATCH` (wrong camera angle), `NOT_CERTIFIED` (the pack has `correctionCues: false` and only counts reps; set for shoulder abduction after the Fit3D test). The thresholds and how they were set are in `docs/experiments.md`.
 
 ## 5. Data boundary
 

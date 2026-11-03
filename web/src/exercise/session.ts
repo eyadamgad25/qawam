@@ -53,7 +53,7 @@ export interface ClipAnalysis {
   secondary: Record<string, (number | null)[]>;
 }
 
-export type CannotAssessReason = 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'NO_REPS';
+export type CannotAssessReason = 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'NO_REPS' | 'NOT_CERTIFIED';
 
 export interface ClipGate {
   ok: boolean;
@@ -379,6 +379,16 @@ export function assessSession(
       status: 'CANNOT_ASSESS',
       reasons: gate.reasons,
       messageAr: gate.messageAr,
+    };
+  }
+  if (pack.correctionCues === false) {
+    return {
+      status: 'CANNOT_ASSESS',
+      reasons: ['NOT_CERTIFIED'],
+      messageAr: tr(
+        `حسبت ${home.reps.length} تكرارات. ${packCopy(pack).evidenceAr}`,
+        `I counted ${home.reps.length} reps. ${packCopy(pack).evidenceAr}`,
+      ),
     };
   }
   const refPosture = repPosture(reference, refRep.start, refRep.end);

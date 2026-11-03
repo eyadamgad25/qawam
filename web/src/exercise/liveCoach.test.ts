@@ -45,6 +45,9 @@ function runLive(
 const cues = (coach: LiveCoach) =>
   coach.reps.map((r) => (r.assessed ? r.cue : r.reason));
 
+/** The shipped arm-abduction pack only counts; this copy keeps the cue logic under test. */
+const CUEING_ABDUCTION: ExercisePack = { ...SHOULDER_ABDUCTION_PACK, correctionCues: true };
+
 describe('live setup check', () => {
   it('is ready only for a full body filmed from the pack view', () => {
     expect(setupStatus(squatClip([90]).slice(0, 20), SQUAT_PACK).state).toBe('READY');
@@ -168,16 +171,31 @@ describe('live coach', () => {
   it('works for shoulder abduction filmed from the front', () => {
     const ref = referenceFrom(
       abductionClip('arm', [80], { movingSide: 'left' }),
-      SHOULDER_ABDUCTION_PACK,
+      CUEING_ABDUCTION,
     );
     expect(ref.side).toBe('left');
     const { coach } = runLive(
-      SHOULDER_ABDUCTION_PACK,
+      CUEING_ABDUCTION,
       ref,
       abductionClip('arm', [80, 50], { movingSide: 'left' }),
     );
     expect(cues(coach)).toEqual(['MATCHES_REFERENCE', 'LESS_THAN_REFERENCE']);
     expect(coach.reps[1]!.messageAr).toContain('ذراعك');
+  });
+
+  it('only counts shoulder abduction, because the Fit3D test failed its cues', () => {
+    const ref = referenceFrom(
+      abductionClip('arm', [80], { movingSide: 'left' }),
+      SHOULDER_ABDUCTION_PACK,
+    );
+    const { coach } = runLive(
+      SHOULDER_ABDUCTION_PACK,
+      ref,
+      abductionClip('arm', [80, 50], { movingSide: 'left' }),
+    );
+    expect(cues(coach)).toEqual(['NOT_CERTIFIED', 'NOT_CERTIFIED']);
+    expect(coach.reps[1]!.spokenAr).toBe('اثنان');
+    expect(summarise(coach.reps, SHOULDER_ABDUCTION_PACK).textAr).toContain('Fit3D');
   });
 
   it('works for shoulder flexion filmed from the side', () => {
@@ -209,10 +227,10 @@ describe('live coach', () => {
   it('flags a bent elbow during arm abduction even when the height is right', () => {
     const ref = referenceFrom(
       abductionClip('arm', [80], { movingSide: 'left' }),
-      SHOULDER_ABDUCTION_PACK,
+      CUEING_ABDUCTION,
     );
     const { coach } = runLive(
-      SHOULDER_ABDUCTION_PACK,
+      CUEING_ABDUCTION,
       ref,
       abductionClip('arm', [80, 80], { movingSide: 'left', elbowBendDeg: [0, 60] }),
     );

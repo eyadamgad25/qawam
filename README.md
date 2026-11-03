@@ -4,7 +4,7 @@ Arabic-first, physiotherapist-supervised **home-rehabilitation coach** (PWA). Ed
 
 The long-term product goal is physiotherapist-supervised home rehabilitation. The current educational prototype can overlay MediaPipe pose landmarks on a selected local video and includes an experimental arm-raise counter. Its landmark mapping and thresholds are unvalidated test assumptions; it does not assess form or provide treatment advice.
 
-**Live demo:** https://eyadamgad25.github.io/qawam/ (open it on a phone over HTTPS and allow the camera). It is rebuilt from `main` by `.github/workflows/pages.yml`; everything runs in the visitor's browser, with the pose model bundled, and nothing is uploaded.
+**Live demo:** https://eyadamgad25.github.io/qawam/ (open it on a phone over HTTPS and allow the camera). It is rebuilt from `main` by `.github/workflows/pages.yml`; everything runs in the visitor's browser, with the pose model bundled, and nothing is uploaded. It installs like an app ("Add to Home screen" / "Install app"), and after one visit online it opens and runs the coach with no internet: `web/public/sw.js` caches the page, the bundles and the pose model and WASM runtime.
 
 ## What this is / is not
 

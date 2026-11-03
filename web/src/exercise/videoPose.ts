@@ -4,6 +4,7 @@
  * are served from this app when `prepare-offline` copied them into public/
  * (works with no internet), otherwise from the public CDN.
  */
+import { tr } from '../i18n';
 import type { PoseFrame } from './poseFrames';
 
 export const WASM_URL =
@@ -137,7 +138,14 @@ function waitFor(
     const fail = () => {
       video.removeEventListener(event, done);
       video.removeEventListener('error', fail);
-      reject(new Error('تعذّر فتح الفيديو. جرّب ملف MP4 مدعومًا.'));
+      reject(
+        new Error(
+          tr(
+            'تعذّر فتح الفيديو. جرّب ملف MP4 مدعومًا.',
+            'Could not open the video. Try a supported MP4 file.',
+          ),
+        ),
+      );
     };
     video.addEventListener(event, done);
     video.addEventListener('error', fail);
@@ -161,16 +169,20 @@ export async function extractPoseFrames(
     await ready;
     const duration = video.duration;
     if (!Number.isFinite(duration) || duration <= 0) {
-      throw new Error('تعذّر قراءة مدة الفيديو.');
+      throw new Error(
+        tr('تعذّر قراءة مدة الفيديو.', 'Could not read the video length.'),
+      );
     }
     if (duration > MAX_SECONDS) {
-      throw new Error('اختر فيديو مدته دقيقتان أو أقل.');
+      throw new Error(
+        tr('اختر فيديو مدته دقيقتان أو أقل.', 'Choose a video of two minutes or less.'),
+      );
     }
     const frames: PoseFrame[] = [];
     const total = Math.floor(duration * SAMPLE_FPS);
     for (let i = 0; i < total; i += 1) {
       if (signal?.aborted) {
-        throw new Error('أُلغي التحليل.');
+        throw new Error(tr('أُلغي التحليل.', 'Analysis cancelled.'));
       }
       const time = i / SAMPLE_FPS;
       const seeked = waitFor(video, 'seeked');

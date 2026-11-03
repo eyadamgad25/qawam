@@ -11,6 +11,7 @@ import squatPackJson from '../../../rules/packs/lower-limb.squat.json';
 import shoulderAbductionPackJson from '../../../rules/packs/upper-limb.shoulder-abduction.json';
 import shoulderFlexionPackJson from '../../../rules/packs/upper-limb.shoulder-flexion.json';
 import { angleDegrees, type Point2D } from '../anglePipeline';
+import { getLang } from '../i18n';
 
 export type Side = 'left' | 'right';
 export type AngleTransform = 'interior' | 'flexion' | 'abduction';
@@ -159,8 +160,72 @@ export const PACK_COPY: Readonly<Record<string, PackCopy>> = {
   },
 };
 
+/** English wording; same keys as PACK_COPY (the *Ar names are kept for both languages). */
+const PACK_COPY_EN: Readonly<Record<string, PackCopy>> = {
+  'lower-limb.squat': {
+    measureAr: 'knee bend',
+    setupAr: 'Stand side-on to the camera, visible from shoulders to feet.',
+    moreAr:
+      'You went less deep than your reference. Go a little deeper if it does not hurt.',
+    lessAr: 'You went deeper than your reference. Keep to the depth your physio set.',
+    spokenMoreAr: 'Go a little deeper',
+    spokenLessAr: 'Not deeper than the reference',
+    evidenceAr:
+      'In the research test with 5 people, the measurement was wrong on 3 of 88 squat reps filmed side-on.',
+  },
+  'lower-limb.lunge': {
+    measureAr: 'front knee bend',
+    setupAr: 'Stand side-on to the camera, with both feet visible.',
+    moreAr:
+      'Your lunge was less deep than the reference. Go a little deeper if it does not hurt.',
+    lessAr:
+      'Your lunge went deeper than the reference. Keep to the depth your physio set.',
+    spokenMoreAr: 'Go a little deeper',
+    spokenLessAr: 'Not deeper than the reference',
+    evidenceAr:
+      'In the research test with 5 people, the measurement was wrong on 3 of 52 lunge reps filmed side-on.',
+  },
+  'lower-limb.leg-abduction': {
+    measureAr: 'sideways leg raise',
+    setupAr: 'Face the camera directly, visible from shoulders to feet.',
+    moreAr:
+      'You raised your leg less than the reference. Raise it a little higher if it does not hurt.',
+    lessAr:
+      'You raised your leg higher than the reference. Keep to the height your physio set.',
+    spokenMoreAr: 'Raise your leg a little higher',
+    spokenLessAr: 'Not higher than the reference',
+    evidenceAr:
+      'In the research test, the measurement was wrong on 1 of 26 reps filmed from the front; it cannot be measured side-on.',
+  },
+  'upper-limb.shoulder-abduction': {
+    measureAr: 'sideways arm raise',
+    setupAr: 'Face the camera directly, with both arms and hips visible.',
+    moreAr:
+      'You raised your arm less than the reference. Raise it a little higher if it does not hurt.',
+    lessAr:
+      'You raised your arm higher than the reference. Keep to the height your physio set.',
+    spokenMoreAr: 'Raise your arm a little higher',
+    spokenLessAr: 'Not higher than the reference',
+    evidenceAr:
+      'The gate has not been measured for this exercise yet; comparing with the personal reference separated errors well in REHAB26 data (AUC 0.76).',
+  },
+  'upper-limb.shoulder-flexion': {
+    measureAr: 'forward arm raise',
+    setupAr:
+      'Stand side-on, with the measured arm towards the camera and your hip visible.',
+    moreAr:
+      'You raised your arm less than the reference. Raise it a little higher if it does not hurt.',
+    lessAr:
+      'You raised your arm higher than the reference. Keep to the height your physio set.',
+    spokenMoreAr: 'Raise your arm a little higher',
+    spokenLessAr: 'Not higher than the reference',
+    evidenceAr:
+      'On skeletons of 34 KIMORE patients, the side-view range error was under one degree and the cue matched the reference measurement on 99% of reps (camera geometry only, no real video).',
+  },
+};
+
 export function packCopy(pack: ExercisePack): PackCopy {
-  const copy = PACK_COPY[pack.packId];
+  const copy = (getLang() === 'en' ? PACK_COPY_EN : PACK_COPY)[pack.packId];
   if (!copy) {
     throw new Error(`no Arabic wording for ${pack.packId}`);
   }
@@ -213,6 +278,36 @@ export const POSTURE_COPY: Readonly<
     spokenAr: 'افرد ذراعك',
   },
 };
+
+const POSTURE_COPY_EN: Readonly<Record<string, { textAr: string; spokenAr: string }>> =
+  {
+    hip_flexion: {
+      textAr:
+        'Your trunk leans differently from the reference. Keep your chest up as in the reference.',
+      spokenAr: 'Chest up',
+    },
+    trunk_hip_flexion: {
+      textAr:
+        'Your trunk leans differently from the reference. Keep it straight as in the reference.',
+      spokenAr: 'Keep your trunk straight',
+    },
+    trunk_lean: {
+      textAr: 'Your trunk leans sideways more than in the reference. Keep it straight.',
+      spokenAr: 'Do not lean sideways',
+    },
+    elbow_flexion: {
+      textAr:
+        'Your elbow differs from the reference. Keep your arm straight as in the reference.',
+      spokenAr: 'Straighten your arm',
+    },
+  };
+
+/** Posture wording for one secondary angle in the current language. */
+export function postureCopy(
+  name: string,
+): { textAr: string; spokenAr: string } | undefined {
+  return (getLang() === 'en' ? POSTURE_COPY_EN : POSTURE_COPY)[name];
+}
 
 /** Landmark names the pack needs for one side. */
 export function requiredLandmarks(pack: ExercisePack, side: Side): string[] {

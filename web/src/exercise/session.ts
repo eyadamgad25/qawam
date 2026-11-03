@@ -13,10 +13,11 @@
  *  - The tolerance is set by the physiotherapist. The default shown in the
  *    prototype is a test value, not a clinical one.
  */
+import { tr } from '../i18n';
 import {
   packAngle,
   packCopy,
-  POSTURE_COPY,
+  postureCopy,
   resolveAngles,
   resolvePrimaryAngle,
   type ExercisePack,
@@ -218,7 +219,7 @@ export function postureCheck(
   let worst: PostureFinding | null = null;
   for (const [name, curve] of Object.entries(repPosture)) {
     const ref = refPosture[name];
-    const copy = POSTURE_COPY[name];
+    const copy = postureCopy(name);
     if (!curve || !ref || !copy) {
       continue;
     }
@@ -258,14 +259,22 @@ export function gateClip(clip: ClipAnalysis): ClipGate {
   if (reasons.length === 0 && clip.reps.length === 0) {
     reasons.push('NO_REPS');
   }
-  let messageAr = 'زاوية التصوير مناسبة، والجسم ظاهر بوضوح.';
+  let messageAr = tr(
+    'زاوية التصوير مناسبة، والجسم ظاهر بوضوح.',
+    'The camera angle is right and your body is clearly visible.',
+  );
   if (reasons.includes('LOW_DETECTION')) {
-    messageAr =
-      'لا أرى جسمك في معظم الفيديو: ابتعد عن الكاميرا حتى يظهر جسمك كاملًا، وأضئ المكان.';
+    messageAr = tr(
+      'لا أرى جسمك في معظم الفيديو: ابتعد عن الكاميرا حتى يظهر جسمك كاملًا، وأضئ المكان.',
+      'I cannot see your body in most of the video: step back until your whole body shows, and add light.',
+    );
   } else if (reasons.includes('VIEW_MISMATCH')) {
     messageAr = viewAdviceAr(clip.view);
   } else if (reasons.includes('NO_REPS')) {
-    messageAr = 'لم أجد تكرارًا كاملًا في هذا الفيديو: أدِّ الحركة كاملة ذهابًا وعودة.';
+    messageAr = tr(
+      'لم أجد تكرارًا كاملًا في هذا الفيديو: أدِّ الحركة كاملة ذهابًا وعودة.',
+      'I found no complete rep in this video: do the full movement there and back.',
+    );
   }
   return { ok: reasons.length === 0, reasons, messageAr };
 }
@@ -287,15 +296,24 @@ export function cueText(pack: ExercisePack, cue: RepCue): string {
   const copy = packCopy(pack);
   switch (cue) {
     case 'MATCHES_REFERENCE':
-      return 'أحسنت، هذا التكرار قريب من التكرار الذي سجّلته مع أخصائيك.';
+      return tr(
+        'أحسنت، هذا التكرار قريب من التكرار الذي سجّلته مع أخصائيك.',
+        'Well done, this rep is close to the one you recorded with your physio.',
+      );
     case 'LESS_THAN_REFERENCE':
       return copy.moreAr;
     case 'MORE_THAN_REFERENCE':
       return copy.lessAr;
     case 'POSTURE_DIFFERENT':
-      return 'المدى مناسب لكن وضع جسمك مختلف عن المرجع.';
+      return tr(
+        'المدى مناسب لكن وضع جسمك مختلف عن المرجع.',
+        'The range is right but your posture differs from the reference.',
+      );
     default:
-      return 'المدى مناسب لكن طريقة الحركة مختلفة عن المرجع. تحرّك ببطء وبنفس الطريقة.';
+      return tr(
+        'المدى مناسب لكن طريقة الحركة مختلفة عن المرجع. تحرّك ببطء وبنفس الطريقة.',
+        'The range is right but the movement differs from the reference. Move slowly and the same way.',
+      );
   }
 }
 
@@ -303,15 +321,15 @@ export function spokenCue(pack: ExercisePack, cue: RepCue): string {
   const copy = packCopy(pack);
   switch (cue) {
     case 'MATCHES_REFERENCE':
-      return 'ممتاز';
+      return tr('ممتاز', 'Great');
     case 'LESS_THAN_REFERENCE':
       return copy.spokenMoreAr;
     case 'MORE_THAN_REFERENCE':
       return copy.spokenLessAr;
     case 'POSTURE_DIFFERENT':
-      return 'انتبه لوضع جسمك';
+      return tr('انتبه لوضع جسمك', 'Watch your posture');
     default:
-      return 'تحرّك ببطء وبنفس الطريقة';
+      return tr('تحرّك ببطء وبنفس الطريقة', 'Move slowly and the same way');
   }
 }
 
@@ -395,6 +413,9 @@ export function assessSession(
   return {
     status: 'ASSESSED',
     reps,
-    summaryAr: `${matches} من ${reps.length} تكرارات قريبة من المرجع.`,
+    summaryAr: tr(
+      `${matches} من ${reps.length} تكرارات قريبة من المرجع.`,
+      `${matches} of ${reps.length} reps close to the reference.`,
+    ),
   };
 }

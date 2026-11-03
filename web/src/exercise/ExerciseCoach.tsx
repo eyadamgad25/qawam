@@ -1,3 +1,4 @@
+import { tr } from '../i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   EXERCISE_PACKS,
@@ -54,14 +55,14 @@ function SourcePicker({
         aria-pressed={value === 'camera'}
         onClick={() => onChange('camera')}
       >
-        بالكاميرا الآن
+        {tr('بالكاميرا الآن', 'Camera now')}
       </button>
       <button
         type="button"
         aria-pressed={value === 'file'}
         onClick={() => onChange('file')}
       >
-        من ملف فيديو
+        {tr('من ملف فيديو', 'From a video file')}
       </button>
     </div>
   );
@@ -75,7 +76,9 @@ export function parseOptionalDegrees(value: string): number | null {
   }
   const number = Number(text);
   if (!Number.isFinite(number) || number <= 0 || number >= 180) {
-    throw new Error('أدخل رقمًا بين 0 و180 درجة.');
+    throw new Error(
+      tr('أدخل رقمًا بين 0 و180 درجة.', 'Enter a number between 0 and 180 degrees.'),
+    );
   }
   return number;
 }
@@ -83,7 +86,9 @@ export function parseOptionalDegrees(value: string): number | null {
 export function parseRepCount(value: string): number {
   const number = Number(value.trim());
   if (!Number.isInteger(number) || number < 1 || number > 30) {
-    throw new Error('أدخل عدد تكرارات بين 1 و30.');
+    throw new Error(
+      tr('أدخل عدد تكرارات بين 1 و30.', 'Enter a rep count between 1 and 30.'),
+    );
   }
   return number;
 }
@@ -96,7 +101,10 @@ export function formatDegrees(value: number, signed = false): string {
 export function CurveChart({
   reference,
   rep,
-  label = 'منحنى الحركة: المرجع مقابل هذا التكرار',
+  label = tr(
+    'منحنى الحركة: المرجع مقابل هذا التكرار',
+    'Movement curve: reference vs this rep',
+  ),
 }: {
   reference: readonly number[];
   rep: readonly number[];
@@ -127,40 +135,57 @@ export function CurveChart({
   );
 }
 
-const SIDE_AR = { left: 'اليسرى', right: 'اليمنى' } as const;
+const sideName = (side: 'left' | 'right') =>
+  side === 'left' ? tr('اليسرى', 'Left') : tr('اليمنى', 'Right');
 
 function ClipStatus({ clip, pack }: { clip: ClipAnalysis; pack: ExercisePack }) {
   const gate = gateClip(clip);
-  const limb = pack.packId.startsWith('upper-limb') ? 'الذراع' : 'الرجل';
+  const limb = pack.packId.startsWith('upper-limb')
+    ? tr('الذراع', 'Arm')
+    : tr('الرجل', 'Leg');
   return (
     <div
       className={gate.ok ? 'clip-status clip-ok' : 'clip-status clip-refused'}
       role="status"
     >
       <p>
-        <strong>{gate.ok ? 'التصوير مناسب' : 'لا أستطيع التقييم'}</strong> —{' '}
-        {gate.messageAr}
+        <strong>
+          {gate.ok
+            ? tr('التصوير مناسب', 'Camera view OK')
+            : tr('لا أستطيع التقييم', 'Cannot assess')}
+        </strong>{' '}
+        — {gate.messageAr}
       </p>
       <p className="clip-facts">
-        <span>اكتشاف الجسم: {Math.round(clip.detectionRate * 100)}%</span>
         <span>
-          زاوية التصوير (frontalness):{' '}
+          {tr('اكتشاف الجسم', 'Body detected')}: {Math.round(clip.detectionRate * 100)}%
+        </span>
+        <span>
+          {tr('زاوية التصوير', 'Camera angle')} (frontalness):{' '}
           {clip.view.frontalness === null ? '—' : clip.view.frontalness.toFixed(2)}{' '}
           {pack.view === 'side'
-            ? `(المقبول للتصوير الجانبي حتى ${clip.view.cutoff})`
-            : `(المقبول للتصوير الأمامي من ${clip.view.cutoff})`}
+            ? tr(
+                `(المقبول للتصوير الجانبي حتى ${clip.view.cutoff})`,
+                `(side view accepted up to ${clip.view.cutoff})`,
+              )
+            : tr(
+                `(المقبول للتصوير الأمامي من ${clip.view.cutoff})`,
+                `(front view accepted from ${clip.view.cutoff})`,
+              )}
         </span>
         <span>
-          {limb} المتابَعة: {SIDE_AR[clip.side]}
+          {limb} {tr('المتابَعة', 'tracked')}: {sideName(clip.side)}
         </span>
-        <span>تكرارات وُجدت: {clip.reps.length}</span>
+        <span>
+          {tr('تكرارات وُجدت', 'Reps found')}: {clip.reps.length}
+        </span>
       </p>
     </div>
   );
 }
 
 const PATIENT_KEY = 'qawam.patient';
-const DEFAULT_PATIENT = 'مريض تجريبي';
+const DEFAULT_PATIENT = 'مريض تجريبي'; // stored key, not shown translated
 
 function readPatient(): string {
   try {
@@ -181,7 +206,8 @@ function writePatient(value: string): void {
 function Progress({ value }: { value: number }) {
   return (
     <p className="analysis-progress" role="status" aria-live="polite">
-      جارٍ تحليل الفيديو على جهازك… {Math.round(value * 100)}%
+      {tr('جارٍ تحليل الفيديو على جهازك…', 'Analysing the video on your device…')}{' '}
+      {Math.round(value * 100)}%
       <progress max={1} value={value} />
     </p>
   );
@@ -221,7 +247,7 @@ export default function ExerciseCoach() {
       return;
     }
     if (!file.type.startsWith('video/')) {
-      setError('اختر ملف فيديو صالحًا.');
+      setError(tr('اختر ملف فيديو صالحًا.', 'Choose a valid video file.'));
       return;
     }
     setError(null);
@@ -250,7 +276,10 @@ export default function ExerciseCoach() {
       setError(
         cause instanceof Error
           ? cause.message
-          : 'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت ثم أعد المحاولة.',
+          : tr(
+              'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت ثم أعد المحاولة.',
+              'Could not load the MediaPipe model. Check the internet connection and try again.',
+            ),
       );
     } finally {
       setBusy(null);
@@ -263,12 +292,15 @@ export default function ExerciseCoach() {
       const goniometer = parseOptionalDegrees(goniometerText);
       const reps = parseRepCount(repsText);
       if (tolerance === null) {
-        return { error: 'أدخل هامش السماح.' } as const;
+        return { error: tr('أدخل هامش السماح.', 'Enter the tolerance.') } as const;
       }
       return { tolerance, goniometer, reps } as const;
     } catch (cause) {
       return {
-        error: cause instanceof Error ? cause.message : 'قيمة غير صالحة.',
+        error:
+          cause instanceof Error
+            ? cause.message
+            : tr('قيمة غير صالحة.', 'Invalid value.'),
       } as const;
     }
   }, [toleranceText, goniometerText, repsText]);
@@ -354,20 +386,33 @@ export default function ExerciseCoach() {
       >
         <div className="summary-heading">
           <div>
-            <p className="summary-kicker">مدرب تمارين مباشر · تجريبي</p>
-            <h2 id="exercise-coach-title">تمرينك مقارنةً بتكرارك المرجعي</h2>
+            <p className="summary-kicker">
+              {tr('مدرب تمارين مباشر · تجريبي', 'Live exercise coach · prototype')}
+            </p>
+            <h2 id="exercise-coach-title">
+              {tr(
+                'تمرينك مقارنةً بتكرارك المرجعي',
+                'Your exercise against your own reference rep',
+              )}
+            </h2>
           </div>
-          <span className="simulation-badge">الفيديو لا يُرفع</span>
+          <span className="simulation-badge">
+            {tr('الفيديو لا يُرفع', 'Video is never uploaded')}
+          </span>
         </div>
         <p>
-          يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن قوام كل تكرار في البيت
-          بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة،
-          يقول قوام إنه لا يراك جيدًا بدل أن يخمّن.
+          {tr(
+            'يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن التطبيق كل تكرار في البيت بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة، يقول قوام إنه لا يراك جيدًا بدل أن يخمّن.',
+            'Your physio records one correct rep with you in the clinic. At home, the app compares every rep with that same rep, not with one rule for everyone. If the camera angle is wrong, it says it cannot see you well instead of guessing.',
+          )}
         </p>
 
         <div className="exercise-picker">
           <label className="pain-demo-label" htmlFor="patient-label">
-            المريض (اسم أو رمز، يُحفظ على هذا الجهاز فقط)
+            {tr(
+              'المريض (اسم أو رمز، يُحفظ على هذا الجهاز فقط)',
+              'Patient (name or code, saved on this device only)',
+            )}
           </label>
           <input
             id="patient-label"
@@ -379,7 +424,7 @@ export default function ExerciseCoach() {
             }}
           />
           <label className="pain-demo-label" htmlFor="exercise-pack">
-            التمرين
+            {tr('التمرين', 'Exercise')}
           </label>
           <select
             id="exercise-pack"
@@ -393,18 +438,22 @@ export default function ExerciseCoach() {
           >
             {EXERCISE_PACKS.map((item) => (
               <option key={item.packId} value={item.packId}>
-                {item.names.ar}
+                {tr(item.names.ar, item.names.en)}
               </option>
             ))}
           </select>
           <p className="field-help">
-            {copy.setupAr} {pack.view === 'side' ? '(تصوير جانبي)' : '(تصوير أمامي)'}
+            {copy.setupAr}{' '}
+            {pack.view === 'side'
+              ? tr('(تصوير جانبي)', '(side view)')
+              : tr('(تصوير أمامي)', '(front view)')}
           </p>
           {pack.sides !== 'both' && (
             <>
               <label className="pain-demo-label" htmlFor="exercise-side">
-                {pack.packId.startsWith('upper-limb') ? 'الذراع' : 'الرجل'} التي تتمرن
-                بها
+                {pack.packId.startsWith('upper-limb')
+                  ? tr('الذراع التي تتمرن بها', 'Arm you exercise')
+                  : tr('الرجل التي تتمرن بها', 'Leg you exercise')}
               </label>
               <select
                 id="exercise-side"
@@ -416,45 +465,77 @@ export default function ExerciseCoach() {
                   reset();
                 }}
               >
-                <option value="auto">تلقائي: التي تتحرك أكثر</option>
-                <option value="left">اليسرى</option>
-                <option value="right">اليمنى</option>
+                <option value="auto">
+                  {tr('تلقائي: التي تتحرك أكثر', 'Automatic: the one that moves most')}
+                </option>
+                <option value="left">{tr('اليسرى', 'Left')}</option>
+                <option value="right">{tr('اليمنى', 'Right')}</option>
               </select>
             </>
           )}
         </div>
 
         <div className="cannot-assess-result" role="note">
-          <strong>تنبيه: نموذج بحثي غير معتمد سريريًا</strong>
+          <strong>
+            {tr(
+              'تنبيه: نموذج بحثي غير معتمد سريريًا',
+              'Note: research prototype, not clinically approved',
+            )}
+          </strong>
           <p>
-            حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. القيم الافتراضية هنا
-            مأخوذة من دراسات وإرشادات منشورة (المصدر بجانب كل قيمة) ولم يراجعها أخصائي
-            بعد. النتائج للتجربة فقط ولا تُستخدم لتغيير خطة العلاج.
+            {tr(
+              'حزم التمارين وحدودها تنتظر موافقة أخصائي علاج طبيعي. القيم الافتراضية هنا مأخوذة من دراسات وإرشادات منشورة (المصدر بجانب كل قيمة) ولم يراجعها أخصائي بعد. النتائج للتجربة فقط ولا تُستخدم لتغيير خطة العلاج.',
+              'Exercise packs and their limits await a physiotherapist’s approval. Defaults here come from published studies and guidelines (source next to each value) and have not been reviewed by a physio yet. Results are for testing only and must not change a care plan.',
+            )}
           </p>
           {pack.literatureGoals?.map((goal) => (
             <p key={goal.metric} className="field-help">
-              هدف من دراسة منشورة لـ{copy.measureAr}: {goal.value}°
+              {tr('هدف من دراسة منشورة لـ', 'Published goal for ')}
+              {copy.measureAr}: {goal.value}°
               {goal.population ? ` (${goal.population})` : ''}.{' '}
               <LiteratureNote source={goal} />
             </p>
           ))}
           <details>
-            <summary>ماذا يقيس قوام هنا؟</summary>
+            <summary>
+              {tr('ماذا يقيس التطبيق هنا؟', 'What does the app measure here?')}
+            </summary>
             <ul>
               <li>
-                {copy.measureAr} بالدرجات (زاوية ثنائية الأبعاد) من نقاط MediaPipe،
-                للجهة {pack.sides === 'both' ? 'الأقرب للكاميرا' : 'التي تتمرن بها'}.
+                {copy.measureAr}{' '}
+                {tr(
+                  'بالدرجات (زاوية ثنائية الأبعاد) من نقاط MediaPipe، للجهة',
+                  'in degrees (a 2D angle) from MediaPipe points, for the side',
+                )}{' '}
+                {pack.sides === 'both'
+                  ? tr('الأقرب للكاميرا', 'nearest the camera')
+                  : tr('التي تتمرن بها', 'you exercise')}
+                .
               </li>
               <li>
-                يقبل التقييم فقط إذا كان التصوير{' '}
+                {tr(
+                  'يقبل التقييم فقط إذا كان التصوير',
+                  'Reps are judged only when filmed',
+                )}{' '}
                 {pack.view === 'side'
-                  ? 'من الجنب (نسبة عرض الكتفين إلى طول الجذع لا تتجاوز 0.178)'
-                  : 'من الأمام (نسبة عرض الكتفين إلى طول الجذع 0.601 على الأقل)'}
-                ، وهي قيمة بحثية من بيانات REHAB24-6.
+                  ? tr(
+                      'من الجنب (نسبة عرض الكتفين إلى طول الجذع لا تتجاوز 0.178)',
+                      'from the side (shoulder width ÷ torso length at most 0.178)',
+                    )
+                  : tr(
+                      'من الأمام (نسبة عرض الكتفين إلى طول الجذع 0.601 على الأقل)',
+                      'from the front (shoulder width ÷ torso length at least 0.601)',
+                    )}
+                {tr(
+                  '، وهي قيمة بحثية من بيانات REHAB24-6.',
+                  ', a research value from REHAB24-6 data.',
+                )}
               </li>
               <li>
-                لكل تكرار: فرق المدى عن المرجع مقاسًا من وضع راحتك، ومتوسط فرق المسار
-                بعد محاذاة الزمن (DTW).
+                {tr(
+                  'لكل تكرار: فرق المدى عن المرجع مقاسًا من وضع راحتك، ومتوسط فرق المسار بعد محاذاة الزمن (DTW).',
+                  'For each rep: the range difference from the reference, measured from your resting pose, and the mean path difference after time alignment (DTW).',
+                )}
               </li>
               <li>{copy.evidenceAr}</li>
             </ul>
@@ -462,20 +543,28 @@ export default function ExerciseCoach() {
         </div>
 
         <div className="squat-step">
-          <h3>١. التكرار المرجعي — يُسجَّل مع الأخصائي في العيادة</h3>
+          <h3>
+            {tr(
+              '١. التكرار المرجعي — يُسجَّل مع الأخصائي في العيادة',
+              '1. Reference rep — recorded with the physio in the clinic',
+            )}
+          </h3>
           <p className="field-help">
-            {copy.setupAr} أدِّ تكرارين صحيحين ببطء؛ يتوقف التسجيل بالكاميرا تلقائيًا
-            بعدهما.
+            {copy.setupAr}{' '}
+            {tr(
+              'أدِّ تكرارين صحيحين ببطء؛ يتوقف التسجيل بالكاميرا تلقائيًا بعدهما.',
+              'Do two correct reps slowly; camera recording stops by itself after them.',
+            )}
           </p>
           <SourcePicker
             value={referenceSource}
             onChange={setReferenceSource}
-            label="طريقة تسجيل المرجع"
+            label={tr('طريقة تسجيل المرجع', 'How to record the reference')}
           />
           {referenceSource === 'file' && (
             <>
               <label className="pain-demo-label" htmlFor="squat-reference-video">
-                ملف فيديو المرجع
+                {tr('ملف فيديو المرجع', 'Reference video file')}
               </label>
               <input
                 id="squat-reference-video"
@@ -491,7 +580,10 @@ export default function ExerciseCoach() {
           {referenceSource === 'camera' &&
             (reference ? (
               <button className="secondary-button" type="button" onClick={reset}>
-                سجّل مرجعًا جديدًا بالكاميرا
+                {tr(
+                  'سجّل مرجعًا جديدًا بالكاميرا',
+                  'Record a new reference with the camera',
+                )}
               </button>
             ) : (
               <LiveCamera
@@ -511,7 +603,7 @@ export default function ExerciseCoach() {
           {reference && referenceReady && (
             <div className="squat-settings">
               <label className="pain-demo-label" htmlFor="squat-reference-rep">
-                التكرار المرجعي
+                {tr('التكرار المرجعي', 'Reference rep')}
               </label>
               <select
                 id="squat-reference-rep"
@@ -520,13 +612,16 @@ export default function ExerciseCoach() {
               >
                 {reference.reps.map((rep, index) => (
                   <option key={rep.start} value={index}>
-                    تكرار {index + 1} — مدى الحركة{' '}
+                    {tr('تكرار', 'Rep')} {index + 1} — {tr('مدى الحركة', 'range')}{' '}
                     {formatDegrees(rep.peakDeg - reference.baseDeg)}
                   </option>
                 ))}
               </select>
               <label className="pain-demo-label" htmlFor="squat-tolerance">
-                هامش السماح بالدرجات (يحدده الأخصائي)
+                {tr(
+                  'هامش السماح بالدرجات (يحدده الأخصائي)',
+                  'Tolerance in degrees (set by the physio)',
+                )}
               </label>
               <input
                 id="squat-tolerance"
@@ -538,13 +633,18 @@ export default function ExerciseCoach() {
                 onChange={(event) => setToleranceText(event.currentTarget.value)}
               />
               <p className="field-help">
-                القيمة الافتراضية {TEST_DEFAULT_TOLERANCE_DEG}°: بهذا الفرق تقريبًا
-                يستطيع التقدير بالعين أو الجونيوميتر القصير التمييز بين زاويتين، فلا
-                ننبّه على فرق أصغر.{' '}
+                {tr('القيمة الافتراضية', 'Default')} {TEST_DEFAULT_TOLERANCE_DEG}°:{' '}
+                {tr(
+                  'بهذا الفرق تقريبًا يستطيع التقدير بالعين أو الجونيوميتر القصير التمييز بين زاويتين، فلا ننبّه على فرق أصغر.',
+                  'about the smallest gap that eye estimation or a short goniometer can tell apart, so smaller gaps are not cued.',
+                )}{' '}
                 <LiteratureNote source={sourceOf(DEMO_DEFAULTS.toleranceDeg.source)} />
               </p>
               <label className="pain-demo-label" htmlFor="exercise-reps">
-                عدد التكرارات في البيت (يحدده الأخصائي)
+                {tr(
+                  'عدد التكرارات في البيت (يحدده الأخصائي)',
+                  'Reps at home (set by the physio)',
+                )}
               </label>
               <input
                 id="exercise-reps"
@@ -556,12 +656,20 @@ export default function ExerciseCoach() {
                 onChange={(event) => setRepsText(event.currentTarget.value)}
               />
               <p className="field-help">
-                القيمة الافتراضية {TEST_DEFAULT_HOME_REPS} (أقل المدى الموصى به
-                للمبتدئين 8–12)؛ ينتهي التمرين بالكاميرا تلقائيًا عند بلوغها.{' '}
+                {tr('القيمة الافتراضية', 'Default')} {TEST_DEFAULT_HOME_REPS}{' '}
+                {tr(
+                  '(أقل المدى الموصى به للمبتدئين 8–12)؛ ينتهي التمرين بالكاميرا تلقائيًا عند بلوغها.',
+                  '(low end of the 8–12 recommended for beginners); a camera session ends by itself when it is reached.',
+                )}{' '}
                 <LiteratureNote source={sourceOf(DEMO_DEFAULTS.homeReps.source)} />
               </p>
               <label className="pain-demo-label" htmlFor="squat-goniometer">
-                قراءة الجونيوميتر لـ{copy.measureAr} في التكرار المرجعي (اختياري)
+                {tr('قراءة الجونيوميتر لـ', 'Goniometer reading for ')}
+                {copy.measureAr}
+                {tr(
+                  ' في التكرار المرجعي (اختياري)',
+                  ' in the reference rep (optional)',
+                )}
               </label>
               <input
                 id="squat-goniometer"
@@ -573,8 +681,10 @@ export default function ExerciseCoach() {
                 onChange={(event) => setGoniometerText(event.currentTarget.value)}
               />
               <p className="field-help">
-                إذا أدخلها الأخصائي، يعرض قوام الزاوية بالدرجات الحقيقية بعد تصحيح فرق
-                الكاميرا.
+                {tr(
+                  'إذا أدخلها الأخصائي، يعرض التطبيق الزاوية بالدرجات الحقيقية بعد تصحيح فرق الكاميرا.',
+                  'If the physio enters it, the app shows the angle in true degrees after correcting for the camera.',
+                )}
               </p>
               {'error' in settings && (
                 <p className="pose-error" role="alert">
@@ -586,19 +696,26 @@ export default function ExerciseCoach() {
         </div>
 
         <div className="squat-step" aria-disabled={!referenceReady}>
-          <h3>٢. التمرين في البيت</h3>
+          <h3>{tr('٢. التمرين في البيت', '2. Exercise at home')}</h3>
           {!referenceReady && (
-            <p className="field-help">سجّل تكرارًا مرجعيًا مناسبًا أولًا.</p>
+            <p className="field-help">
+              {tr(
+                'سجّل تكرارًا مرجعيًا مناسبًا أولًا.',
+                'Record a suitable reference rep first.',
+              )}
+            </p>
           )}
           <SourcePicker
             value={homeSource}
             onChange={setHomeSource}
-            label="طريقة التمرين"
+            label={tr('طريقة التمرين', 'How to exercise')}
           />
           {homeSource === 'camera' && referenceReady && !liveRangeOk && (
             <p className="pose-error" role="alert">
-              التكرار المرجعي المختار يكاد لا يحتوي على حركة. اختر تكرارًا آخر أو سجّل
-              المرجع من جديد.
+              {tr(
+                'التكرار المرجعي المختار يكاد لا يحتوي على حركة. اختر تكرارًا آخر أو سجّل المرجع من جديد.',
+                'The chosen reference rep has almost no movement. Pick another rep or record the reference again.',
+              )}
             </p>
           )}
           {homeSource === 'camera' &&
@@ -621,7 +738,7 @@ export default function ExerciseCoach() {
           {homeSource === 'file' && (
             <>
               <label className="pain-demo-label" htmlFor="squat-home-video">
-                ملف فيديو التمرين
+                {tr('ملف فيديو التمرين', 'Exercise video file')}
               </label>
               <input
                 id="squat-home-video"
@@ -638,7 +755,7 @@ export default function ExerciseCoach() {
           {homeSource === 'file' && home && <ClipStatus clip={home} pack={pack} />}
           {homeSource === 'file' && result?.status === 'CANNOT_ASSESS' && (
             <div className="cannot-assess-result" role="status">
-              <h3>لا أراك جيدًا</h3>
+              <h3>{tr('لا أراك جيدًا', 'I cannot see you well')}</h3>
               <p>{result.messageAr}</p>
               <span className="reason-code" dir="ltr">
                 {result.reasons.join(', ')}
@@ -652,23 +769,29 @@ export default function ExerciseCoach() {
               <div className="pose-session-result" role="status" aria-live="polite">
                 <h3>{result.summaryAr}</h3>
                 <p className="curve-legend">
-                  <span className="legend-reference">المرجع</span>
-                  <span className="legend-rep">هذا التكرار</span>
+                  <span className="legend-reference">{tr('المرجع', 'Reference')}</span>
+                  <span className="legend-rep">{tr('هذا التكرار', 'This rep')}</span>
                 </p>
                 <ol className="rep-feedback-list">
                   {result.reps.map((rep) => (
                     <li key={rep.index} className="rep-feedback" data-cue={rep.cue}>
                       <div>
                         <strong>
-                          تكرار {rep.index + 1} ({rep.startSeconds.toFixed(1)}–
-                          {rep.endSeconds.toFixed(1)} ث)
+                          {tr('تكرار', 'Rep')} {rep.index + 1} (
+                          {rep.startSeconds.toFixed(1)}–{rep.endSeconds.toFixed(1)}{' '}
+                          {tr('ث', 's')})
                         </strong>
                         <p>{rep.messageAr}</p>
                         <p className="rep-numbers">
-                          فرق المدى {formatDegrees(rep.comparison.depthDiffDeg, true)} ·
-                          فرق المسار {formatDegrees(rep.comparison.dtwMeanAbsDeg)}
+                          {tr('فرق المدى', 'Range diff')}{' '}
+                          {formatDegrees(rep.comparison.depthDiffDeg, true)} ·{' '}
+                          {tr('فرق المسار', 'path diff')}{' '}
+                          {formatDegrees(rep.comparison.dtwMeanAbsDeg)}
                           {rep.calibratedPeakDeg !== null &&
-                            ` · الزاوية المصححة ${formatDegrees(rep.calibratedPeakDeg)}`}
+                            tr(
+                              ` · الزاوية المصححة ${formatDegrees(rep.calibratedPeakDeg)}`,
+                              ` · corrected angle ${formatDegrees(rep.calibratedPeakDeg)}`,
+                            )}
                         </p>
                       </div>
                       <CurveChart

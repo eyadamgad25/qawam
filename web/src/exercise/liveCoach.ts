@@ -9,6 +9,7 @@
  * detected on most of its frames and filmed from the pack's view (the
  * research unit is the rep); otherwise the coach says it could not see it.
  */
+import { getLang, tr } from '../i18n';
 import {
   packAngle,
   packCopy,
@@ -62,6 +63,19 @@ export const PART_AR: Readonly<Record<string, string>> = {
   KNEE: 'ركبتيك',
   ANKLE: 'قدميك',
 };
+
+const PART_EN: Readonly<Record<string, string>> = {
+  SHOULDER: 'your shoulders',
+  ELBOW: 'your elbow',
+  WRIST: 'your hand',
+  HIP: 'your hip',
+  KNEE: 'your knees',
+  ANKLE: 'your feet',
+};
+
+function partName(part: string): string {
+  return tr(PART_AR[part] ?? part, PART_EN[part] ?? part.toLowerCase());
+}
 
 function landmarkSeen(frame: PoseFrame, name: string): boolean {
   if (visibilityOf(frame, name) < MIN_BODY_VISIBILITY) {
@@ -126,12 +140,21 @@ export function hiddenJoint(
 
 function placementHint(parts: readonly string[]): string {
   if (parts.some((p) => p === 'ANKLE' || p === 'KNEE')) {
-    return 'ابتعد عن الكاميرا أو اخفضها قليلًا حتى تظهر قدماك.';
+    return tr(
+      'ابتعد عن الكاميرا أو اخفضها قليلًا حتى تظهر قدماك.',
+      'Step back or lower the camera a little until your feet show.',
+    );
   }
   if (parts.some((p) => p === 'WRIST' || p === 'ELBOW')) {
-    return 'ابتعد عن الكاميرا حتى تظهر ذراعاك كاملتين.';
+    return tr(
+      'ابتعد عن الكاميرا حتى تظهر ذراعاك كاملتين.',
+      'Step back until both arms show fully.',
+    );
   }
-  return 'ابتعد قليلًا حتى يظهر جسمك كاملًا.';
+  return tr(
+    'ابتعد قليلًا حتى يظهر جسمك كاملًا.',
+    'Step back a little until your whole body shows.',
+  );
 }
 
 /** Setup check on the last second or so of camera frames. */
@@ -143,8 +166,11 @@ export function setupStatus(
   if (recent.length === 0 || detected.length < recent.length / 2) {
     return {
       state: 'NO_PERSON',
-      messageAr: 'لا أرى أحدًا أمام الكاميرا. قف في مكان مضاء أمامها.',
-      spokenAr: 'قف أمام الكاميرا',
+      messageAr: tr(
+        'لا أرى أحدًا أمام الكاميرا. قف في مكان مضاء أمامها.',
+        'I cannot see anyone. Stand in a well-lit spot in front of the camera.',
+      ),
+      spokenAr: tr('قف أمام الكاميرا', 'Stand in front of the camera'),
       frontalness: null,
       missingParts: [],
     };
@@ -165,11 +191,17 @@ export function setupStatus(
       .filter(([, n]) => n >= detected.length * (1 - MIN_FULL_BODY_SHARE))
       .sort((a, b) => b[1] - a[1])
       .map(([part]) => part);
-    const names = parts.map((part) => PART_AR[part] ?? part).join(' و');
+    const names = parts.map(partName).join(tr(' و', ' and '));
     return {
       state: 'NOT_FULL_BODY',
-      messageAr: `لا أرى ${names || 'جسمك كاملًا'} بوضوح. ${placementHint(parts)}`,
-      spokenAr: `لا أرى ${names || 'جسمك كاملًا'}`,
+      messageAr: tr(
+        `لا أرى ${names || 'جسمك كاملًا'} بوضوح. ${placementHint(parts)}`,
+        `I cannot see ${names || 'your whole body'} clearly. ${placementHint(parts)}`,
+      ),
+      spokenAr: tr(
+        `لا أرى ${names || 'جسمك كاملًا'}`,
+        `I cannot see ${names || 'your whole body'}`,
+      ),
       frontalness: null,
       missingParts: parts,
     };
@@ -180,15 +212,18 @@ export function setupStatus(
     return {
       state: 'WRONG_VIEW',
       messageAr: advice,
-      spokenAr: pack.view === 'side' ? 'استدر للجنب' : 'واجه الكاميرا',
+      spokenAr:
+        pack.view === 'side'
+          ? tr('استدر للجنب', 'Turn sideways')
+          : tr('واجه الكاميرا', 'Face the camera'),
       frontalness: view.frontalness,
       missingParts: [],
     };
   }
   return {
     state: 'READY',
-    messageAr: 'ممتاز، أراك جيدًا.',
-    spokenAr: 'ممتاز، أراك جيدًا',
+    messageAr: tr('ممتاز، أراك جيدًا.', 'Great, I can see you well.'),
+    spokenAr: tr('ممتاز، أراك جيدًا', 'Great, I can see you well'),
     frontalness: view.frontalness,
     missingParts: [],
   };
@@ -283,6 +318,11 @@ const ARABIC_NUMBERS = [
 
 export function arabicNumberWord(n: number): string {
   return ARABIC_NUMBERS[n] ?? String(n);
+}
+
+/** Rep number as spoken in the current language (English voices read digits). */
+export function spokenNumber(n: number): string {
+  return getLang() === 'en' ? String(n) : arabicNumberWord(n);
 }
 
 export class LiveCoach {
@@ -412,7 +452,7 @@ export class LiveCoach {
 
   private judge(start: number, end: number, seconds: number): LiveRepFeedback {
     const index = this.feedback.length;
-    const number = arabicNumberWord(index + 1);
+    const number = spokenNumber(index + 1);
     const frames = this.frames.slice(start, end + 1);
     const detected = frames.filter((frame) => frame.landmarks !== null);
     if (detected.length < frames.length * MIN_DETECTION_RATE) {
@@ -420,8 +460,11 @@ export class LiveCoach {
         index,
         assessed: false,
         reason: 'LOW_DETECTION',
-        messageAr: 'لم أرك بوضوح في هذا التكرار، فلن أقيّمه.',
-        spokenAr: `${number}، لم أرك جيدًا`,
+        messageAr: tr(
+          'لم أرك بوضوح في هذا التكرار، فلن أقيّمه.',
+          'I did not see you clearly in this rep, so I will not judge it.',
+        ),
+        spokenAr: tr(`${number}، لم أرك جيدًا`, `${number}, I did not see you well`),
       };
     }
     const hidden = hiddenJoint(
@@ -430,13 +473,16 @@ export class LiveCoach {
       this.side ?? chooseSide(this.frames, this.pack),
     );
     if (hidden !== null) {
-      const part = PART_AR[hidden] ?? '';
+      const part = partName(hidden);
       return {
         index,
         assessed: false,
         reason: 'JOINTS_HIDDEN',
-        messageAr: `لم أرَ ${part} بوضوح في هذا التكرار، فلن أقيّمه.`,
-        spokenAr: `${number}، لم أرَ ${part}`,
+        messageAr: tr(
+          `لم أرَ ${part} بوضوح في هذا التكرار، فلن أقيّمه.`,
+          `I did not see ${part} clearly in this rep, so I will not judge it.`,
+        ),
+        spokenAr: tr(`${number}، لم أرَ ${part}`, `${number}, I did not see ${part}`),
       };
     }
     const view = checkView(detected, this.pack.view);
@@ -445,8 +491,14 @@ export class LiveCoach {
         index,
         assessed: false,
         reason: 'VIEW_MISMATCH',
-        messageAr: `لم أقيّم هذا التكرار. ${viewAdviceAr(view)}`,
-        spokenAr: `${number}، ${this.pack.view === 'side' ? 'استدر للجنب' : 'واجه الكاميرا'}`,
+        messageAr: tr(
+          `لم أقيّم هذا التكرار. ${viewAdviceAr(view)}`,
+          `I did not judge this rep. ${viewAdviceAr(view)}`,
+        ),
+        spokenAr: tr(
+          `${number}، ${this.pack.view === 'side' ? 'استدر للجنب' : 'واجه الكاميرا'}`,
+          `${number}, ${this.pack.view === 'side' ? 'turn sideways' : 'face the camera'}`,
+        ),
       };
     }
     const curve = this.smoothed.slice(start, end + 1);
@@ -472,10 +524,15 @@ export class LiveCoach {
     const tempo =
       this.reference.durationSeconds > 0 ? seconds / this.reference.durationSeconds : 1;
     const tempoNoteAr =
-      tempo < 0.5 ? 'كان هذا التكرار أسرع بكثير من المرجع. أبطئ.' : null;
+      tempo < 0.5
+        ? tr(
+            'كان هذا التكرار أسرع بكثير من المرجع. أبطئ.',
+            'This rep was much faster than the reference. Slow down.',
+          )
+        : null;
     const spoken =
       cue === 'MATCHES_REFERENCE' && tempoNoteAr
-        ? 'أبطئ قليلًا'
+        ? tr('أبطئ قليلًا', 'Slow down a little')
         : cue === 'POSTURE_DIFFERENT' && posture
           ? posture.spokenAr
           : spokenCue(this.pack, cue);
@@ -486,7 +543,7 @@ export class LiveCoach {
       comparison,
       posture,
       messageAr: feedbackText(this.pack, cue, posture),
-      spokenAr: `${number}، ${spoken}`,
+      spokenAr: tr(`${number}، ${spoken}`, `${number}, ${spoken}`),
       tempoNoteAr,
       curve,
     };
@@ -520,13 +577,19 @@ export function summarise(
       assessed: 0,
       matches: 0,
       meanRangeDiffDeg: null,
-      textAr: 'لم أحسب أي تكرار. تأكد أنك تؤدي الحركة كاملة وأن الكاميرا تراك.',
-      spokenAr: 'لم أحسب أي تكرار',
+      textAr: tr(
+        'لم أحسب أي تكرار. تأكد أنك تؤدي الحركة كاملة وأن الكاميرا تراك.',
+        'I did not count any rep. Make sure you do the full movement and the camera can see you.',
+      ),
+      spokenAr: tr('لم أحسب أي تكرار', 'I did not count any rep'),
     };
   }
   const copy = packCopy(pack);
   const postureIssues = assessed.filter((rep) => rep.posture !== null);
-  let advice = 'أداء قريب من المرجع، استمر هكذا.';
+  let advice = tr(
+    'أداء قريب من المرجع، استمر هكذا.',
+    'Close to your reference, keep it up.',
+  );
   if (postureIssues.length > matches && postureIssues.length >= Math.max(less, more)) {
     advice = postureIssues[0]!.posture!.messageAr;
   } else if (less > matches && less >= more) {
@@ -534,30 +597,40 @@ export function summarise(
   } else if (more > matches) {
     advice = copy.lessAr;
   } else if (assessed.length < reps.length / 2) {
-    advice = 'لم أستطع تقييم معظم التكرارات. عدّل مكان الكاميرا قبل المرة القادمة.';
+    advice = tr(
+      'لم أستطع تقييم معظم التكرارات. عدّل مكان الكاميرا قبل المرة القادمة.',
+      'I could not judge most reps. Move the camera before next time.',
+    );
   }
   return {
     reps: reps.length,
     assessed: assessed.length,
     matches,
     meanRangeDiffDeg: mean,
-    textAr: `أنهيت ${reps.length} تكرارات، قيّمت منها ${assessed.length}، و${matches} قريبة من المرجع. ${advice}`,
-    spokenAr: `انتهى التمرين. عدد التكرارات ${reps.length}، والقريبة من المرجع ${matches}`,
+    textAr: tr(
+      `أنهيت ${reps.length} تكرارات، قيّمت منها ${assessed.length}، و${matches} قريبة من المرجع. ${advice}`,
+      `You did ${reps.length} reps; I judged ${assessed.length}, and ${matches} were close to the reference. ${advice}`,
+    ),
+    spokenAr: tr(
+      `انتهى التمرين. عدد التكرارات ${reps.length}، والقريبة من المرجع ${matches}`,
+      `Exercise finished. ${reps.length} reps, ${matches} close to the reference`,
+    ),
   };
 }
 
 // ------------------------------------------------------------------ voice
 
-/** Speak Arabic text if the browser can; silently does nothing otherwise. */
+/** Speak text in the current language if the browser can; silently does nothing otherwise. */
 export function speakAr(text: string, interrupt = true): void {
   try {
     const synth = globalThis.speechSynthesis;
     if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
       return;
     }
+    const lang = getLang();
     const utterance = new SpeechSynthesisUtterance(text);
-    const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith('ar'));
-    utterance.lang = voice?.lang ?? 'ar-EG';
+    const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith(lang));
+    utterance.lang = voice?.lang ?? (lang === 'en' ? 'en-US' : 'ar-EG');
     if (voice) {
       utterance.voice = voice;
     }
@@ -571,11 +644,12 @@ export function speakAr(text: string, interrupt = true): void {
   }
 }
 
-/** True when the browser has an Arabic voice installed. */
-export function hasArabicVoice(): boolean {
+/** True when the browser has a voice installed for the current language. */
+export function hasVoiceForLanguage(): boolean {
   try {
+    const lang = getLang();
     return (globalThis.speechSynthesis?.getVoices() ?? []).some((v) =>
-      v.lang.toLowerCase().startsWith('ar'),
+      v.lang.toLowerCase().startsWith(lang),
     );
   } catch {
     return false;

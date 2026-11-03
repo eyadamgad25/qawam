@@ -1,3 +1,4 @@
+import { tr } from './i18n';
 import { useEffect, useRef, useState } from 'react';
 import {
   advanceArmRaiseCounter,
@@ -35,7 +36,12 @@ export function parseManualRepCount(value: string): number | null {
   }
   const repetitions = Number(value);
   if (!Number.isSafeInteger(repetitions) || repetitions < 0) {
-    throw new Error('أدخل عددًا صحيحًا غير سالب للتكرارات اليدوية.');
+    throw new Error(
+      tr(
+        'أدخل عددًا صحيحًا غير سالب للتكرارات اليدوية.',
+        'Enter a whole number of zero or more for the manual reps.',
+      ),
+    );
   }
   return repetitions;
 }
@@ -103,10 +109,13 @@ export function drawPoseOverlay(
 
 export function validateVideoDuration(duration: number): string | null {
   if (!Number.isFinite(duration) || duration <= 0) {
-    return 'تعذّر قراءة مدة الفيديو.';
+    return tr('تعذّر قراءة مدة الفيديو.', 'Could not read the video length.');
   }
   if (duration > MAX_VIDEO_SECONDS) {
-    return 'اختر فيديو مدته دقيقتان أو أقل.';
+    return tr(
+      'اختر فيديو مدته دقيقتان أو أقل.',
+      'Choose a video of two minutes or less.',
+    );
   }
   return null;
 }
@@ -118,7 +127,9 @@ export default function LocalVideoPoseDemo() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [videoName, setVideoName] = useState('');
   const [isRunning, setIsRunning] = useState(false);
-  const [status, setStatus] = useState('اختر فيديو محليًا للبدء.');
+  const [status, setStatus] = useState(
+    tr('اختر فيديو محليًا للبدء.', 'Choose a local video to start.'),
+  );
   const [error, setError] = useState<string | null>(null);
   const [landmarkCount, setLandmarkCount] = useState(0);
   const [counter, setCounter] = useState<ArmRaiseCounterState>(INITIAL_ARM_RAISE_STATE);
@@ -151,7 +162,12 @@ export default function LocalVideoPoseDemo() {
     async function initializeAndAnalyze() {
       try {
         setError(null);
-        setStatus('جارٍ تحميل نموذج الوضعية محليًا داخل المتصفح…');
+        setStatus(
+          tr(
+            'جارٍ تحميل نموذج الوضعية محليًا داخل المتصفح…',
+            'Loading the pose model in the browser…',
+          ),
+        );
         const { FilesetResolver, PoseLandmarker } =
           await import('@mediapipe/tasks-vision');
         const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
@@ -206,8 +222,14 @@ export default function LocalVideoPoseDemo() {
               setCounter(counterRef.current);
               setStatus(
                 landmarks?.length
-                  ? `تم اكتشاف ${landmarks.length} نقطة وضعية في الإطار الحالي.`
-                  : 'لم يُكتشف جسم واضح في الإطار الحالي.',
+                  ? tr(
+                      `تم اكتشاف ${landmarks.length} نقطة وضعية في الإطار الحالي.`,
+                      `Found ${landmarks.length} pose points in the current frame.`,
+                    )
+                  : tr(
+                      'لم يُكتشف جسم واضح في الإطار الحالي.',
+                      'No clear body found in the current frame.',
+                    ),
               );
               drawPoseOverlay(canvas, landmarks, connections);
             }
@@ -215,16 +237,24 @@ export default function LocalVideoPoseDemo() {
           animationFrame = requestAnimationFrame(renderFrame);
         };
 
-        setStatus('النموذج جاهز. شغّل الفيديو لمشاهدة النقاط المكتشفة.');
+        setStatus(
+          tr(
+            'النموذج جاهز. شغّل الفيديو لمشاهدة النقاط المكتشفة.',
+            'Model ready. Play the video to see the detected points.',
+          ),
+        );
         animationFrame = requestAnimationFrame(renderFrame);
       } catch (cause) {
         if (!cancelled) {
           setError(
             cause instanceof Error
               ? cause.message
-              : 'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت ثم أعد المحاولة.',
+              : tr(
+                  'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت ثم أعد المحاولة.',
+                  'Could not load the MediaPipe model. Check the internet connection and try again.',
+                ),
           );
-          setStatus('لم يبدأ تحليل الفيديو.');
+          setStatus(tr('لم يبدأ تحليل الفيديو.', 'Video analysis did not start.'));
           setIsRunning(false);
         }
       }
@@ -252,12 +282,17 @@ export default function LocalVideoPoseDemo() {
       return;
     }
     if (!file.type.startsWith('video/')) {
-      setError('اختر ملف فيديو صالحًا.');
+      setError(tr('اختر ملف فيديو صالحًا.', 'Choose a valid video file.'));
       return;
     }
     setVideoName(file.name);
     setVideoUrl(URL.createObjectURL(file));
-    setStatus('تم اختيار الفيديو. اضغط بدء تحليل الوضعية.');
+    setStatus(
+      tr(
+        'تم اختيار الفيديو. اضغط بدء تحليل الوضعية.',
+        'Video chosen. Press Start pose analysis.',
+      ),
+    );
   }
 
   function checkDuration() {
@@ -270,7 +305,7 @@ export default function LocalVideoPoseDemo() {
       setError(durationError);
       setVideoUrl(null);
       setVideoName('');
-      setStatus('لم يتم قبول الفيديو.');
+      setStatus(tr('لم يتم قبول الفيديو.', 'The video was not accepted.'));
       setIsRunning(false);
     }
   }
@@ -279,56 +314,89 @@ export default function LocalVideoPoseDemo() {
     <section className="session-summary" aria-labelledby="local-pose-title">
       <div className="summary-heading">
         <div>
-          <p className="summary-kicker">تحليل محلي في المتصفح</p>
-          <h2 id="local-pose-title">جرّب فيديو قصيرًا</h2>
+          <p className="summary-kicker">
+            {tr('تحليل محلي في المتصفح', 'Local analysis in the browser')}
+          </p>
+          <h2 id="local-pose-title">{tr('جرّب فيديو قصيرًا', 'Try a short video')}</h2>
         </div>
-        <span className="simulation-badge">الفيديو لا يُرفع</span>
+        <span className="simulation-badge">
+          {tr('الفيديو لا يُرفع', 'Video is never uploaded')}
+        </span>
       </div>
       <p>
-        اختر فيديو لا يتجاوز دقيقتين. يُحمّل المتصفح MediaPipe من الإنترنت، ثم يحلل
-        الفيديو على جهازك ويعرض هيكل النقاط المكتشفة. لا يُرسل الفيديو إلى خادم. أضفنا
-        عدّادًا تجريبيًا لحركة رفع الذراع لاختبار الوظيفة؛ دقته ومطابقة الحركة غير متحقق
-        منهما، وليس تقييمًا للتمرين أو نصيحة علاجية.
+        {tr(
+          'اختر فيديو لا يتجاوز دقيقتين. يُحمّل المتصفح MediaPipe من الإنترنت، ثم يحلل الفيديو على جهازك ويعرض هيكل النقاط المكتشفة. لا يُرسل الفيديو إلى خادم. أضفنا عدّادًا تجريبيًا لحركة رفع الذراع لاختبار الوظيفة؛ دقته ومطابقة الحركة غير متحقق منهما، وليس تقييمًا للتمرين أو نصيحة علاجية.',
+          'Choose a video of up to two minutes. The browser runs MediaPipe and draws the detected skeleton on your device; the video is never sent to a server. An experimental arm-raise counter tests the function; its accuracy is unverified, and it is not an exercise assessment or treatment advice.',
+        )}
       </p>
       <div className="cannot-assess-result" role="note">
-        <strong>تنبيه: عدّاد تجريبي غير مُعتمد</strong>
+        <strong>
+          {tr(
+            'تنبيه: عدّاد تجريبي غير مُعتمد',
+            'Note: experimental, unapproved counter',
+          )}
+        </strong>
         <p>
-          خريطة النقاط والحدود أدناه افتراضات برمجية للاختبار فقط. لم تُراجع طبيًا أو
-          تُتحقق مقابل مجموعة بيانات؛ قد يكون العدد خاطئًا ولا تستخدمه لتحديد جرعة
-          تمرين.
+          {tr(
+            'خريطة النقاط والحدود أدناه افتراضات برمجية للاختبار فقط. لم تُراجع طبيًا أو تُتحقق مقابل مجموعة بيانات؛ قد يكون العدد خاطئًا ولا تستخدمه لتحديد جرعة تمرين.',
+            'The point mapping and limits below are test assumptions only. They are not medically reviewed or checked against a dataset; the count may be wrong, so do not use it to set an exercise dose.',
+          )}
         </p>
         <details>
-          <summary>خريطة النقاط والحدود التجريبية</summary>
+          <summary>
+            {tr(
+              'خريطة النقاط والحدود التجريبية',
+              'Experimental point mapping and limits',
+            )}
+          </summary>
           <ul>
             <li>
-              النقاط: كتف ومعصم وورك من الجهة الأوضح في MediaPipe Pose (يسار 11/15/23،
-              يمين 12/16/24).
+              {tr(
+                'النقاط: كتف ومعصم وورك من الجهة الأوضح في MediaPipe Pose (يسار 11/15/23، يمين 12/16/24).',
+                'Points: shoulder, wrist and hip on the clearer side in MediaPipe Pose (left 11/15/23, right 12/16/24).',
+              )}
             </li>
             <li>
-              الزاوية ثنائية الأبعاد بين اتجاه الكتف إلى الورك واتجاه الكتف إلى المعصم.
+              {tr(
+                'الزاوية ثنائية الأبعاد بين اتجاه الكتف إلى الورك واتجاه الكتف إلى المعصم.',
+                'The 2D angle between shoulder-to-hip and shoulder-to-wrist.',
+              )}
             </li>
             <li>
-              بداية الحركة عند زاوية ≤ {ARM_RAISE_DEMO.loweredAngleDegrees}°، وبلوغ
-              الرفع عند ≥ {ARM_RAISE_DEMO.raisedAngleDegrees}°؛ يُحتسب تكرار بعد الرجوع
-              إلى زاوية البداية.
+              {tr('بداية الحركة عند زاوية ≤', 'Movement starts at ≤')}{' '}
+              {ARM_RAISE_DEMO.loweredAngleDegrees}°
+              {tr('، وبلوغ الرفع عند ≥', ', the raise is reached at ≥')}{' '}
+              {ARM_RAISE_DEMO.raisedAngleDegrees}°
+              {tr(
+                '؛ يُحتسب تكرار بعد الرجوع إلى زاوية البداية.',
+                '; a rep counts after returning to the start angle.',
+              )}
             </li>
             <li>
-              يلزم ظهور النقاط الثلاث بوضوح MediaPipe visibility ≥{' '}
+              {tr(
+                'يلزم ظهور النقاط الثلاث بوضوح MediaPipe visibility ≥',
+                'All three points must be visible, MediaPipe visibility ≥',
+              )}{' '}
               {ARM_RAISE_DEMO.minimumVisibility}.
             </li>
             <li>
-              قد تقل دقة النقاط والعدّ عند التصوير الجانبي أو حجب الذراع؛ الزاوية ثنائية
-              الأبعاد ولا تعوّض العمق أو تغيّر اتجاه الكاميرا.
+              {tr(
+                'قد تقل دقة النقاط والعدّ عند التصوير الجانبي أو حجب الذراع؛ الزاوية ثنائية الأبعاد ولا تعوّض العمق أو تغيّر اتجاه الكاميرا.',
+                'Points and counting may be less accurate side-on or when the arm is hidden; the angle is 2D and does not correct for depth or camera direction.',
+              )}
             </li>
             <li>
-              هدف العرض {ARM_RAISE_DEMO.targetRepetitions} تكرارات للتجربة فقط، وليس
-              هدفًا علاجيًا؛ العدد المعروض يحسب الحركة المكتشفة ولا يُملأ مسبقًا.
+              {tr('هدف العرض', 'Demo target')} {ARM_RAISE_DEMO.targetRepetitions}{' '}
+              {tr(
+                'تكرارات للتجربة فقط، وليس هدفًا علاجيًا؛ العدد المعروض يحسب الحركة المكتشفة ولا يُملأ مسبقًا.',
+                'reps for testing only, not a treatment target; the count shows detected movement and is never pre-filled.',
+              )}
             </li>
           </ul>
         </details>
       </div>
       <label className="pain-demo-label" htmlFor="local-pose-video">
-        ملف فيديو من جهازك
+        {tr('ملف فيديو من جهازك', 'Video file from your device')}
       </label>
       <input
         id="local-pose-video"
@@ -337,7 +405,7 @@ export default function LocalVideoPoseDemo() {
         onChange={(event) => selectVideo(event.currentTarget.files?.[0])}
       />
       <label className="pain-demo-label" htmlFor="arm-raise-side">
-        جهة الذراع المراد تتبعها
+        {tr('جهة الذراع المراد تتبعها', 'Arm side to track')}
       </label>
       <select
         id="arm-raise-side"
@@ -355,12 +423,21 @@ export default function LocalVideoPoseDemo() {
           setSummary(null);
         }}
       >
-        <option value="auto">تلقائي: أوضح جهة</option>
-        <option value="left">يسار الشخص حسب MediaPipe</option>
-        <option value="right">يمين الشخص حسب MediaPipe</option>
+        <option value="auto">
+          {tr('تلقائي: أوضح جهة', 'Automatic: clearer side')}
+        </option>
+        <option value="left">
+          {tr('يسار الشخص حسب MediaPipe', 'Person’s left (MediaPipe)')}
+        </option>
+        <option value="right">
+          {tr('يمين الشخص حسب MediaPipe', 'Person’s right (MediaPipe)')}
+        </option>
       </select>
       <label className="pain-demo-label" htmlFor="manual-reference-count">
-        عدد التكرارات الذي لاحظته يدويًا (اختياري للمقارنة)
+        {tr(
+          'عدد التكرارات الذي لاحظته يدويًا (اختياري للمقارنة)',
+          'Reps you counted yourself (optional, for comparison)',
+        )}
       </label>
       <input
         id="manual-reference-count"
@@ -376,15 +453,21 @@ export default function LocalVideoPoseDemo() {
         }}
       />
       <p className="field-help">
-        احسب التكرارات المكتملة بنفسك، ثم قارنها بعد انتهاء الفيديو. العدد اليدوي مرجع
-        ملاحظتك فقط وليس تقييمًا سريريًا.
+        {tr(
+          'احسب التكرارات المكتملة بنفسك، ثم قارنها بعد انتهاء الفيديو. العدد اليدوي مرجع ملاحظتك فقط وليس تقييمًا سريريًا.',
+          'Count the completed reps yourself, then compare after the video ends. Your count is only your observation, not a clinical assessment.',
+        )}
       </p>
       {referenceCountError && (
         <p className="pose-error" role="alert">
           {referenceCountError}
         </p>
       )}
-      {videoName && <p dir="ltr">المحدد: {videoName}</p>}
+      {videoName && (
+        <p dir="ltr">
+          {tr('المحدد', 'Selected')}: {videoName}
+        </p>
+      )}
       {videoUrl && (
         <>
           <div className="pose-video-stage">
@@ -399,7 +482,12 @@ export default function LocalVideoPoseDemo() {
                 onEnded={() => {
                   const video = videoRef.current;
                   if (!hasAnalyzedFrameRef.current) {
-                    setStatus('ابدأ تحليل الوضعية قبل انتهاء الفيديو لعرض الملخص.');
+                    setStatus(
+                      tr(
+                        'ابدأ تحليل الوضعية قبل انتهاء الفيديو لعرض الملخص.',
+                        'Start pose analysis before the video ends to see the summary.',
+                      ),
+                    );
                     return;
                   }
                   if (video && Number.isFinite(video.duration)) {
@@ -415,15 +503,28 @@ export default function LocalVideoPoseDemo() {
                       setReferenceCountError(
                         cause instanceof Error
                           ? cause.message
-                          : 'تعذّر قراءة العدد اليدوي.',
+                          : tr(
+                              'تعذّر قراءة العدد اليدوي.',
+                              'Could not read the manual count.',
+                            ),
                       );
                       setSummary(null);
                     }
                   }
                 }}
-                onError={() => setError('تعذّر فتح الفيديو. جرّب ملف MP4 مدعومًا.')}
+                onError={() =>
+                  setError(
+                    tr(
+                      'تعذّر فتح الفيديو. جرّب ملف MP4 مدعومًا.',
+                      'Could not open the video. Try a supported MP4 file.',
+                    ),
+                  )
+                }
               />
-              <canvas ref={canvasRef} aria-label="نقاط الوضعية المكتشفة" />
+              <canvas
+                ref={canvasRef}
+                aria-label={tr('نقاط الوضعية المكتشفة', 'Detected pose points')}
+              />
             </div>
           </div>
           <button
@@ -439,66 +540,106 @@ export default function LocalVideoPoseDemo() {
               setIsRunning(true);
             }}
           >
-            {isRunning ? 'جارٍ التحليل…' : 'بدء تحليل الوضعية'}
+            {isRunning
+              ? tr('جارٍ التحليل…', 'Analysing…')
+              : tr('بدء تحليل الوضعية', 'Start pose analysis')}
           </button>
           <p className="rep-counter" aria-live="polite">
-            التكرارات المكتملة المكتشفة: {counter.repetitions} /{' '}
-            {ARM_RAISE_DEMO.targetRepetitions}
+            {tr('التكرارات المكتملة المكتشفة', 'Completed reps detected')}:{' '}
+            {counter.repetitions} / {ARM_RAISE_DEMO.targetRepetitions}
           </p>
           <div className="counter-diagnostics" aria-live="polite">
             <p>
-              الجانب المتابع:{' '}
+              {tr('الجانب المتابع', 'Tracked side')}:{' '}
               {counter.side === 'left'
-                ? 'الأيسر حسب MediaPipe'
+                ? tr('الأيسر حسب MediaPipe', 'Left (MediaPipe)')
                 : counter.side === 'right'
-                  ? 'الأيمن حسب MediaPipe'
-                  : 'غير متاح — أظهر الكتف والمعصم والورك بوضوح'}
+                  ? tr('الأيمن حسب MediaPipe', 'Right (MediaPipe)')
+                  : tr(
+                      'غير متاح — أظهر الكتف والمعصم والورك بوضوح',
+                      'Not available — show the shoulder, wrist and hip clearly',
+                    )}
             </p>
             <p>
-              زاوية الذراع المقدّرة:{' '}
+              {tr('زاوية الذراع المقدّرة', 'Estimated arm angle')}:{' '}
               {counter.angleDegrees === null
-                ? 'غير متاحة'
+                ? tr('غير متاحة', 'Not available')
                 : `${Math.round(counter.angleDegrees)}°`}
             </p>
             <p>
-              أدنى visibility للنقاط الثلاث:{' '}
+              {tr(
+                'أدنى visibility للنقاط الثلاث',
+                'Lowest visibility of the three points',
+              )}
+              :{' '}
               {counter.visibility === null
-                ? 'غير متاح'
+                ? tr('غير متاح', 'Not available')
                 : `${Math.round(counter.visibility * 100)}%`}
             </p>
             <p>
-              حالة العدّ:{' '}
+              {tr('حالة العدّ', 'Counter state')}:{' '}
               {counter.phase === 'waiting'
-                ? 'بانتظار بدء الحركة من وضع الذراع لأسفل'
+                ? tr(
+                    'بانتظار بدء الحركة من وضع الذراع لأسفل',
+                    'Waiting for the movement to start with the arm down',
+                  )
                 : counter.phase === 'lowered'
-                  ? 'تم رصد الوضع المنخفض؛ ارفع الذراع'
-                  : 'تم رصد الرفع؛ أعد الذراع إلى وضع البداية'}
+                  ? tr(
+                      'تم رصد الوضع المنخفض؛ ارفع الذراع',
+                      'Low position seen; raise the arm',
+                    )
+                  : tr(
+                      'تم رصد الرفع؛ أعد الذراع إلى وضع البداية',
+                      'Raise seen; return the arm to the start',
+                    )}
             </p>
             <p className="counter-test-instruction">
-              جرّب نفس الحركة مرتين: مرة مواجهًا للكاميرا ومرة جانبيًا. ارفع ذراعًا
-              واحدة من أسفل إلى أعلى ثم أعدها، وقارن الزاوية والـ visibility والعدد.
-              يمكنك اختيار الجهة بدل التلقائي إذا كانت جهة واحدة أوضح.
+              {tr(
+                'جرّب نفس الحركة مرتين: مرة مواجهًا للكاميرا ومرة جانبيًا. ارفع ذراعًا واحدة من أسفل إلى أعلى ثم أعدها، وقارن الزاوية والـ visibility والعدد. يمكنك اختيار الجهة بدل التلقائي إذا كانت جهة واحدة أوضح.',
+                'Try the same movement twice: once facing the camera and once side-on. Raise one arm from low to high and back, and compare the angle, visibility and count. Pick a side instead of automatic if one side is clearer.',
+              )}
             </p>
           </div>
           {summary && (
             <div className="pose-session-result" role="status" aria-live="polite">
-              <h3>ملخص تجريبي لهذا الفيديو</h3>
-              <p>التكرارات المكتملة التي رصدها العداد: {summary.detectedRepetitions}</p>
-              <p>مدة الفيديو: {formatClipDuration(summary.durationSeconds)}</p>
+              <h3>
+                {tr('ملخص تجريبي لهذا الفيديو', 'Experimental summary for this video')}
+              </h3>
+              <p>
+                {tr(
+                  'التكرارات المكتملة التي رصدها العداد',
+                  'Completed reps the counter saw',
+                )}
+                : {summary.detectedRepetitions}
+              </p>
+              <p>
+                {tr('مدة الفيديو', 'Video length')}:{' '}
+                {formatClipDuration(summary.durationSeconds)}
+              </p>
               {summary.manualReferenceRepetitions !== null && (
                 <>
-                  <p>العدد اليدوي الذي أدخلته: {summary.manualReferenceRepetitions}</p>
                   <p>
-                    الفرق المطلق عن العدد اليدوي:{' '}
+                    {tr('العدد اليدوي الذي أدخلته', 'Your manual count')}:{' '}
+                    {summary.manualReferenceRepetitions}
+                  </p>
+                  <p>
+                    {tr(
+                      'الفرق المطلق عن العدد اليدوي',
+                      'Absolute difference from your count',
+                    )}
+                    :{' '}
                     {Math.abs(
                       summary.detectedRepetitions - summary.manualReferenceRepetitions,
                     )}{' '}
-                    تكرارات
+                    {tr('تكرارات', 'reps')}
                   </p>
                 </>
               )}
               <p>
-                هذا ملخص آلي مؤقت داخل الصفحة فقط، وليس تقييمًا دقيقًا أو سجلًا طبيًا.
+                {tr(
+                  'هذا ملخص آلي مؤقت داخل الصفحة فقط، وليس تقييمًا دقيقًا أو سجلًا طبيًا.',
+                  'This is a temporary in-page summary, not an accurate assessment or a medical record.',
+                )}
               </p>
               <button
                 className="demo-run-button"
@@ -511,7 +652,7 @@ export default function LocalVideoPoseDemo() {
                   }
                 }}
               >
-                إعادة الفيديو
+                {tr('إعادة الفيديو', 'Replay the video')}
               </button>
             </div>
           )}
@@ -519,7 +660,9 @@ export default function LocalVideoPoseDemo() {
       )}
       <p role="status" aria-live="polite">
         {status}
-        {landmarkCount > 0 ? ` (${landmarkCount} نقطة)` : ''}
+        {landmarkCount > 0
+          ? tr(` (${landmarkCount} نقطة)`, ` (${landmarkCount} points)`)
+          : ''}
       </p>
       {error && (
         <p className="pose-error" role="alert">

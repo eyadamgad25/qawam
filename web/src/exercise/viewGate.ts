@@ -7,6 +7,7 @@
  * median frontalness matches. Cut-offs come from rules/gate/view-rule.json,
  * fitted on REHAB24-6 view labels only (research value, not clinical).
  */
+import { tr } from '../i18n';
 import viewRuleJson from '../../../rules/gate/view-rule.json';
 import { median, pixelPoints, type PoseFrame } from './poseFrames';
 
@@ -70,12 +71,24 @@ export function checkView(
 export function viewAdviceAr(check: ViewCheck): string {
   switch (check.verdict) {
     case 'MATCHES':
-      return 'زاوية التصوير مناسبة لهذا التمرين.';
+      return tr(
+        'زاوية التصوير مناسبة لهذا التمرين.',
+        'The camera angle is right for this exercise.',
+      );
     case 'TOO_FRONTAL':
-      return 'لا أراك جيدًا من هذه الزاوية: ضع الهاتف على جانبك بحيث يظهر جسمك من الجنب.';
+      return tr(
+        'لا أراك جيدًا من هذه الزاوية: ضع الهاتف على جانبك بحيث يظهر جسمك من الجنب.',
+        'I cannot see you well from this angle: put the phone to your side so it sees you side-on.',
+      );
     case 'TOO_SIDEWAYS':
-      return 'لا أراك جيدًا من هذه الزاوية: واجه الهاتف مباشرة.';
+      return tr(
+        'لا أراك جيدًا من هذه الزاوية: واجه الهاتف مباشرة.',
+        'I cannot see you well from this angle: face the phone directly.',
+      );
     default:
-      return 'لا أرى جسمك بوضوح: ابتعد قليلًا حتى يظهر جسمك كاملًا من الكتفين إلى القدمين.';
+      return tr(
+        'لا أرى جسمك بوضوح: ابتعد قليلًا حتى يظهر جسمك كاملًا من الكتفين إلى القدمين.',
+        'I cannot see your body clearly: step back until you show from shoulders to feet.',
+      );
   }
 }

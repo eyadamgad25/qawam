@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — KERAAL downloaded: how often do two clinicians agree?
+
+- **Question:** What does KERAAL give us, and how consistent are its clinician labels (the ceiling for any model trained on them)?
+- **Data:** KERAAL groups 1A (patients, 250 recordings: CTK 84, ELK 84, RTK 82) and 2A (healthy, 51), CC BY-NC-SA, in gitignored `data/raw/keraal/`. Each recording: anonymised video, Kinect, BlazePose and OpenPose skeletons, and one label file per clinician (annotatorA, annotatorB). The label files claim UTF-16 but many are UTF-8, so a loader must try both.
+- **Method:** Global verdict per recording (Correct / Incorrect / Incomplete / Motionless) from each clinician; percent agreement and Cohen's kappa, 4-way and correct-vs-not.
+- **Result:** Patients: agreement 0.77, kappa 0.54 (correct-vs-not); 0.76 / 0.59 4-way. Annotator A called 135 / 250 correct, B 101 / 250. Healthy: 0.92, kappa 0.81. Errors are mostly at the spine (A 46, B 86) or both arms (35, 39).
+- **Interpretation:** On real patients two clinicians agree only moderately, so a model cannot be expected to beat about 77% agreement with either one, and "the clinician's label" is not one truth. This supports the project's design: compare with the patient's own physio-approved reference instead of a universal "correct", and abstain when unsure. A KERAAL classifier should be scored against both clinicians and against where they agree.
+- **Caveats:** 12 patients only; label meaning of Error1-3 per exercise is in the dataset readme, not yet mapped.
+
 ## 2026-11-03 — Gate 2.0 on Fit3D: shipped view rule on new people and new cameras
 
 - **Question:** Does the view rule (cut-offs fitted on REHAB24-6, not refitted) stay "silent rather than wrong" on other people, other cameras and other recording conditions? Can a learned gate speak on more reps and still certify?

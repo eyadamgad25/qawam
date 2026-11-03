@@ -4,6 +4,17 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — Pain check: stated-temperature rule and safe negation
+
+- **Question:** Can two small rules fix the known misses (a stated temperature such as "٣٩") and the main false alarms (negated mentions such as "مفيش دوخة") without losing red flags?
+- **Change (`web/src/painTriage.ts`):**
+  - **Temperature:** a clause with a temperature word (حرار, سخون, سخن, حمى, درجة, temp, fever) and a number from the threshold up to 43 adds `TEMPERATURE_FLAG` / `NHS-FEVER-TEMP`. Threshold 38 C, from NHS ("38C or above", `rules/literature/demo-defaults.json` `feverTempC`).
+  - **Negation:** `assertedText` drops clauses whose first or second word is a "there is no" word (مفيش, مش, مبقاش, بدون, ولا ...), splitting clauses at punctuation, بس / لكن, and "و" + negator. Never dropped, because these are red flags themselves: inability (مش قادر), lost feeling (مش حاسس, مفيش إحساس, مفيش نفس), not getting better (مش بيخف), abnormal (مش طبيعي). The word list matches only asserted clauses; the model flags only if both the whole note and the asserted clauses score as red flags (dropping "مش أكتر" alone could otherwise make a mild note look worse, seen on dev).
+- **Tests:** `web/src/painTriage.test.ts` covers the dangerous cases above, mixed notes ("مفيش دوخة بس عندي تنميل" keeps the numbness flag) and number edge cases (37.5, "40 تكرار", "385").
+- **Result (all 121 notes):** word list OR model OR temperature: red flags 78 / 81 (was 77), fever 10 / 10 (was 9), false alarms 9 / 40 (was 13; negated 3 / 9, was 7). Word list alone: same 28 / 81 caught, false alarms 4 / 40 (was 8). Test split: 39 / 40 caught, 7 / 19 false alarms (unchanged); dev false alarms 2 / 21 (was 6).
+- **Note on method:** the test split was read twice in this round (once before the "both must flag" model rule, which was motivated by a dev note); the change did not alter test recall.
+- **Still open:** wound discharge in other words ("بيطلع منه سايل", "إفرازات"), idioms ("صدري مفتوح", "قلبي فرحان"); and the negation word list needs a physio and native-speaker review.
+
 ## 2026-11-03 — On-device pain red-flag model (word list OR model)
 
 - **Question:** Can a model small enough to ship offline catch the red-flag notes the word list misses, without hiding any word-list flag?

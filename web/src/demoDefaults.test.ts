@@ -9,6 +9,7 @@ describe('literature demo defaults', () => {
     const used = [
       DEMO_DEFAULTS.toleranceDeg.source,
       DEMO_DEFAULTS.homeReps.source,
+      DEMO_DEFAULTS.feverTempC.source,
       DEMO_DEFAULTS.emergencyNumber.source,
       ...DEMO_DEFAULTS.painRedFlags.map((term) => term.source),
     ];

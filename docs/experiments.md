@@ -4,6 +4,16 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — On-device pain red-flag model (word list OR model)
+
+- **Question:** Can a model small enough to ship offline catch the red-flag notes the word list misses, without hiding any word-list flag?
+- **Data:** Training: `ml/pain/training-notes.jsonl`, 846 synthetic notes (579 red flags) from `ml/pain/make_training_notes.py`, phrase x frame combinations written after the test set; 2 notes equal to a test note were dropped. Evaluation: the dev/test notes of the baseline entry below (unchanged).
+- **Model:** logistic regression on distinct character 2-4-grams of the normalised note (`ml/pain/pain_text.py`, same normalisation as the app), balanced class weights, L2, numpy only (`ml/pain/train_flag_model.py`). Exported to `web/src/painModel.json` (58 KB, 3,715 weights) and run in the browser by `web/src/painModel.ts`; a web test checks the browser scores equal the Python scores. Threshold fixed at probability 0.5, not tuned. The app escalates if the word list OR the model flags (`evaluatePainTriage` `modelFlag`), so the model can only add alerts.
+- **Tuning:** one round on dev: the first model flagged 9 / 28 benign notes (mild, familiar pain), so 18 mild-pain and 12 idiom / resolved-symptom training notes were added. Test was read once, after that.
+- **Result (test, 40 red flags / 19 non-flags):** word list 14 / 40 caught, 3 / 19 false alarms; word list OR model **39 / 40 caught, 7 / 19 false alarms**. All 121: 77 / 81 caught (paraphrase 27 / 30, Franco-Arabic 9 / 9, formal Arabic 8 / 9, typo 9 / 9), false alarms 13 / 40 (benign 4 / 28, negated 7 / 9, idiom 2 / 3). Still missed in dev: "قست الحرارة طلعت ٣٩", "مكان العملية بيطلع منه سايل", "توجد إفرازات من مكان الغرز".
+- **Interpretation:** Recall on unseen notes goes from 35% to 98% for 58 KB and no network. The extra false alarms are mostly negation ("مفيش دوخة"), which the word list already flags; for an "escalate for review" message that is the safe direction, but alarm fatigue must be checked with real users. Numbers about temperature ("٣٩") are not understood: a rule for a stated temperature is a cheap next step.
+- **Caveats:** Training and test notes have one author (Claude) and share vocabulary, so these numbers are an upper bound on what real patients' notes will give; no physio has reviewed any label; 40 test red flags give a wide interval (exact 95% lower bound for 39 / 40 is 0.87). Next: physio-reviewed labels and consented real notes, and compare against an Arabic BERT (EgyBERT / MARBERT) offline as a ceiling.
+
 ## 2026-11-03 — Pain red-flag word list on synthetic Egyptian-Arabic notes (baseline for C5)
 
 - **Question:** How many red-flag notes does the app's word list (23 phrases, `rules/literature/demo-defaults.json`) catch when patients do not use its exact wording?

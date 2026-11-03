@@ -21,6 +21,7 @@ Written 2026-11-03. Each idea keeps the project's edge — **silent rather than 
    - **Status 2026-11-03 (first Fit3D run, `docs/experiments.md`):** not met. The rule held for knees (silent on every diagonal view), failed for shoulder abduction (false-cue rate 0.34), and the learned gate certified nothing. Next: find a signal that predicts arm-angle error (out-of-plane arm motion, elbow depth from MediaPipe's z, wrist visibility) and add a Fit3D test split by person before certifying.
 2. **#2 next**, because cue wording is what patients and physios notice. It only speaks an error type when the selective model is confident; otherwise it falls back to today's "different from your reference".
 3. **#3 and #4 together** make the Arabic edge measurable: red-flag recall and entity F1 on a physio-reviewed set.
+   - **Status 2026-11-03:** first version shipped as a 58 KB character n-gram model in the browser instead of a BERT (offline, phones): test recall 39 / 40 vs 14 / 40 for the word list, on synthetic notes. Still needed: physio review of labels, real consented notes, body part / side / intensity extraction, and a BERT comparison.
 
 ## How each is tested (same rules as today)
 

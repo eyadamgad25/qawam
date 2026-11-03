@@ -164,22 +164,21 @@ describe('simulated session scenarios', () => {
     fireEvent.click(screen.getByRole('button', { name: 'افحص العبارة' }));
 
     expect(screen.getByText('ESCALATE_FOR_REVIEW')).toBeTruthy();
-    expect(screen.getByText(/LEXICON_FLAG, NHS-KNEE-FEVER-01/)).toBeTruthy();
+    expect(screen.getByText(/LEXICON_FLAG, (MODEL_FLAG, )?NHS-KNEE-FEVER-01/)).toBeTruthy();
     expect(screen.getByText(/فاتصل بالإسعاف 123/)).toBeTruthy();
     expect(screen.getByText('لم يراجعها أخصائي')).toBeTruthy();
   });
 
-  it('demonstrates that a simulated model flag cannot be suppressed', () => {
+  it('escalates a red flag in words the list does not have, through the on-device model', () => {
     render(<App />);
     openTab('فحص الألم');
     fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
-      target: { value: 'عبارة لا تطابق' },
+      target: { value: 'الدنيا بتلف بيا' },
     });
-    fireEvent.click(screen.getByLabelText('محاكاة إشارة نموذج إيجابية (للاختبار فقط)'));
     fireEvent.click(screen.getByRole('button', { name: 'افحص العبارة' }));
 
     expect(screen.getByText('ESCALATE_FOR_REVIEW')).toBeTruthy();
-    expect(screen.getByText(/MODEL_FLAG/)).toBeTruthy();
+    expect(screen.getByText(/^رموز النتيجة: MODEL_FLAG$/)).toBeTruthy();
     expect(screen.getByText(/إذا قلقت فتواصل مع أخصائيك/)).toBeTruthy();
   });
 });

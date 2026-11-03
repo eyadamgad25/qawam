@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — Pain red-flag word list on synthetic Egyptian-Arabic notes (baseline for C5)
+
+- **Question:** How many red-flag notes does the app's word list (23 phrases, `rules/literature/demo-defaults.json`) catch when patients do not use its exact wording?
+- **Data:** `ml/pain/synthetic-notes.jsonl`, 121 notes written by Claude (`ml/pain/make_synthetic_notes.py`): 81 red flags over 9 symptoms (chest pain, breathing, calf, fever, wound, knee swelling, numbness, dizziness, sharp pain) in 6 styles (lexicon wording, paraphrase, typo, Franco-Arabic, formal Arabic, English) and 40 non-flags (28 benign, 9 negated, 3 idioms such as "صدري مفتوح"). Every second note per group is test; dev is for changing the list. **Synthetic, not patient text, not reviewed by a physiotherapist.**
+- **Command:** `cd web; npx vitest run src/painTriage.eval.test.ts --silent=false` (uses the app's own `evaluatePainTriage`, so it scores exactly what ships).
+- **Result:** Red flags caught 28 / 81 (35%; dev 14 / 41, test 14 / 40). By style: lexicon wording 23 / 23, typo 3 / 9, paraphrase 2 / 30, Franco-Arabic 0 / 9, formal Arabic 0 / 9, English 0 / 1. False alarms 8 / 40: benign 0 / 28, negated 7 / 9, idiom 1 / 3.
+- **Interpretation:** The list only works when the patient happens to use its words. Misses include "الدنيا بتلف بيا", "أغمى عليا", "بنهج جامد", "قلبي بيوجعني" and any Franco-Arabic. False alarms come only from negation ("مفيش دوخة"), which is the safe direction. This is the measured case for contribution C5 (a model for Egyptian-Arabic pain notes); success = red-flag recall well above 35% on test with no fewer catches than the list (model OR list, so the list's catches are kept).
+- **Caveats:** One author wrote all notes after seeing the list, so the list's own wording is over-represented and real notes may differ; 121 notes is small; physio review of the labels and real (consented) patient notes are needed before any claim.
+
 ## 2026-11-03 — KERAAL downloaded: how often do two clinicians agree?
 
 - **Question:** What does KERAAL give us, and how consistent are its clinician labels (the ceiling for any model trained on them)?

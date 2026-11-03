@@ -1,0 +1,121 @@
+{"id": "syn-001", "split": "dev", "text": "حاسس بوجع في صدري من ساعة ما خلصت التمرين", "red_flag": true, "symptom": "chest pain", "style": "paraphrase"}
+{"id": "syn-002", "split": "test", "text": "صدري واجعني أوي ومش عارف أنام", "red_flag": true, "symptom": "chest pain", "style": "lexicon"}
+{"id": "syn-003", "split": "dev", "text": "في تقل على صدري كده زي حاجة كابسة عليه", "red_flag": true, "symptom": "chest pain", "style": "paraphrase"}
+{"id": "syn-004", "split": "test", "text": "عندي ألم في الصدر بيروح للدراع الشمال", "red_flag": true, "symptom": "chest pain", "style": "lexicon"}
+{"id": "syn-005", "split": "dev", "text": "قلبي بيوجعني وأنا بعمل السكوات", "red_flag": true, "symptom": "chest pain", "style": "paraphrase"}
+{"id": "syn-006", "split": "test", "text": "حاسة بضغط جامد في الضلوع من قدام", "red_flag": true, "symptom": "chest pain", "style": "paraphrase"}
+{"id": "syn-007", "split": "dev", "text": "sadry wag3ny awy ba3d el tamreen", "red_flag": true, "symptom": "chest pain", "style": "arabizi"}
+{"id": "syn-008", "split": "test", "text": "my chest hurts after the exercise", "red_flag": true, "symptom": "chest pain", "style": "english"}
+{"id": "syn-009", "split": "dev", "text": "وجع جامد في الصدر", "red_flag": true, "symptom": "chest pain", "style": "paraphrase"}
+{"id": "syn-010", "split": "test", "text": "صدرى بيوجعنى", "red_flag": true, "symptom": "chest pain", "style": "typo"}
+{"id": "syn-011", "split": "dev", "text": "مش قادر أتنفس كويس من الصبح", "red_flag": true, "symptom": "difficulty breathing", "style": "lexicon"}
+{"id": "syn-012", "split": "test", "text": "نفسي مقطوع بعد كام تكرار بس", "red_flag": true, "symptom": "difficulty breathing", "style": "lexicon"}
+{"id": "syn-013", "split": "dev", "text": "بنهج جامد وأنا طالع السلم", "red_flag": true, "symptom": "difficulty breathing", "style": "paraphrase"}
+{"id": "syn-014", "split": "test", "text": "حاسس إني مخنوق ومش لاحق نفسي", "red_flag": true, "symptom": "difficulty breathing", "style": "paraphrase"}
+{"id": "syn-015", "split": "dev", "text": "عندي ضيق في النفس", "red_flag": true, "symptom": "difficulty breathing", "style": "lexicon"}
+{"id": "syn-016", "split": "test", "text": "مش عارفة آخد نفسي", "red_flag": true, "symptom": "difficulty breathing", "style": "paraphrase"}
+{"id": "syn-017", "split": "dev", "text": "msh 2ader at2nafes", "red_flag": true, "symptom": "difficulty breathing", "style": "arabizi"}
+{"id": "syn-018", "split": "test", "text": "نفسى مقطوع", "red_flag": true, "symptom": "difficulty breathing", "style": "typo"}
+{"id": "syn-019", "split": "dev", "text": "صعوبة في التنفس عند بذل أي مجهود", "red_flag": true, "symptom": "difficulty breathing", "style": "msa"}
+{"id": "syn-020", "split": "test", "text": "نهجانة اوي النهارده", "red_flag": true, "symptom": "difficulty breathing", "style": "paraphrase"}
+{"id": "syn-021", "split": "dev", "text": "سمانة رجلي الشمال وارمة وسخنة", "red_flag": true, "symptom": "calf pain or swelling", "style": "lexicon"}
+{"id": "syn-022", "split": "test", "text": "بطن رجلي بيوجعني ومشدود", "red_flag": true, "symptom": "calf pain or swelling", "style": "lexicon"}
+{"id": "syn-023", "split": "dev", "text": "عندي شد في رجلي اليمين مش بيروح", "red_flag": true, "symptom": "calf pain or swelling", "style": "lexicon"}
+{"id": "syn-024", "split": "test", "text": "السمانة حمرا ووارمة", "red_flag": true, "symptom": "calf pain or swelling", "style": "paraphrase"}
+{"id": "syn-025", "split": "dev", "text": "رجلي اليمين كلها وارمة من تحت الركبة", "red_flag": true, "symptom": "calf pain or swelling", "style": "paraphrase"}
+{"id": "syn-026", "split": "test", "text": "بطة رجلي بتوجعني اوي", "red_flag": true, "symptom": "calf pain or swelling", "style": "paraphrase"}
+{"id": "syn-027", "split": "dev", "text": "fe wag3 gamed fe semanet regly", "red_flag": true, "symptom": "calf pain or swelling", "style": "arabizi"}
+{"id": "syn-028", "split": "test", "text": "سمانة رجلى بتوجعني", "red_flag": true, "symptom": "calf pain or swelling", "style": "typo"}
+{"id": "syn-029", "split": "dev", "text": "ألم في ربلة الساق مع تورم", "red_flag": true, "symptom": "calf pain or swelling", "style": "msa"}
+{"id": "syn-030", "split": "test", "text": "رجلي سخنة ولونها متغير", "red_flag": true, "symptom": "calf pain or swelling", "style": "paraphrase"}
+{"id": "syn-031", "split": "dev", "text": "عندي سخونية من امبارح", "red_flag": true, "symptom": "fever or shivering", "style": "lexicon"}
+{"id": "syn-032", "split": "test", "text": "حرارتي عالية ٣٨ ونص", "red_flag": true, "symptom": "fever or shivering", "style": "lexicon"}
+{"id": "syn-033", "split": "dev", "text": "جسمي بيترعش وبردان", "red_flag": true, "symptom": "fever or shivering", "style": "paraphrase"}
+{"id": "syn-034", "split": "test", "text": "جالي رعشة بالليل", "red_flag": true, "symptom": "fever or shivering", "style": "lexicon"}
+{"id": "syn-035", "split": "dev", "text": "حاسس إني سخن وتعبان", "red_flag": true, "symptom": "fever or shivering", "style": "paraphrase"}
+{"id": "syn-036", "split": "test", "text": "عندي حمى", "red_flag": true, "symptom": "fever or shivering", "style": "msa"}
+{"id": "syn-037", "split": "dev", "text": "3andy sokhonya", "red_flag": true, "symptom": "fever or shivering", "style": "arabizi"}
+{"id": "syn-038", "split": "test", "text": "عندي سخونيه", "red_flag": true, "symptom": "fever or shivering", "style": "typo"}
+{"id": "syn-039", "split": "dev", "text": "قست الحرارة طلعت ٣٩", "red_flag": true, "symptom": "fever or shivering", "style": "paraphrase"}
+{"id": "syn-040", "split": "test", "text": "ارتفاع في درجة الحرارة", "red_flag": true, "symptom": "fever or shivering", "style": "msa"}
+{"id": "syn-041", "split": "dev", "text": "الجرح فيه صديد", "red_flag": true, "symptom": "wound discharge", "style": "lexicon"}
+{"id": "syn-042", "split": "test", "text": "الجرح بينز مية صفرا", "red_flag": true, "symptom": "wound discharge", "style": "lexicon"}
+{"id": "syn-043", "split": "dev", "text": "مكان العملية بيطلع منه سايل", "red_flag": true, "symptom": "wound discharge", "style": "paraphrase"}
+{"id": "syn-044", "split": "test", "text": "الجرح ريحته وحشة ولونه احمر", "red_flag": true, "symptom": "wound discharge", "style": "paraphrase"}
+{"id": "syn-045", "split": "dev", "text": "توجد إفرازات من مكان الغرز", "red_flag": true, "symptom": "wound discharge", "style": "msa"}
+{"id": "syn-046", "split": "test", "text": "el gar7 beynez", "red_flag": true, "symptom": "wound discharge", "style": "arabizi"}
+{"id": "syn-047", "split": "dev", "text": "الجرح بينذ", "red_flag": true, "symptom": "wound discharge", "style": "typo"}
+{"id": "syn-048", "split": "test", "text": "شايف صديد على الشاش", "red_flag": true, "symptom": "wound discharge", "style": "lexicon"}
+{"id": "syn-049", "split": "dev", "text": "ركبتي وارمة ومش بتخف", "red_flag": true, "symptom": "knee swelling or redness", "style": "lexicon"}
+{"id": "syn-050", "split": "test", "text": "ركبتي حمرا وسخنة", "red_flag": true, "symptom": "knee swelling or redness", "style": "lexicon"}
+{"id": "syn-051", "split": "dev", "text": "الورم بيزيد كل يوم", "red_flag": true, "symptom": "knee swelling or redness", "style": "lexicon"}
+{"id": "syn-052", "split": "test", "text": "الركبة منفوخة أكتر من الأول", "red_flag": true, "symptom": "knee swelling or redness", "style": "paraphrase"}
+{"id": "syn-053", "split": "dev", "text": "ركبتى ورمانه", "red_flag": true, "symptom": "knee swelling or redness", "style": "typo"}
+{"id": "syn-054", "split": "test", "text": "rokbety warma", "red_flag": true, "symptom": "knee swelling or redness", "style": "arabizi"}
+{"id": "syn-055", "split": "dev", "text": "تورم الركبة يزداد", "red_flag": true, "symptom": "knee swelling or redness", "style": "msa"}
+{"id": "syn-056", "split": "test", "text": "ركبتي محمرة ووارمة", "red_flag": true, "symptom": "knee swelling or redness", "style": "paraphrase"}
+{"id": "syn-057", "split": "dev", "text": "عندي تنميل في صوابع رجلي", "red_flag": true, "symptom": "numbness", "style": "lexicon"}
+{"id": "syn-058", "split": "test", "text": "إيدي منملة", "red_flag": true, "symptom": "numbness", "style": "paraphrase"}
+{"id": "syn-059", "split": "dev", "text": "رجلي منمله", "red_flag": true, "symptom": "numbness", "style": "typo"}
+{"id": "syn-060", "split": "test", "text": "حاسس رجلي نايمة ومش حاسس بيها", "red_flag": true, "symptom": "numbness", "style": "paraphrase"}
+{"id": "syn-061", "split": "dev", "text": "فيه تنميل في دراعي الشمال", "red_flag": true, "symptom": "numbness", "style": "lexicon"}
+{"id": "syn-062", "split": "test", "text": "tanmeel fe regly", "red_flag": true, "symptom": "numbness", "style": "arabizi"}
+{"id": "syn-063", "split": "dev", "text": "فقدت الإحساس في القدم", "red_flag": true, "symptom": "numbness", "style": "msa"}
+{"id": "syn-064", "split": "test", "text": "صوابعي بتنمل", "red_flag": true, "symptom": "numbness", "style": "paraphrase"}
+{"id": "syn-065", "split": "dev", "text": "جاتلي دوخة وأنا بقوم", "red_flag": true, "symptom": "dizziness or fainting", "style": "lexicon"}
+{"id": "syn-066", "split": "test", "text": "أنا دايخ شوية بعد التمرين", "red_flag": true, "symptom": "dizziness or fainting", "style": "lexicon"}
+{"id": "syn-067", "split": "dev", "text": "الدنيا بتلف بيا", "red_flag": true, "symptom": "dizziness or fainting", "style": "paraphrase"}
+{"id": "syn-068", "split": "test", "text": "حسيت إني هقع وعيني زغللت", "red_flag": true, "symptom": "dizziness or fainting", "style": "paraphrase"}
+{"id": "syn-069", "split": "dev", "text": "أنا دايخه", "red_flag": true, "symptom": "dizziness or fainting", "style": "typo"}
+{"id": "syn-070", "split": "test", "text": "dayekh awy", "red_flag": true, "symptom": "dizziness or fainting", "style": "arabizi"}
+{"id": "syn-071", "split": "dev", "text": "شعرت بدوار", "red_flag": true, "symptom": "dizziness or fainting", "style": "msa"}
+{"id": "syn-072", "split": "test", "text": "عندي دوخه", "red_flag": true, "symptom": "dizziness or fainting", "style": "typo"}
+{"id": "syn-073", "split": "dev", "text": "أغمى عليا وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting", "style": "paraphrase"}
+{"id": "syn-074", "split": "dev", "text": "ألم حاد في الركبة لما بنزل", "red_flag": true, "symptom": "sharp or sudden pain", "style": "lexicon"}
+{"id": "syn-075", "split": "test", "text": "وجع زي السكينة في ضهري", "red_flag": true, "symptom": "sharp or sudden pain", "style": "lexicon"}
+{"id": "syn-076", "split": "dev", "text": "وجع حاد في الركبة", "red_flag": true, "symptom": "sharp or sudden pain", "style": "paraphrase"}
+{"id": "syn-077", "split": "test", "text": "وجع بيخزّق في الركبة", "red_flag": true, "symptom": "sharp or sudden pain", "style": "paraphrase"}
+{"id": "syn-078", "split": "dev", "text": "حاجة بتشكني جامد في الركبة", "red_flag": true, "symptom": "sharp or sudden pain", "style": "paraphrase"}
+{"id": "syn-079", "split": "test", "text": "alam 7ad fel rokba", "red_flag": true, "symptom": "sharp or sudden pain", "style": "arabizi"}
+{"id": "syn-080", "split": "dev", "text": "سمعت طقة في ركبتي ووجعتني جامد", "red_flag": true, "symptom": "sharp or sudden pain", "style": "paraphrase"}
+{"id": "syn-081", "split": "test", "text": "ألم شديد ومفاجئ", "red_flag": true, "symptom": "sharp or sudden pain", "style": "msa"}
+{"id": "syn-082", "split": "dev", "text": "مفيش دوخة الحمد لله", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-083", "split": "test", "text": "مش حاسس بأي تنميل", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-084", "split": "dev", "text": "مفيش سخونية ولا حاجة", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-085", "split": "test", "text": "صدري كويس، بس رجلي تعبانة شوية", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-086", "split": "dev", "text": "الجرح ناشف ومفيش صديد", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-087", "split": "test", "text": "ركبتي مش وارمة النهارده", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-088", "split": "dev", "text": "نفسي مش مقطوع زي الأول", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-089", "split": "test", "text": "الدكتور قال لو حصل دوخة أكلمه", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-090", "split": "dev", "text": "مش دايخ خالص", "red_flag": false, "symptom": null, "style": "negated"}
+{"id": "syn-091", "split": "dev", "text": "صدري مفتوح النهارده وعندي طاقة", "red_flag": false, "symptom": null, "style": "idiom"}
+{"id": "syn-092", "split": "test", "text": "الجو حر ونفسي مش في التمرين النهارده", "red_flag": false, "symptom": null, "style": "idiom"}
+{"id": "syn-093", "split": "dev", "text": "قلبي فرحان إني قدرت أكمل", "red_flag": false, "symptom": null, "style": "idiom"}
+{"id": "syn-094", "split": "dev", "text": "رجلي تعبانة شوية بعد التمرين", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-095", "split": "test", "text": "عضلات فخدي مشدودة زي كل مرة", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-096", "split": "dev", "text": "الوجع خفيف ٣ من ١٠", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-097", "split": "test", "text": "حاسس بشوية تيبس الصبح بيروح بعد ما أتحرك", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-098", "split": "dev", "text": "التمرين كان سهل النهارده", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-099", "split": "test", "text": "ركبتي بتطقطق بس مش بتوجع", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-100", "split": "dev", "text": "تعبت شوية بس كملت", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-101", "split": "test", "text": "مفيش وجع خالص", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-102", "split": "dev", "text": "الوجع زي امبارح، مش أكتر", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-103", "split": "test", "text": "حاسس بشد خفيف في الفخد من ورا", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-104", "split": "dev", "text": "ضهري واجعني شوية من القعدة", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-105", "split": "test", "text": "نمت كويس والوجع أقل", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-106", "split": "dev", "text": "عملت ٨ تكرارات من غير مشاكل", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-107", "split": "test", "text": "الركبة أحسن من الأسبوع اللي فات", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-108", "split": "dev", "text": "حاسة بحرقان خفيف في العضلة", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-109", "split": "test", "text": "kont ta3ban shwaya bas tamam", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-110", "split": "dev", "text": "pain 2/10 today", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-111", "split": "test", "text": "مش قادر أعمل آخر تكرارتين من التعب", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-112", "split": "dev", "text": "عرقت كتير", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-113", "split": "test", "text": "إيدي تعبانة من شيل الشنط", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-114", "split": "dev", "text": "الحمد لله ماشية كويس", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-115", "split": "test", "text": "الوجع بيروح لما أرتاح", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-116", "split": "dev", "text": "مقدرتش أنزل لتحت أوي في السكوات", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-117", "split": "test", "text": "ركبتي ناشفة الصبح شوية", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-118", "split": "dev", "text": "شوية ألم في الكتف لما برفع إيدي فوق أوي", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-119", "split": "test", "text": "pain fel rokba 3 men 10", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-120", "split": "dev", "text": "أخدت المسكن وبقيت أحسن", "red_flag": false, "symptom": null, "style": "benign"}
+{"id": "syn-121", "split": "test", "text": "مفيش أي جديد", "red_flag": false, "symptom": null, "style": "benign"}

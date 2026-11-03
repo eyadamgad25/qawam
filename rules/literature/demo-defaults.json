@@ -16,6 +16,10 @@
       "citation": "NHS. Complications of a knee replacement. nhs.uk, page last reviewed 9 September 2026.",
       "url": "https://www.nhs.uk/tests-and-treatments/knee-replacement/complications/"
     },
+    "nhsFever": {
+      "citation": "NHS. High temperature (fever) in adults. nhs.uk: 'A high temperature is usually considered to be 38C or above.'",
+      "url": "https://www.nhs.uk/symptoms/fever-in-adults/"
+    },
     "brief": {
       "citation": "Qawam project brief (docs/AI_BRIEF.md), section 2: red flags named in the brief (sharp pain, numbness, dizziness, chest pain). Not a published source.",
       "url": "https://github.com/eyadamgad25/qawam/blob/main/docs/AI_BRIEF.md"
@@ -34,6 +38,11 @@
     "value": 8,
     "source": "acsm2009",
     "finding": "For novices the ACSM recommends loads matching an 8-12 repetition range; the demo uses the low end."
+  },
+  "feverTempC": {
+    "value": 38,
+    "source": "nhsFever",
+    "finding": "The NHS counts 38C or above as a high temperature; a note that names a temperature at or above this is escalated (high temperature is a red flag after knee replacement, see nhsKnee)."
   },
   "emergencyNumber": {
     "value": "123",

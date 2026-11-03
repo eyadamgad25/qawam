@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import notesJsonl from '../../ml/pain/synthetic-notes.jsonl?raw';
-import { PAIN_RED_FLAGS } from './demoDefaults';
+import { DEMO_DEFAULTS, PAIN_RED_FLAGS } from './demoDefaults';
 import { PAIN_MODEL, painModelFlags, painModelScore } from './painModel';
 import { evaluatePainTriage } from './painTriage';
 
@@ -29,6 +29,7 @@ const escalates = (note: Note, withModel: boolean) =>
     text: note.text,
     lexicon: PAIN_RED_FLAGS,
     modelFlag: withModel && painModelFlags(note.text),
+    ...(withModel ? { feverThresholdC: DEMO_DEFAULTS.feverTempC.value } : {}),
   }).status === 'ESCALATE_FOR_REVIEW';
 
 describe('red-flag check on synthetic notes', () => {

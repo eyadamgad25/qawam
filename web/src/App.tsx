@@ -208,6 +208,7 @@ export default function App() {
                     text: painDemoText,
                     lexicon: PAIN_RED_FLAGS,
                     modelFlag: painModelFlags(painDemoText),
+                    feverThresholdC: DEMO_DEFAULTS.feverTempC.value,
                   }),
                 )
               }

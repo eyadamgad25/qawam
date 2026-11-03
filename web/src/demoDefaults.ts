@@ -23,6 +23,7 @@ interface DemoDefaults {
   sources: Record<string, LiteratureSource>;
   toleranceDeg: SourcedValue<number>;
   homeReps: SourcedValue<number>;
+  feverTempC: SourcedValue<number>;
   emergencyNumber: SourcedValue<string>;
   painRedFlags: (PainFlagTerm & { source: string; symptom: string })[];
 }

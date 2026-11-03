@@ -4,6 +4,38 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — Gate 2.0: a signal for wrong arm angles (Fit3D shoulder abduction)
+
+- **Question:** Frontalness does not predict arm-angle error (entry below). Is there a signal the phone can see that does, well enough to bring shoulder-abduction cues back?
+- **Data:** the 212 Fit3D shoulder-abduction units (7 people with units, 4 cameras); wrong = mean error > 10 deg after one-rep calibration (63 wrong). Same units as `ml/eval/fit3d_gate_eval.py`.
+- **Candidates:** the gate's existing features (`qawam_ml.quality.rep_features`) and two new ones: **arm shortening** = shortest 2D upper arm (shoulder to elbow, divided by torso length) during the rep, relative to the longest in the calibration rep; and the same at the peak of the rep.
+- **Result (AUROC, high value = trustworthy):** arm shortening **0.75**, at peak 0.71; visibility 0.59; out-of-plane depth 0.37, frontalness 0.35, jitter 0.34, bone-length variation 0.31 (these point the other way: more of them, more error). Speaking only on the reps with the least shortening: top 20% wrong 4 / 42 (0.10), top 40% 9 / 85 (0.11), all 63 / 212 (0.30).
+- **Certification:** leave-one-person-out, choosing on 7 people the cut-off whose exact 95% upper bound is <= 0.10: no cut-off qualifies for any signal (coverage 0%). With 85 spoken reps at 11% wrong the bound is 0.18; about three times more arm reps (e.g. Fit3D's other arm exercises, which need the archive downloaded again) are needed before the bound can reach 0.10.
+- **Decision:** shoulder-abduction cues stay off (`correctionCues: false`). Arm shortening is the signal to certify next; it matches the physics (an arm moving towards the camera looks shorter, and its 2D angle is wrong).
+- **Caveats:** exploratory (several features tried on the same units); a first call to the bound function used the wrong confidence argument and was discarded.
+
+## 2026-11-03 — KERAAL patients: personal reference vs healthy reference (first patient result)
+
+- **Question:** On real low-back-pain patients, does distance to the patient's own correct recording flag the recordings clinicians called wrong, better than distance to other people?
+- **Data:** KERAAL group 1A (6 patients R1-R6, 3 exercises CTK / ELK / RTK, 250 recordings) and 2A (healthy, 51), BlazePose 2D, front camera; verdicts from two clinicians. 177 patient recordings scored (references and recordings without a reference left out); errors 64 (A), 93 (B), 53 of 126 where both agree.
+- **Command:** `py -3.14 ml\eval\keraal_eval.py` (default `--features angles`; `--features positions` for the joint-position version). Tests: `tests/python/test_keraal_eval.py`.
+- **Method:** multivariate DTW over every 5th frame. Personal = distance to the patient's first recording of that exercise that both clinicians call Correct (by take number); patients = median distance to other patients' both-Correct recordings; healthy = median distance to healthy both-Correct recordings. AUC for flagging non-Correct recordings, 95% CI resampling patients.
+- **Result, angles (trunk tilt, shoulder abduction, elbow, both sides):** where both clinicians agree: personal **0.28** [0.15, 0.55], patients 0.55 [0.34, 0.84], healthy **0.65** [0.53, 0.81]. Clinician A: 0.36 / 0.57 / 0.70 [0.59, 0.82]; clinician B: 0.33 / 0.51 / 0.50. Positions instead of angles: personal 0.34, healthy 0.56 (agreed).
+- **Checks before believing it:** personal distance mostly tracks how much the patient moves (r = 0.73 with movement size); dividing by movement, or using the median over all the patient's correct recordings instead of the first, still gives 0.44-0.45. Errors fall over the programme (48% of early recordings, 21% of late ones), so patients are still learning.
+- **Interpretation:** A negative result for the personal reference on this data, and an informative one: KERAAL's "reference" is the patient's own early recording, made while they were still learning (their compensations included); later correct recordings move towards the healthy pattern, so they look *further* from it. The app's design assumes a reference recorded by the physio when the patient does the exercise well; KERAAL cannot test that. A healthy reference does carry signal on real patients for the angle the app measures (0.65-0.70), mostly in CTK. Claim to keep: "the personal reference catches deliberate errors (REHAB24-6, REHAB26)"; claim to drop: "it works for any reference the patient recorded".
+- **Caveats:** 6 patients, so wide intervals; several analyses were run (positions, angles, two reference choices), so treat the best number as exploratory; whole recordings with several reps, not single reps; front 2D cannot see forward trunk bending.
+
+## 2026-11-03 — Pain check: stated-temperature rule and safe negation
+
+- **Question:** Can two small rules fix the known misses (a stated temperature such as "٣٩") and the main false alarms (negated mentions such as "مفيش دوخة") without losing red flags?
+- **Change (`web/src/painTriage.ts`):**
+  - **Temperature:** a clause with a temperature word (حرار, سخون, سخن, حمى, درجة, temp, fever) and a number from the threshold up to 43 adds `TEMPERATURE_FLAG` / `NHS-FEVER-TEMP`. Threshold 38 C, from NHS ("38C or above", `rules/literature/demo-defaults.json` `feverTempC`).
+  - **Negation:** `assertedText` drops clauses whose first or second word is a "there is no" word (مفيش, مش, مبقاش, بدون, ولا ...), splitting clauses at punctuation, بس / لكن, and "و" + negator. Never dropped, because these are red flags themselves: inability (مش قادر), lost feeling (مش حاسس, مفيش إحساس, مفيش نفس), not getting better (مش بيخف), abnormal (مش طبيعي). The word list matches only asserted clauses; the model flags only if both the whole note and the asserted clauses score as red flags (dropping "مش أكتر" alone could otherwise make a mild note look worse, seen on dev).
+- **Tests:** `web/src/painTriage.test.ts` covers the dangerous cases above, mixed notes ("مفيش دوخة بس عندي تنميل" keeps the numbness flag) and number edge cases (37.5, "40 تكرار", "385").
+- **Result (all 121 notes):** word list OR model OR temperature: red flags 78 / 81 (was 77), fever 10 / 10 (was 9), false alarms 9 / 40 (was 13; negated 3 / 9, was 7). Word list alone: same 28 / 81 caught, false alarms 4 / 40 (was 8). Test split: 39 / 40 caught, 7 / 19 false alarms (unchanged); dev false alarms 2 / 21 (was 6).
+- **Note on method:** the test split was read twice in this round (once before the "both must flag" model rule, which was motivated by a dev note); the change did not alter test recall.
+- **Still open:** wound discharge in other words ("بيطلع منه سايل", "إفرازات"), idioms ("صدري مفتوح", "قلبي فرحان"); and the negation word list needs a physio and native-speaker review.
+
 ## 2026-11-03 — On-device pain red-flag model (word list OR model)
 
 - **Question:** Can a model small enough to ship offline catch the red-flag notes the word list misses, without hiding any word-list flag?

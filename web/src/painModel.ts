@@ -6,7 +6,7 @@
  * modelFlag), so the model can never hide a word-list match. Trained on synthetic notes.
  */
 import modelJson from './painModel.json';
-import { normalizeArabicText } from './painTriage';
+import { assertedText, normalizeArabicText } from './painTriage';
 
 interface PainModel {
   ngram: [number, number];
@@ -41,6 +41,15 @@ export function painModelScore(text: string): number {
   return PAIN_MODEL.bias + sum / Math.sqrt(grams.size);
 }
 
+/**
+ * Flags only if both the whole note and its asserted clauses score as a red flag, so
+ * "مفيش دوخة" alone is not flagged, and dropping "مش أكتر" cannot turn a mild note into one.
+ */
 export function painModelFlags(text: string): boolean {
-  return text.trim() !== '' && painModelScore(text) > PAIN_MODEL.threshold;
+  const asserted = assertedText(text).replaceAll(' | ', ' ');
+  return (
+    asserted !== '' &&
+    painModelScore(text) > PAIN_MODEL.threshold &&
+    painModelScore(asserted) > PAIN_MODEL.threshold
+  );
 }

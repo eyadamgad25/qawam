@@ -59,10 +59,12 @@ TOLERANCE_DEG = 10.0
 MIN_DETECTION = 0.5  # same as the app's MIN_DETECTION_RATE
 ENTER, LEAVE = 0.3, 0.15  # web/src/exercise/liveCoach.ts ENTER_FRACTION / EXIT_FRACTION
 
-# Fit3D joints3d_25 follow Human3.6M: 1-3 right leg, 4-6 left leg, 11-13 left arm, 14-16 right arm.
+# Fit3D joints3d_25: 1-3 left leg, 4-6 right leg, 11-13 left arm, 14-16 right arm (person's sides).
+# The legs are the reverse of the usual Human3.6M naming: checked on the real data, where the
+# projected joints sit within about 10 px of MediaPipe's knees and ankles only with this mapping.
 H36M_FOR_LANDMARK = {
-    "RIGHT_HIP": 1, "RIGHT_KNEE": 2, "RIGHT_ANKLE": 3,
-    "LEFT_HIP": 4, "LEFT_KNEE": 5, "LEFT_ANKLE": 6,
+    "LEFT_HIP": 1, "LEFT_KNEE": 2, "LEFT_ANKLE": 3,
+    "RIGHT_HIP": 4, "RIGHT_KNEE": 5, "RIGHT_ANKLE": 6,
     "LEFT_SHOULDER": 11, "LEFT_ELBOW": 12, "LEFT_WRIST": 13,
     "RIGHT_SHOULDER": 14, "RIGHT_ELBOW": 15, "RIGHT_WRIST": 16,
 }

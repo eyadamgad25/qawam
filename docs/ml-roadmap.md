@@ -18,6 +18,7 @@ Written 2026-11-03. Each idea keeps the project's edge — **silent rather than 
 ## Why this order
 
 1. **#1 first.** It is the core contribution made stronger, it needs no new labels (Fit3D gives exact angles from 4 views), and it runs on a laptop. Success = a certified false-cue rate at or below 10% with more of the reps spoken than the current rule (26.5%).
+   - **Status 2026-11-03 (first Fit3D run, `docs/experiments.md`):** not met. The rule held for knees (silent on every diagonal view), failed for shoulder abduction (false-cue rate 0.34), and the learned gate certified nothing. Next: find a signal that predicts arm-angle error (out-of-plane arm motion, elbow depth from MediaPipe's z, wrist visibility) and add a Fit3D test split by person before certifying.
 2. **#2 next**, because cue wording is what patients and physios notice. It only speaks an error type when the selective model is confident; otherwise it falls back to today's "different from your reference".
 3. **#3 and #4 together** make the Arabic edge measurable: red-flag recall and entity F1 on a physio-reviewed set.
 

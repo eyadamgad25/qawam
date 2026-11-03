@@ -25,7 +25,7 @@ def _squat(view: str, reps: int = 5, per_rep: int = 30, seed: int = 0):
     for t in np.tile(np.sin(np.linspace(0, np.pi, per_rep)), reps):
         bend = np.radians(90 * t)
         g = np.zeros((25, 2))
-        for hip, knee, ankle, shoulder, dx in ((4, 5, 6, 11, -1), (1, 2, 3, 14, 1)):
+        for hip, knee, ankle, shoulder, dx in ((1, 2, 3, 11, -1), (4, 5, 6, 14, 1)):
             ankle_xy = np.array([500 + dx * (40 if view == "front" else 3), 900])
             knee_xy = ankle_xy + [0, -200]
             # side view: thigh rotates in the image plane; front view: it points at the camera
@@ -34,7 +34,7 @@ def _squat(view: str, reps: int = 5, per_rep: int = 30, seed: int = 0):
             g[ankle], g[knee], g[hip] = ankle_xy, knee_xy, hip_xy
             g[shoulder] = hip_xy + [dx * (60 if view == "front" else 4), -300]
         w = np.zeros((25, 3))
-        for hip, knee, ankle, shoulder, dz in ((4, 5, 6, 11, -0.1), (1, 2, 3, 14, 0.1)):
+        for hip, knee, ankle, shoulder, dz in ((1, 2, 3, 11, -0.1), (4, 5, 6, 14, 0.1)):
             w[ankle], w[knee] = [0, 0, dz], [0, 0.4, dz]
             w[hip] = w[knee] + [0.4 * np.sin(bend), 0.4 * np.cos(bend), 0]
             w[shoulder] = w[hip] + [0, 0.6, 0]

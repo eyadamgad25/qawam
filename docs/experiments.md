@@ -4,6 +4,19 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — Gate 2.0 on Fit3D: shipped view rule on new people and new cameras
+
+- **Question:** Does the view rule (cut-offs fitted on REHAB24-6, not refitted) stay "silent rather than wrong" on other people, other cameras and other recording conditions? Can a learned gate speak on more reps and still certify?
+- **Data:** Fit3D training set (fit3d.imar.ro, non-commercial, single-user licence; archive and outputs local only). 8 people (s03-s11), 4 RGB cameras at 900 x 900, Vicon joints. Actions our packs cover: squat, dumbbell_reverse_lunge, side_lateral_raise; 96 videos, every 3rd frame (16.7 fps). 820 units (rep x camera x side, first rep of each video is the calibration rep and is not scored).
+- **Command:** `py -3.14 ml\eval\fit3d_extract.py --archive <fit3d_train.tar.gz>` then `py -3.14 ml\eval\fit3d_gate_eval.py` (tests: `tests/python/test_fit3d_extract.py`, `tests/python/test_fit3d_gate_eval.py`).
+- **Method:** MediaPipe Pose Lite (same setup as `angle_eval.py`). Truth = the pack's angle from the 3D Vicon joints, so it is the same for every camera; a rep is wrong if the mean |phone angle - truth - calibration offset| > 10 deg. Shipped rule: side packs speak only at frontalness <= 0.178, front packs at >= 0.601. Learned gate: leave-one-person-out, Learn-then-Test at alpha 0.10.
+- **Bug found and fixed first:** Fit3D's leg joints are 1-3 left, 4-6 right (the reverse of the usual Human3.6M naming); arms are as expected. Found because projected truth sat 57-79 px from MediaPipe's hips, knees and ankles; with the fix, knees and ankles are 8-12 px and arms 6-12 px away (hips about 25 px: mocap hip centres sit inside the pelvis). The first run (wrong legs) is discarded.
+- **Result, knee packs (squat, lunge):** no Fit3D camera is side-on (frontalness 0.57-0.85). The rule stayed silent on all 608 knee units; speaking would have been wrong on 424 / 608 (70%). Zero false cues.
+- **Result, shoulder abduction (front pack):** the rule spoke on 157 / 212 units (74%) and 53 were wrong: false-cue rate 0.34 (exact 95% upper 0.41), above the 0.10 target. Always speaking: 63 / 212 wrong (0.30). MediaPipe error vs 3D truth: median 8.8 deg, 70% within 10 deg, 94% within 15 deg. Frontalness does not predict the error here (wrong rate 19% below 0.60, 13% at 0.62-0.64, 46-60% above 0.64).
+- **Result, learned gate:** certifies nothing (coverage 0%) for both the view score and the combined score: with 8 people and these error rates no subset is clean enough to pass the bound. It falls back to silence, which is safe but adds nothing.
+- **Interpretation:** The knee result is the safety claim working on unseen people and cameras: the rule refused every diagonal view, where a knee cue would usually have been wrong. The shoulder result is a real weakness: frontalness is the wrong signal for arm-raise accuracy, because a near-frontal 2D view still loses the out-of-plane part of a dumbbell raise (Fit3D's raise is partly forward). Until another signal is found and certified on held-out people, shoulder-abduction cues must not be presented as certified; the pack should stay at "shows the angle, no correction cue" or use a wider tolerance that is itself tested.
+- **Caveats:** Gym exercises by healthy adults, not patients; truth is the 3D angle, so part of the "error" is the 2D projection the phone cannot see (that is the point of the gate, but it is not pure pose-model error); 10 deg tolerance is the research threshold, not the app's 14 deg literature cue tolerance.
+
 ## 2026-11-03 — UCOPhyRehab++: personal reference vs physio scores, and rep counting
 
 - **Question:** (A) Does distance to the person's own reference rep track a physiotherapist's 1-5 quality score better than universal methods? (B) How well does the app's rep rule count physio-annotated reps?

@@ -1,7 +1,7 @@
 {
-  "name": "قوام | Qawam",
-  "short_name": "قوام",
-  "description": "نموذج تعليمي أولي لدعم تمارين التأهيل في البيت",
+  "name": "HomeRehab AI",
+  "short_name": "HomeRehab",
+  "description": "Home physiotherapy coach that knows when to stay silent (educational prototype)",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",

@@ -1,3 +1,4 @@
+import { tr } from '../i18n';
 import { useState } from 'react';
 import { packById, packCopy } from './exercisePack';
 import {
@@ -42,7 +43,14 @@ export function ProgressChart({ sessions }: { sessions: readonly StoredSession[]
     .map((s) => ({ s, mean: sessionStats(s).meanRangeDeg }))
     .filter((p): p is { s: StoredSession; mean: number } => p.mean !== null);
   if (points.length === 0) {
-    return <p className="field-help">لا توجد تكرارات مقيّمة بعد لرسم التقدم.</p>;
+    return (
+      <p className="field-help">
+        {tr(
+          'لا توجد تكرارات مقيّمة بعد لرسم التقدم.',
+          'No judged reps yet to chart progress.',
+        )}
+      </p>
+    );
   }
   const width = 600;
   const height = 220;
@@ -64,7 +72,10 @@ export function ProgressChart({ sessions }: { sessions: readonly StoredSession[]
       className="progress-chart"
       viewBox={`0 0 ${width} ${height}`}
       role="img"
-      aria-label="مدى الحركة في كل جلسة مقارنةً بالمرجع"
+      aria-label={tr(
+        'مدى الحركة في كل جلسة مقارنةً بالمرجع',
+        'Range of motion per session against the reference',
+      )}
     >
       {ticks.map((t) => (
         <g key={t}>
@@ -94,7 +105,7 @@ export function ProgressChart({ sessions }: { sessions: readonly StoredSession[]
         textAnchor="start"
         direction="rtl"
       >
-        {`المرجع ${Math.round(ref)}°`}
+        {tr(`المرجع ${Math.round(ref)}°`, `Reference ${Math.round(ref)}°`)}
       </text>
       <path d={path} className="progress-line" />
       {points.map((p, i) => (
@@ -145,15 +156,23 @@ export default function ProgressReport({
     <section className="session-summary physio-report" aria-labelledby="progress-title">
       <div className="summary-heading">
         <div>
-          <p className="summary-kicker">تقرير الأخصائي · {pack.names.ar}</p>
-          <h2 id="progress-title">تقدّم المريض: {patient}</h2>
+          <p className="summary-kicker">
+            {tr('تقرير الأخصائي', 'Physio report')} · {tr(pack.names.ar, pack.names.en)}
+          </p>
+          <h2 id="progress-title">
+            {tr('تقدّم المريض', 'Patient progress')}: {patient}
+          </h2>
         </div>
-        <span className="simulation-badge">محفوظ على هذا الجهاز فقط</span>
+        <span className="simulation-badge">
+          {tr('محفوظ على هذا الجهاز فقط', 'Saved on this device only')}
+        </span>
       </div>
       {sessions.length === 0 ? (
         <p>
-          لا توجد جلسات محفوظة لهذا المريض في هذا التمرين بعد. كل تمرين ينتهي في الخطوة
-          ٢ يُحفظ هنا تلقائيًا.
+          {tr(
+            'لا توجد جلسات محفوظة لهذا المريض في هذا التمرين بعد. كل تمرين ينتهي في الخطوة ٢ يُحفظ هنا تلقائيًا.',
+            'No saved sessions for this patient and exercise yet. Every exercise finished in step 2 is saved here automatically.',
+          )}
         </p>
       ) : (
         <>
@@ -162,34 +181,40 @@ export default function ProgressReport({
               <span className="metric-value" dir="ltr">
                 {sessions.length}
               </span>
-              <span>جلسات</span>
+              <span>{tr('جلسات', 'Sessions')}</span>
             </div>
             <div className="summary-metric">
               <span className="metric-value" dir="ltr">
                 {sessionsInLastDays(sessions, 7)}
               </span>
-              <span>جلسات في آخر 7 أيام</span>
+              <span>{tr('جلسات في آخر 7 أيام', 'Sessions in the last 7 days')}</span>
             </div>
             <div className="summary-metric">
               <span className="metric-value" dir="ltr">
                 {lastStats ? `${lastStats.matches}/${lastStats.reps}` : '—'}
               </span>
-              <span>قريبة من المرجع في آخر جلسة</span>
+              <span>
+                {tr(
+                  'قريبة من المرجع في آخر جلسة',
+                  'Close to the reference, last session',
+                )}
+              </span>
             </div>
           </div>
           <h3 className="report-subtitle">
-            مدى {copy.measureAr} في كل جلسة (متوسط التكرارات)
+            {tr('مدى', 'Range of')} {copy.measureAr}{' '}
+            {tr('في كل جلسة (متوسط التكرارات)', 'per session (mean of reps)')}
           </h3>
           <ProgressChart sessions={sessions} />
           <table className="report-table">
             <thead>
               <tr>
-                <th>التاريخ</th>
-                <th>الطريقة</th>
-                <th>تكرارات</th>
-                <th>قريبة من المرجع</th>
-                <th>متوسط المدى</th>
-                <th>ملاحظات وضعية</th>
+                <th>{tr('التاريخ', 'Date')}</th>
+                <th>{tr('الطريقة', 'Method')}</th>
+                <th>{tr('تكرارات', 'Reps')}</th>
+                <th>{tr('قريبة من المرجع', 'Close to reference')}</th>
+                <th>{tr('متوسط المدى', 'Mean range')}</th>
+                <th>{tr('ملاحظات وضعية', 'Posture notes')}</th>
               </tr>
             </thead>
             <tbody>
@@ -198,7 +223,11 @@ export default function ProgressReport({
                 return (
                   <tr key={s.id}>
                     <td dir="ltr">{formatDate(s.dateIso)}</td>
-                    <td>{s.mode === 'live' ? 'كاميرا' : 'فيديو'}</td>
+                    <td>
+                      {s.mode === 'live'
+                        ? tr('كاميرا', 'Camera')
+                        : tr('فيديو', 'Video')}
+                    </td>
                     <td>{st.reps}</td>
                     <td>{st.matches}</td>
                     <td dir="ltr">
@@ -213,14 +242,19 @@ export default function ProgressReport({
             </tbody>
           </table>
           <p className="field-help report-note">
-            المدى مقاس بالكاميرا من وضع راحة المريض في كل جلسة (زاوية ثنائية الأبعاد)،
-            وهو نموذج بحثي غير معتمد سريريًا وليس تشخيصًا.
+            {tr(
+              'المدى مقاس بالكاميرا من وضع راحة المريض في كل جلسة (زاوية ثنائية الأبعاد)، وهو نموذج بحثي غير معتمد سريريًا وليس تشخيصًا.',
+              'Range is measured by the camera from the patient’s resting pose in each session (a 2D angle). This is a research prototype, not clinically approved and not a diagnosis.',
+            )}
           </p>
         </>
       )}
       <div className="report-actions no-print">
         <label className="pain-demo-label" htmlFor="physio-phone">
-          رقم واتساب الأخصائي (اختياري، مع كود الدولة مثل 2010…)
+          {tr(
+            'رقم واتساب الأخصائي (اختياري، مع كود الدولة مثل 2010…)',
+            'Physio’s WhatsApp number (optional, with country code, e.g. 2010…)',
+          )}
         </label>
         <input
           id="physio-phone"
@@ -240,7 +274,7 @@ export default function ProgressReport({
             target="_blank"
             rel="noreferrer"
           >
-            أرسل الملخص على واتساب
+            {tr('أرسل الملخص على واتساب', 'Send the summary on WhatsApp')}
           </a>
           <button
             className="secondary-button"
@@ -248,7 +282,7 @@ export default function ProgressReport({
             disabled={sessions.length === 0}
             onClick={() => window.print()}
           >
-            اطبع التقرير / احفظه PDF
+            {tr('اطبع التقرير / احفظه PDF', 'Print the report / save as PDF')}
           </button>
           <button
             className="secondary-button"
@@ -256,7 +290,7 @@ export default function ProgressReport({
             disabled={sessions.length === 0}
             onClick={downloadCsv}
           >
-            تنزيل البيانات (CSV)
+            {tr('تنزيل البيانات (CSV)', 'Download the data (CSV)')}
           </button>
           <button
             className="secondary-button danger"
@@ -267,11 +301,13 @@ export default function ProgressReport({
               setCleared((n) => n + 1);
             }}
           >
-            امسح بيانات هذا المريض
+            {tr('امسح بيانات هذا المريض', 'Delete this patient’s data')}
           </button>
         </div>
         <details>
-          <summary>نص الملخص الذي سيُرسل</summary>
+          <summary>
+            {tr('نص الملخص الذي سيُرسل', 'Summary text that will be sent')}
+          </summary>
           <pre className="whatsapp-preview">{summary}</pre>
         </details>
       </div>

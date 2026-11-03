@@ -1,6 +1,6 @@
-# Qawam (قوام)
+# HomeRehab AI (formerly Qawam)
 
-Arabic-first, physiotherapist-supervised **home-rehabilitation coach** (PWA). Educational prototype — not a diagnostic or treatment-outcome product.
+Arabic-first, physiotherapist-supervised **home-rehabilitation coach** (PWA), in Arabic and English (switch in the header). Educational prototype — not a diagnostic or treatment-outcome product.
 
 The long-term product goal is physiotherapist-supervised home rehabilitation. The current educational prototype can overlay MediaPipe pose landmarks on a selected local video and includes an experimental arm-raise counter. Its landmark mapping and thresholds are unvalidated test assumptions; it does not assess form or provide treatment advice.
 

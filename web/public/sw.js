@@ -3,7 +3,7 @@
 // WASM runtime) is cache-first. Install precaches the app shell and the pose
 // files so the coach works offline right after the first visit.
 // shortcut: one cache that only grows across deploys; bump CACHE to clear it.
-const CACHE = 'qawam-v1';
+const CACHE = 'homerehab-v2';
 const POSE_FILES = [
   'models/pose_landmarker_lite.task',
   'mediapipe/wasm/vision_wasm_internal.js',
@@ -16,7 +16,15 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  // drop caches from older versions (e.g. the pre-rename 'qawam-v1')
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))),
+      )
+      .then(() => self.clients.claim()),
+  );
 });
 
 self.addEventListener('fetch', (event) => {

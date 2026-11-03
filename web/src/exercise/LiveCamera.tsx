@@ -1,9 +1,10 @@
+import { tr } from '../i18n';
 import { useEffect, useRef, useState } from 'react';
 import { drawPoseOverlay } from '../LocalVideoPoseDemo';
 import { packCopy, type ExercisePack } from './exercisePack';
 import {
-  arabicNumberWord,
-  hasArabicVoice,
+  spokenNumber,
+  hasVoiceForLanguage,
   LiveCoach,
   setupStatus,
   speakAr,
@@ -54,6 +55,13 @@ export const SETUP_TITLE_AR: Readonly<Record<SetupStatus['state'], string>> = {
   NOT_FULL_BODY: 'جسمك غير ظاهر كاملًا',
   WRONG_VIEW: 'غيّر زاوية الكاميرا',
   READY: 'جاهز',
+};
+
+const SETUP_TITLE_EN: Readonly<Record<SetupStatus['state'], string>> = {
+  NO_PERSON: 'I cannot see anyone',
+  NOT_FULL_BODY: 'Your whole body is not visible',
+  WRONG_VIEW: 'Change the camera angle',
+  READY: 'Ready',
 };
 
 export function signedDegrees(value: number): string {
@@ -238,7 +246,7 @@ export default function LiveCamera(props: Props) {
                   referenceRepsRef.current = found;
                   setReferenceReps(found);
                   if (found > 0) {
-                    say(arabicNumberWord(found));
+                    say(spokenNumber(found));
                   }
                 }
                 if (found >= current.targetReps) {
@@ -258,7 +266,10 @@ export default function LiveCamera(props: Props) {
           setError(
             cause instanceof Error
               ? cause.message
-              : 'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت.',
+              : tr(
+                  'تعذّر تحميل نموذج MediaPipe. تحقق من اتصال الإنترنت.',
+                  'Could not load the MediaPipe model. Check the internet connection.',
+                ),
           );
         }
       }
@@ -284,7 +295,10 @@ export default function LiveCamera(props: Props) {
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error(
-          'المتصفح لا يسمح بالكاميرا هنا. افتح الصفحة من localhost أو من رابط https.',
+          tr(
+            'المتصفح لا يسمح بالكاميرا هنا. افتح الصفحة من localhost أو من رابط https.',
+            'This browser blocks the camera here. Open the page on localhost or an https link.',
+          ),
         );
       }
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -294,7 +308,7 @@ export default function LiveCamera(props: Props) {
       streamRef.current = stream;
       const video = videoRef.current;
       if (!video) {
-        throw new Error('عنصر الفيديو غير متاح.');
+        throw new Error(tr('عنصر الفيديو غير متاح.', 'Video element not available.'));
       }
       video.srcObject = stream;
       await video.play();
@@ -307,10 +321,13 @@ export default function LiveCamera(props: Props) {
       const denied = cause instanceof DOMException && cause.name === 'NotAllowedError';
       setError(
         denied
-          ? 'لم يُسمح باستخدام الكاميرا. اسمح بها من إعدادات المتصفح ثم أعد المحاولة.'
+          ? tr(
+              'لم يُسمح باستخدام الكاميرا. اسمح بها من إعدادات المتصفح ثم أعد المحاولة.',
+              'Camera access was not allowed. Allow it in the browser settings and try again.',
+            )
           : cause instanceof Error
             ? cause.message
-            : 'تعذّر تشغيل الكاميرا.',
+            : tr('تعذّر تشغيل الكاميرا.', 'Could not start the camera.'),
       );
     } finally {
       setStarting(false);
@@ -339,13 +356,13 @@ export default function LiveCamera(props: Props) {
     }
     setPhase('countdown');
     setCountdown(COUNTDOWN_SECONDS);
-    say('جاهز. ثلاثة');
+    say(tr('جاهز. ثلاثة', 'Ready. Three'));
     for (let k = 1; k <= COUNTDOWN_SECONDS; k += 1) {
       const id = window.setTimeout(() => {
         const left = COUNTDOWN_SECONDS - k;
         setCountdown(left);
         if (left > 0) {
-          say(arabicNumberWord(left));
+          say(spokenNumber(left));
         } else {
           startRecording();
         }
@@ -369,7 +386,7 @@ export default function LiveCamera(props: Props) {
         ? new LiveCoach(current.pack, current.reference, current.toleranceDeg)
         : null;
     setPhase('recording');
-    say('ابدأ');
+    say(tr('ابدأ', 'Go'));
   }
 
   function finish() {
@@ -380,7 +397,7 @@ export default function LiveCamera(props: Props) {
     const current = propsRef.current;
     if (current.mode === 'reference') {
       const frames = framesRef.current;
-      say('تم تسجيل المرجع');
+      say(tr('تم تسجيل المرجع', 'Reference recorded'));
       stopCamera();
       current.onReference(frames);
       return;
@@ -413,7 +430,7 @@ export default function LiveCamera(props: Props) {
         {!cameraOn ? (
           <>
             <label className="pain-demo-label" htmlFor={`live-facing-${props.mode}`}>
-              الكاميرا
+              {tr('الكاميرا', 'Camera')}
             </label>
             <select
               id={`live-facing-${props.mode}`}
@@ -424,8 +441,15 @@ export default function LiveCamera(props: Props) {
                 )
               }
             >
-              <option value="user">الأمامية (كاميرا اللابتوب أو السيلفي)</option>
-              <option value="environment">الخلفية (الهاتف)</option>
+              <option value="user">
+                {tr(
+                  'الأمامية (كاميرا اللابتوب أو السيلفي)',
+                  'Front (laptop or selfie camera)',
+                )}
+              </option>
+              <option value="environment">
+                {tr('الخلفية (الهاتف)', 'Back (phone)')}
+              </option>
             </select>
             <button
               className="demo-run-button"
@@ -433,12 +457,14 @@ export default function LiveCamera(props: Props) {
               disabled={starting}
               onClick={() => void startCamera()}
             >
-              {starting ? 'جارٍ تشغيل الكاميرا…' : 'شغّل الكاميرا'}
+              {starting
+                ? tr('جارٍ تشغيل الكاميرا…', 'Starting the camera…')
+                : tr('شغّل الكاميرا', 'Start camera')}
             </button>
           </>
         ) : (
           <button className="secondary-button" type="button" onClick={stopCamera}>
-            أوقف الكاميرا
+            {tr('أوقف الكاميرا', 'Stop camera')}
           </button>
         )}
         <label className="pain-model-toggle">
@@ -450,7 +476,7 @@ export default function LiveCamera(props: Props) {
               setVoice(event.currentTarget.checked);
             }}
           />
-          <span>إرشاد صوتي</span>
+          <span>{tr('إرشاد صوتي', 'Voice guidance')}</span>
         </label>
         <label className="pain-model-toggle">
           <input
@@ -461,13 +487,20 @@ export default function LiveCamera(props: Props) {
               setAuto(event.currentTarget.checked);
             }}
           />
-          <span>ابدأ تلقائيًا عندما أكون جاهزًا</span>
+          <span>
+            {tr(
+              'ابدأ تلقائيًا عندما أكون جاهزًا',
+              'Start automatically when I am ready',
+            )}
+          </span>
         </label>
       </div>
-      {voice && cameraOn && !hasArabicVoice() && (
+      {voice && cameraOn && !hasVoiceForLanguage() && (
         <p className="field-help">
-          لا يوجد صوت عربي مثبّت في المتصفح، فقد يكون النطق غير واضح. جرّب Chrome أو
-          Edge.
+          {tr(
+            'لا يوجد صوت عربي مثبّت في المتصفح، فقد يكون النطق غير واضح. جرّب Chrome أو Edge.',
+            'No English voice is installed in this browser, so speech may be unclear. Try Chrome or Edge.',
+          )}
         </p>
       )}
 
@@ -478,7 +511,10 @@ export default function LiveCamera(props: Props) {
           }
         >
           <video ref={videoRef} playsInline muted />
-          <canvas ref={canvasRef} aria-label="نقاط الوضعية المكتشفة" />
+          <canvas
+            ref={canvasRef}
+            aria-label={tr('نقاط الوضعية المكتشفة', 'Detected pose points')}
+          />
         </div>
         {setup && phase !== 'countdown' && (
           <div
@@ -489,28 +525,37 @@ export default function LiveCamera(props: Props) {
           >
             <strong>
               {phase === 'recording' && ready
-                ? `تكرار ${(isHome ? reps.length : referenceReps) + 1}`
-                : SETUP_TITLE_AR[setup.state]}
+                ? tr(
+                    `تكرار ${(isHome ? reps.length : referenceReps) + 1}`,
+                    `Rep ${(isHome ? reps.length : referenceReps) + 1}`,
+                  )
+                : tr(SETUP_TITLE_AR[setup.state], SETUP_TITLE_EN[setup.state])}
             </strong>
             <span>
               {phase === 'recording' && ready
                 ? isHome
                   ? `${copy.measureAr}: ${angle === null ? '—' : `${Math.round(angle)}°`}`
-                  : 'أدِّ الحركة ببطء كما يطلب الأخصائي.'
+                  : tr(
+                      'أدِّ الحركة ببطء كما يطلب الأخصائي.',
+                      'Do the movement slowly, as your physio asked.',
+                    )
                 : setup.messageAr}
             </span>
           </div>
         )}
         {phase === 'countdown' && (
           <div className="countdown" aria-live="assertive">
-            {countdown > 0 ? countdown : 'ابدأ'}
+            {countdown > 0 ? countdown : tr('ابدأ', 'Go')}
           </div>
         )}
         {isHome && phase === 'recording' && (
           <div
             className="range-meter"
             role="meter"
-            aria-label={`${copy.measureAr} مقارنةً بالمرجع`}
+            aria-label={tr(
+              `${copy.measureAr} مقارنةً بالمرجع`,
+              `${copy.measureAr} compared with the reference`,
+            )}
             aria-valuemin={0}
             aria-valuemax={150}
             aria-valuenow={Math.round((progress ?? 0) * 100)}
@@ -524,7 +569,7 @@ export default function LiveCamera(props: Props) {
               className="range-fill"
               style={{ height: `${Math.max(0, Math.min(1.5, progress ?? 0)) * 66}%` }}
             />
-            <span className="range-label">المرجع</span>
+            <span className="range-label">{tr('المرجع', 'Reference')}</span>
           </div>
         )}
       </div>
@@ -538,25 +583,36 @@ export default function LiveCamera(props: Props) {
               disabled={!ready}
               onClick={beginCountdown}
             >
-              {props.mode === 'reference' ? 'ابدأ تسجيل المرجع' : 'ابدأ التمرين'}
+              {props.mode === 'reference'
+                ? tr('ابدأ تسجيل المرجع', 'Start recording the reference')
+                : tr('ابدأ التمرين', 'Start exercise')}
             </button>
           )}
           {(phase === 'recording' || phase === 'countdown') && (
             <button className="demo-run-button stop" type="button" onClick={finish}>
-              {props.mode === 'reference' ? 'أنهِ التسجيل' : 'أنهِ التمرين'}
+              {props.mode === 'reference'
+                ? tr('أنهِ التسجيل', 'Finish recording')
+                : tr('أنهِ التمرين', 'Finish exercise')}
             </button>
           )}
           {phase === 'idle' && !ready && (
             <span className="field-help">
               {auto
-                ? 'سيبدأ العد تلقائيًا عندما تظهر «جاهز».'
-                : 'يُفعَّل الزر عندما يقول قوام «جاهز».'}
+                ? tr(
+                    'سيبدأ العد تلقائيًا عندما تظهر «جاهز».',
+                    'The countdown starts by itself when it shows “Ready”.',
+                  )
+                : tr(
+                    'يُفعَّل الزر عندما يقول التطبيق «جاهز».',
+                    'The button turns on when the app says “Ready”.',
+                  )}
             </span>
           )}
           {phase === 'recording' && (
             <span className="live-meter" aria-live="off">
-              {Math.floor(elapsed)} ث · {isHome ? reps.length : referenceReps} /{' '}
-              {props.targetReps} تكرارات
+              {Math.floor(elapsed)} {tr('ث', 's')} ·{' '}
+              {isHome ? reps.length : referenceReps} / {props.targetReps}{' '}
+              {tr('تكرارات', 'reps')}
             </span>
           )}
         </div>
@@ -564,20 +620,20 @@ export default function LiveCamera(props: Props) {
 
       {isHome && summary && (
         <div className="session-summary-card" role="status">
-          <h3>ملخص التمرين</h3>
+          <h3>{tr('ملخص التمرين', 'Exercise summary')}</h3>
           <p>{summary.textAr}</p>
           <div className="summary-metrics">
             <div className="summary-metric">
               <span className="metric-value" dir="ltr">
                 {summary.reps}
               </span>
-              <span>تكرارات</span>
+              <span>{tr('تكرارات', 'Reps')}</span>
             </div>
             <div className="summary-metric">
               <span className="metric-value" dir="ltr">
                 {summary.matches}
               </span>
-              <span>قريبة من المرجع</span>
+              <span>{tr('قريبة من المرجع', 'Close to the reference')}</span>
             </div>
             <div className="summary-metric">
               <span className="metric-value" dir="ltr">
@@ -585,11 +641,13 @@ export default function LiveCamera(props: Props) {
                   ? '—'
                   : signedDegrees(summary.meanRangeDiffDeg)}
               </span>
-              <span>متوسط الفرق عن المرجع</span>
+              <span>
+                {tr('متوسط الفرق عن المرجع', 'Mean difference from the reference')}
+              </span>
             </div>
           </div>
           <button className="secondary-button" type="button" onClick={again}>
-            جولة جديدة
+            {tr('جولة جديدة', 'New round')}
           </button>
         </div>
       )}
@@ -606,13 +664,17 @@ export default function LiveCamera(props: Props) {
                 data-cue={rep.assessed ? rep.cue : 'NOT_ASSESSED'}
               >
                 <div>
-                  <strong>تكرار {rep.index + 1}</strong>
+                  <strong>
+                    {tr('تكرار', 'Rep')} {rep.index + 1}
+                  </strong>
                   <p>{rep.messageAr}</p>
                   {rep.assessed && rep.tempoNoteAr && <p>{rep.tempoNoteAr}</p>}
                   {rep.assessed && (
                     <p className="rep-numbers">
-                      فرق المدى {signedDegrees(rep.comparison.depthDiffDeg)} · فرق
-                      المسار {Math.round(rep.comparison.dtwMeanAbsDeg)}°
+                      {tr('فرق المدى', 'Range diff')}{' '}
+                      {signedDegrees(rep.comparison.depthDiffDeg)} ·{' '}
+                      {tr('فرق المسار', 'path diff')}{' '}
+                      {Math.round(rep.comparison.dtwMeanAbsDeg)}°
                     </p>
                   )}
                 </div>
@@ -623,7 +685,9 @@ export default function LiveCamera(props: Props) {
 
       {cameraOn && (
         <details className="live-diagnostics">
-          <summary>تفاصيل تقنية (للتجربة)</summary>
+          <summary>
+            {tr('تفاصيل تقنية (للتجربة)', 'Technical details (for testing)')}
+          </summary>
           <p dir="ltr">
             {fps} fps · {landmarkerDelegate ?? '—'} · model{' '}
             {poseAssetSource === 'local' ? 'offline copy' : (poseAssetSource ?? '—')} ·
@@ -634,8 +698,10 @@ export default function LiveCamera(props: Props) {
             {progress === null ? '—' : progress.toFixed(2)}
           </p>
           <p className="field-help">
-            إذا كانت السرعة أقل من 10 fps فقد تتأخر الهيكلة؛ أغلق البرامج الأخرى أو حسّن
-            الإضاءة.
+            {tr(
+              'إذا كانت السرعة أقل من 10 fps فقد تتأخر الهيكلة؛ أغلق البرامج الأخرى أو حسّن الإضاءة.',
+              'Below 10 fps the skeleton may lag; close other apps or improve the lighting.',
+            )}
           </p>
         </details>
       )}

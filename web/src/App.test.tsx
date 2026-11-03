@@ -3,6 +3,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it } from 'vitest';
+import { setLang } from './i18n';
 import App, { SAFETY_NOTICE, SIMULATED_CANNOT_ASSESS, SIMULATED_SESSION } from './App';
 import {
   formatClipDuration,
@@ -10,7 +11,14 @@ import {
   validateVideoDuration,
 } from './LocalVideoPoseDemo';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  setLang('ar');
+});
+
+function openTab(name: string) {
+  fireEvent.click(screen.getByRole('button', { name }));
+}
 
 describe('local video pose demo boundaries', () => {
   it('accepts only readable videos up to two minutes', () => {
@@ -63,14 +71,31 @@ describe('local video pose demo boundaries', () => {
 });
 
 describe('prototype safety notice', () => {
-  it('renders the warning on the first screen in Arabic and English', () => {
-    const markup = renderToStaticMarkup(<App />);
+  it('renders the warning on the first screen in the chosen language', () => {
+    const arabic = renderToStaticMarkup(<App />);
+    expect(arabic).toContain('role="alert"');
+    expect(arabic).toContain(SAFETY_NOTICE.arabic);
+    expect(arabic).toContain('lang="ar"');
 
-    expect(markup).toContain('role="alert"');
-    expect(markup).toContain(SAFETY_NOTICE.arabic);
-    expect(markup).toContain(SAFETY_NOTICE.english);
-    expect(markup).toContain('lang="ar"');
-    expect(markup).toContain('lang="en"');
+    setLang('en');
+    const english = renderToStaticMarkup(<App />);
+    expect(english).toContain('role="alert"');
+    expect(english).toContain(SAFETY_NOTICE.english);
+    expect(english).toContain('Results may be wrong');
+  });
+
+  it('switches the whole app between Arabic (RTL) and English (LTR)', () => {
+    render(<App />);
+    expect(document.documentElement.dir).toBe('rtl');
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to English' }));
+    expect(document.documentElement.dir).toBe('ltr');
+    expect(document.documentElement.lang).toBe('en');
+    expect(screen.getByRole('button', { name: 'Pain check' })).toBeTruthy();
+    expect(
+      screen.getByText('Your exercise against your own reference rep'),
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'التبديل إلى العربية' }));
+    expect(document.documentElement.dir).toBe('rtl');
   });
 
   it('clearly labels demo outputs as simulated and not clinician-approved', () => {
@@ -95,6 +120,7 @@ describe('simulated session scenarios', () => {
 
   it('shows the simulated summary only after selecting the completed scenario', () => {
     render(<App />);
+    openTab('تجارب تقنية');
 
     fireEvent.click(screen.getByRole('button', { name: 'مثال: جلسة مكتملة' }));
 
@@ -110,6 +136,7 @@ describe('simulated session scenarios', () => {
 
   it('switches back to cannot-assess and removes the repetition count', () => {
     render(<App />);
+    openTab('تجارب تقنية');
     fireEvent.click(screen.getByRole('button', { name: 'مثال: جلسة مكتملة' }));
     fireEvent.click(screen.getByRole('button', { name: 'مثال: تعذّر التقييم' }));
 
@@ -119,6 +146,7 @@ describe('simulated session scenarios', () => {
 
   it('runs the synthetic angle pipeline demo and abstains on its low-visibility frame', () => {
     render(<App />);
+    openTab('تجارب تقنية');
     fireEvent.click(screen.getByRole('button', { name: 'شغّل المثال المصطنع' }));
 
     expect(screen.getByText(/اكتمل المثال:/).textContent).toContain('2 دورات مصطنعة');
@@ -129,6 +157,7 @@ describe('simulated session scenarios', () => {
 
   it('flags an Egyptian-dialect red flag from the cited list and shows the stop prompt', () => {
     render(<App />);
+    openTab('فحص الألم');
     fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
       target: { value: 'عندي سُخونية من امبارح' },
     });
@@ -142,6 +171,7 @@ describe('simulated session scenarios', () => {
 
   it('demonstrates that a simulated model flag cannot be suppressed', () => {
     render(<App />);
+    openTab('فحص الألم');
     fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
       target: { value: 'عبارة لا تطابق' },
     });

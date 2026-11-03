@@ -5,6 +5,7 @@
  * deployment moves this to the clinic's server with patient consent. Every
  * read and write is wrapped so the page still works when storage is blocked.
  */
+import { tr } from '../i18n';
 import { packById, packCopy } from './exercisePack';
 import type { LiveRepFeedback } from './liveCoach';
 import type { RepFeedback } from './session';
@@ -206,20 +207,35 @@ export function whatsappSummary(
   now = new Date(),
 ): string {
   if (sessions.length === 0) {
-    return `قوام: لا توجد جلسات مسجّلة للمريض ${patient} بعد.`;
+    return tr(
+      `HomeRehab AI: لا توجد جلسات مسجّلة للمريض ${patient} بعد.`,
+      `HomeRehab AI: no sessions recorded for ${patient} yet.`,
+    );
   }
   const last = sessions.at(-1)!;
   const pack = packById(last.packId);
   const stats = sessionStats(last);
   const first = sessionStats(sessions[0]!);
   const lines = [
-    `قوام — ملخص ${pack.names.ar} للمريض: ${patient}`,
-    `الجلسات في آخر 7 أيام: ${sessionsInLastDays(sessions, 7, now)}`,
-    `آخر جلسة (${dayLabel(last.dateIso)}): ${stats.reps} تكرارات، ${stats.matches} قريبة من المرجع`,
+    tr(
+      `HomeRehab AI — ملخص ${pack.names.ar} للمريض: ${patient}`,
+      `HomeRehab AI — ${pack.names.en} summary for: ${patient}`,
+    ),
+    tr(
+      `الجلسات في آخر 7 أيام: ${sessionsInLastDays(sessions, 7, now)}`,
+      `Sessions in the last 7 days: ${sessionsInLastDays(sessions, 7, now)}`,
+    ),
+    tr(
+      `آخر جلسة (${dayLabel(last.dateIso)}): ${stats.reps} تكرارات، ${stats.matches} قريبة من المرجع`,
+      `Last session (${dayLabel(last.dateIso)}): ${stats.reps} reps, ${stats.matches} close to the reference`,
+    ),
   ];
   if (stats.meanRangeDeg !== null) {
     lines.push(
-      `متوسط مدى ${packCopy(pack).measureAr}: ${Math.round(stats.meanRangeDeg)}° (المرجع ${Math.round(last.referenceRangeDeg)}°)`,
+      tr(
+        `متوسط مدى ${packCopy(pack).measureAr}: ${Math.round(stats.meanRangeDeg)}° (المرجع ${Math.round(last.referenceRangeDeg)}°)`,
+        `Mean ${packCopy(pack).measureAr} range: ${Math.round(stats.meanRangeDeg)}° (reference ${Math.round(last.referenceRangeDeg)}°)`,
+      ),
     );
   }
   if (
@@ -228,15 +244,35 @@ export function whatsappSummary(
     stats.meanRangeDeg !== null
   ) {
     const change = Math.round(stats.meanRangeDeg - first.meanRangeDeg);
-    lines.push(`التغيّر منذ أول جلسة: ${change > 0 ? '+' : ''}${change}°`);
+    lines.push(
+      tr(
+        `التغيّر منذ أول جلسة: ${change > 0 ? '+' : ''}${change}°`,
+        `Change since the first session: ${change > 0 ? '+' : ''}${change}°`,
+      ),
+    );
   }
   if (stats.postureIssues > 0) {
-    lines.push(`ملاحظات وضعية الجسم: ${stats.postureIssues} تكرارات`);
+    lines.push(
+      tr(
+        `ملاحظات وضعية الجسم: ${stats.postureIssues} تكرارات`,
+        `Posture notes: ${stats.postureIssues} reps`,
+      ),
+    );
   }
   if (stats.assessed < stats.reps) {
-    lines.push(`تكرارات لم تُقيَّم بسبب التصوير: ${stats.reps - stats.assessed}`);
+    lines.push(
+      tr(
+        `تكرارات لم تُقيَّم بسبب التصوير: ${stats.reps - stats.assessed}`,
+        `Reps not judged because of the camera: ${stats.reps - stats.assessed}`,
+      ),
+    );
   }
-  lines.push('قياس بالكاميرا من نموذج بحثي، وليس تشخيصًا.');
+  lines.push(
+    tr(
+      'قياس بالكاميرا من نموذج بحثي، وليس تشخيصًا.',
+      'Camera measurement from a research prototype, not a diagnosis.',
+    ),
+  );
   return lines.join('\n');
 }
 

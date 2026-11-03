@@ -34,6 +34,8 @@ export const PAIN_RED_FLAGS: readonly PainFlagTerm[] = DEMO_DEFAULTS.painRedFlag
 /** Shown next to every literature value in the demo. */
 export const LITERATURE_LABEL_AR =
   'مأخوذة من مصدر منشور، ولم يراجعها أخصائي علاج طبيعي بعد';
+export const LITERATURE_LABEL_EN =
+  'From a published source, not yet reviewed by a physiotherapist';
 
 export function sourceOf(id: string): LiteratureSource {
   const source = DEMO_DEFAULTS.sources[id];

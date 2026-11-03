@@ -53,7 +53,8 @@ export interface ClipAnalysis {
   secondary: Record<string, (number | null)[]>;
 }
 
-export type CannotAssessReason = 'VIEW_MISMATCH' | 'LOW_DETECTION' | 'NO_REPS' | 'NOT_CERTIFIED';
+export type CannotAssessReason =
+  'VIEW_MISMATCH' | 'LOW_DETECTION' | 'NO_REPS' | 'NOT_CERTIFIED';
 
 export interface ClipGate {
   ok: boolean;

@@ -605,7 +605,10 @@ export function summarise(
   );
   if (pack.correctionCues === false) {
     advice = copy.evidenceAr;
-  } else if (postureIssues.length > matches && postureIssues.length >= Math.max(less, more)) {
+  } else if (
+    postureIssues.length > matches &&
+    postureIssues.length >= Math.max(less, more)
+  ) {
     advice = postureIssues[0]!.posture!.messageAr;
   } else if (less > matches && less >= more) {
     advice = copy.moreAr;

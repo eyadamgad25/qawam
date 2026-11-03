@@ -164,7 +164,9 @@ describe('simulated session scenarios', () => {
     fireEvent.click(screen.getByRole('button', { name: 'افحص العبارة' }));
 
     expect(screen.getByText('ESCALATE_FOR_REVIEW')).toBeTruthy();
-    expect(screen.getByText(/LEXICON_FLAG, (MODEL_FLAG, )?NHS-KNEE-FEVER-01/)).toBeTruthy();
+    expect(
+      screen.getByText(/LEXICON_FLAG, (MODEL_FLAG, )?NHS-KNEE-FEVER-01/),
+    ).toBeTruthy();
     expect(screen.getByText(/فاتصل بالإسعاف 123/)).toBeTruthy();
     expect(screen.getByText('لم يراجعها أخصائي')).toBeTruthy();
   });

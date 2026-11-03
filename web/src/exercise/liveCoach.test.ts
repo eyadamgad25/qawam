@@ -46,7 +46,10 @@ const cues = (coach: LiveCoach) =>
   coach.reps.map((r) => (r.assessed ? r.cue : r.reason));
 
 /** The shipped arm-abduction pack only counts; this copy keeps the cue logic under test. */
-const CUEING_ABDUCTION: ExercisePack = { ...SHOULDER_ABDUCTION_PACK, correctionCues: true };
+const CUEING_ABDUCTION: ExercisePack = {
+  ...SHOULDER_ABDUCTION_PACK,
+  correctionCues: true,
+};
 
 describe('live setup check', () => {
   it('is ready only for a full body filmed from the pack view', () => {

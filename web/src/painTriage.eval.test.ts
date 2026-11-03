@@ -39,7 +39,8 @@ describe('red-flag check on synthetic notes', () => {
         `${notes.filter((n) => escalates(n, withModel)).length} / ${notes.length}`;
       const groups = (key: 'symptom' | 'style', notes: Note[]) =>
         [...new Set(notes.map((n) => n[key] ?? '-'))].map(
-          (value) => `  ${value}: ${rate(notes.filter((n) => (n[key] ?? '-') === value))}`,
+          (value) =>
+            `  ${value}: ${rate(notes.filter((n) => (n[key] ?? '-') === value))}`,
         );
       lines.push(withModel ? '== word list OR model' : '== word list only');
       for (const split of ['dev', 'test', 'all'] as const) {
@@ -49,19 +50,37 @@ describe('red-flag check on synthetic notes', () => {
             `false alarms ${rate(part.filter((n) => !n.red_flag))}`,
         );
       }
-      lines.push('caught by symptom:', ...groups('symptom', NOTES.filter((n) => n.red_flag)));
-      lines.push('caught by style:', ...groups('style', NOTES.filter((n) => n.red_flag)));
-      lines.push('flagged non-flags by style:', ...groups('style', NOTES.filter((n) => !n.red_flag)));
+      lines.push(
+        'caught by symptom:',
+        ...groups(
+          'symptom',
+          NOTES.filter((n) => n.red_flag),
+        ),
+      );
+      lines.push(
+        'caught by style:',
+        ...groups(
+          'style',
+          NOTES.filter((n) => n.red_flag),
+        ),
+      );
+      lines.push(
+        'flagged non-flags by style:',
+        ...groups(
+          'style',
+          NOTES.filter((n) => !n.red_flag),
+        ),
+      );
     }
     lines.push(
       'still missed (dev only):',
-      ...NOTES.filter((n) => n.split === 'dev' && n.red_flag && !escalates(n, true)).map(
-        (n) => `  ${n.id} ${n.style} ${n.text}`,
-      ),
+      ...NOTES.filter(
+        (n) => n.split === 'dev' && n.red_flag && !escalates(n, true),
+      ).map((n) => `  ${n.id} ${n.style} ${n.text}`),
       'false alarms (dev only):',
-      ...NOTES.filter((n) => n.split === 'dev' && !n.red_flag && escalates(n, true)).map(
-        (n) => `  ${n.id} ${n.style} ${n.text}`,
-      ),
+      ...NOTES.filter(
+        (n) => n.split === 'dev' && !n.red_flag && escalates(n, true),
+      ).map((n) => `  ${n.id} ${n.style} ${n.text}`),
     );
     console.log(lines.join('\n'));
     expect(NOTES.length).toBeGreaterThan(100);

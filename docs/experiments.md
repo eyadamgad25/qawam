@@ -4,6 +4,17 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-03 — UCOPhyRehab++: personal reference vs physio scores, and rep counting
+
+- **Question:** (A) Does distance to the person's own reference rep track a physiotherapist's 1-5 quality score better than universal methods? (B) How well does the app's rep rule count physio-annotated reps?
+- **Data:** UCOPhyRehab++ (Zenodo 17935737, CC BY 4.0; Sci. Data 2026), `dataset_3d_with_angles.json` + `ucophyrehab2_data.jsonl` in gitignored `data/raw/ucophyrehab-pp/`. 27 people, 16 exercise ids (8 exercises x side), 393 recordings with joints, 1,837 scored reps. The release has **one** score per rep (the paper describes several raters) and only the moving limb's 3 joints plus their 3D angle. Scores: 1 at 2, 119 at 3, 924 at 4, 793 at 5.
+- **Command:** `.\.venv\Scripts\python.exe ml\eval\ucophyrehab_eval.py --root data\raw\ucophyrehab-pp` (tests: `tests/python/test_ucophyrehab_eval.py`).
+- **Method:** Motion-capture angles (upper bound before pose-model noise). Personal reference = best-scored rep, or first rep; both are left out of scoring. Universal template = mean curve of other people's score-5 reps; universal range = range-of-motion z-score against them. Nothing is fitted on the scored person. rho = Spearman(-distance, score); AUC flags reps scored <= 3; 95% CIs resample people. "Angle moves" = recording's p10-p95 range >= 10 deg, the same guard the rep rule uses.
+- **Result A:** No method tracks the score well. Where the angle moves (694 reps, 42 low): rho personal-best 0.14 [0.05, 0.22], personal-first 0.18 [0.07, 0.27], universal template 0.20 [0.12, 0.27], universal range 0.22 [0.13, 0.30]; AUC 0.62-0.68 with overlapping CIs. On all reps: rho 0.02-0.13. About half the score variance is within a person's own exercise set (0.52).
+- **Result B:** The rule abstained (counted 0) on 124 recordings where the measured angle hardly moves (exercises 03, 07, 09-12, 14-16: the motion is at the hip or shoulder, not the released knee/elbow angle). On the 269 it counted: MAE 0.56 reps, exact 76%, within one rep 86%, mean signed -0.38. For context only: Sci. Rep. 2025 (live RGB counter, MediaPipe) reports MAE 1.45 on KIMORE and 3.27 on UI-PRMD, on other data.
+- **Interpretation:** The personal-reference gain seen on REHAB24-6 and REHAB26 comes from deliberate, labelled errors. Graded quality within the "acceptable" range (mostly 4 vs 5) is not visible in one joint angle, for any method. So the claim stays "catches deliberate errors", not "grades quality like a physio". Counting works when the pack measures the joint that moves; when it does not, abstaining is the right behaviour.
+- **Caveats:** One rater, ceiling-heavy scores, 3 joints only (no trunk or posture), mocap not phone video. No view analysis is possible without torso joints.
+
 ## 2026-11-02 — Public HTTPS demo on GitHub Pages; hidden-joint guard checked on cropped video
 
 - **Question:** Can physios try the coach on their own phones during interviews? Phones only allow the camera on HTTPS, and the demo only ran on localhost.

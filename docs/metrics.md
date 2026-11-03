@@ -22,4 +22,6 @@ Train / validation subjects only; numbers from `docs/experiments.md` entries dat
 | View rule + one-rep calibration: false cues (wrong / spoken), held-out people | 3 / 88 | 3 / 52 | 1 / 26 | — |
 | Same with the Full model instead of Lite | 3 / 88 | 14 / 51 | 2 / 24 | — |
 
+UCOPhyRehab++ (external, physio-scored, motion capture; `docs/experiments.md` 2026-11-03): rep counting MAE 0.56 reps (exact 76%) on the 269 recordings whose measured angle moves, abstained on 124; agreement with the physio's 1-5 score is weak for every method (Spearman 0.14-0.22).
+
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

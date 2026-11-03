@@ -1,0 +1,846 @@
+{"id": "train-0001", "text": "النهارده وجع في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0002", "text": "وجع في القلب من امبارح", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0003", "text": "من الصبح وجع في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0004", "text": "وجع في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0005", "text": "عندي وجع في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0006", "text": "شكة في القلب جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0007", "text": "عندي شكة في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0008", "text": "النهارده شكة في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0009", "text": "شكة في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0010", "text": "بعد التمرين شكة في القلب", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0011", "text": "صدري مكتوم", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0012", "text": "عندي صدري مكتوم", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0013", "text": "من الصبح صدري مكتوم", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0014", "text": "حاسس إن صدري مكتوم", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0015", "text": "صدري مكتوم من ساعة ما صحيت", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0016", "text": "بعد التمرين ألم في نص الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0017", "text": "عندي ألم في نص الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0018", "text": "ألم في نص الصدر جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0019", "text": "من الصبح ألم في نص الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0020", "text": "ألم في نص الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0021", "text": "حاسس إن صدري واجعني", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0022", "text": "عندي صدري واجعني", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0023", "text": "بعد التمرين صدري واجعني", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0024", "text": "صدري واجعني", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0025", "text": "من الصبح صدري واجعني", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0026", "text": "ألم بالصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0027", "text": "بعد التمرين ألم بالصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0028", "text": "يا دكتور ألم بالصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0029", "text": "ألم بالصدر جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0030", "text": "ألم بالصدر من امبارح", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0031", "text": "وخز في صدري وأنا بتمرن", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0032", "text": "من الصبح وخز في صدري", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0033", "text": "وخز في صدري من امبارح", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0034", "text": "وخز في صدري جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0035", "text": "عندي وخز في صدري", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0036", "text": "حاسس إن صدري مقبوض", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0037", "text": "صدري مقبوض وأنا بتمرن", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0038", "text": "صدري مقبوض جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0039", "text": "صدري مقبوض من امبارح", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0040", "text": "عندي صدري مقبوض", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0041", "text": "حاسس إن وجع ف صدرى", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0042", "text": "يا دكتور وجع ف صدرى", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0043", "text": "بعد التمرين وجع ف صدرى", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0044", "text": "النهارده وجع ف صدرى", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0045", "text": "عندي وجع ف صدرى", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0046", "text": "ضغط على الصدر جامد", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0047", "text": "عندي ضغط على الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0048", "text": "حاسس إن ضغط على الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0049", "text": "ضغط على الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0050", "text": "بعد التمرين ضغط على الصدر", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0051", "text": "sadri byewga3ni awy", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0052", "text": "3andy sadri byewga3ni", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0053", "text": "sadri byewga3ni ba3d el tamreen", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0054", "text": "el naharda sadri byewga3ni", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0055", "text": "sadri byewga3ni", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0056", "text": "el naharda wag3 fe sdry", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0057", "text": "3andy wag3 fe sdry", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0058", "text": "wag3 fe sdry", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0059", "text": "wag3 fe sdry awy", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0060", "text": "wag3 fe sdry ba3d el tamreen", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0061", "text": "alam fel sadr", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0062", "text": "el naharda alam fel sadr", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0063", "text": "alam fel sadr awy", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0064", "text": "alam fel sadr ba3d el tamreen", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0065", "text": "3andy alam fel sadr", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0066", "text": "chest pain awy", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0067", "text": "el naharda chest pain", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0068", "text": "3andy chest pain", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0069", "text": "chest pain", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0070", "text": "chest pain ba3d el tamreen", "red_flag": true, "symptom": "chest pain"}
+{"id": "train-0071", "text": "نفسي بيتقطع جامد", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0072", "text": "من الصبح نفسي بيتقطع", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0073", "text": "نفسي بيتقطع من امبارح", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0074", "text": "النهارده نفسي بيتقطع", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0075", "text": "حاسس إن نفسي بيتقطع", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0076", "text": "مش لاقي نفسي ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0077", "text": "من الصبح مش لاقي نفسي", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0078", "text": "مش لاقي نفسي", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0079", "text": "عندي مش لاقي نفسي", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0080", "text": "النهارده مش لاقي نفسي", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0081", "text": "النهارده النفس تقيل عليا", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0082", "text": "يا دكتور النفس تقيل عليا", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0083", "text": "حاسس إن النفس تقيل عليا", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0084", "text": "النفس تقيل عليا ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0085", "text": "النفس تقيل عليا جامد", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0086", "text": "عندي بتنفس بالعافية", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0087", "text": "يا دكتور بتنفس بالعافية", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0088", "text": "بتنفس بالعافية وأنا بتمرن", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0089", "text": "بتنفس بالعافية ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0090", "text": "بتنفس بالعافية من ساعة ما صحيت", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0091", "text": "الهوا مش داخل صدري", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0092", "text": "الهوا مش داخل صدري وأنا بتمرن", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0093", "text": "حاسس إن الهوا مش داخل صدري", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0094", "text": "الهوا مش داخل صدري ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0095", "text": "الهوا مش داخل صدري من ساعة ما صحيت", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0096", "text": "يا دكتور نهجان من أقل مجهود", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0097", "text": "من الصبح نهجان من أقل مجهود", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0098", "text": "النهارده نهجان من أقل مجهود", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0099", "text": "نهجان من أقل مجهود", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0100", "text": "نهجان من أقل مجهود ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0101", "text": "النهارده نفسي قصير", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0102", "text": "نفسي قصير من امبارح", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0103", "text": "حاسس إن نفسي قصير", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0104", "text": "عندي نفسي قصير", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0105", "text": "نفسي قصير ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0106", "text": "ضيق تنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0107", "text": "بعد التمرين ضيق تنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0108", "text": "ضيق تنفس وأنا بتمرن", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0109", "text": "ضيق تنفس من امبارح", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0110", "text": "ضيق تنفس من ساعة ما صحيت", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0111", "text": "من الصبح مش قادرة أتنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0112", "text": "يا دكتور مش قادرة أتنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0113", "text": "مش قادرة أتنفس ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0114", "text": "عندي مش قادرة أتنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0115", "text": "مش قادرة أتنفس من امبارح", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0116", "text": "صعوبة في التنفس ومش عارف أعمل ايه", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0117", "text": "من الصبح صعوبة في التنفس", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0118", "text": "صعوبة في التنفس جامد", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0119", "text": "صعوبة في التنفس وأنا بتمرن", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0120", "text": "صعوبة في التنفس من امبارح", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0121", "text": "من الصبح بنهج من غير ما أعمل حاجة", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0122", "text": "بنهج من غير ما أعمل حاجة جامد", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0123", "text": "بنهج من غير ما أعمل حاجة وأنا بتمرن", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0124", "text": "يا دكتور بنهج من غير ما أعمل حاجة", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0125", "text": "النهارده بنهج من غير ما أعمل حاجة", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0126", "text": "mesh 3aref atnaffes awy", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0127", "text": "mesh 3aref atnaffes ba3d el tamreen", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0128", "text": "mesh 3aref atnaffes", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0129", "text": "el naharda mesh 3aref atnaffes", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0130", "text": "3andy mesh 3aref atnaffes", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0131", "text": "nafasy ma2too3 ba3d el tamreen", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0132", "text": "3andy nafasy ma2too3", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0133", "text": "el naharda nafasy ma2too3", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0134", "text": "nafasy ma2too3", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0135", "text": "nafasy ma2too3 awy", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0136", "text": "short of breath awy", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0137", "text": "short of breath ba3d el tamreen", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0138", "text": "3andy short of breath", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0139", "text": "el naharda short of breath", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0140", "text": "short of breath", "red_flag": true, "symptom": "difficulty breathing"}
+{"id": "train-0141", "text": "سمانتي بتوجعني من امبارح", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0142", "text": "من الصبح سمانتي بتوجعني", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0143", "text": "سمانتي بتوجعني جامد", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0144", "text": "النهارده سمانتي بتوجعني", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0145", "text": "حاسس إن سمانتي بتوجعني", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0146", "text": "ورم في السمانة من امبارح", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0147", "text": "ورم في السمانة جامد", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0148", "text": "حاسس إن ورم في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0149", "text": "ورم في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0150", "text": "ورم في السمانة ومش عارف أعمل ايه", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0151", "text": "وجع في بطن الرجل من ساعة ما صحيت", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0152", "text": "وجع في بطن الرجل جامد", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0153", "text": "من الصبح وجع في بطن الرجل", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0154", "text": "حاسس إن وجع في بطن الرجل", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0155", "text": "يا دكتور وجع في بطن الرجل", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0156", "text": "من الصبح رجلي من تحت وارمة وسخنة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0157", "text": "عندي رجلي من تحت وارمة وسخنة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0158", "text": "رجلي من تحت وارمة وسخنة ومش عارف أعمل ايه", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0159", "text": "يا دكتور رجلي من تحت وارمة وسخنة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0160", "text": "رجلي من تحت وارمة وسخنة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0161", "text": "بعد التمرين سمانة رجلي حمرا", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0162", "text": "عندي سمانة رجلي حمرا", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0163", "text": "يا دكتور سمانة رجلي حمرا", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0164", "text": "سمانة رجلي حمرا ومش عارف أعمل ايه", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0165", "text": "سمانة رجلي حمرا من امبارح", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0166", "text": "عندي شد جامد في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0167", "text": "النهارده شد جامد في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0168", "text": "حاسس إن شد جامد في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0169", "text": "شد جامد في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0170", "text": "يا دكتور شد جامد في السمانة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0171", "text": "الساق وارمة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0172", "text": "حاسس إن الساق وارمة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0173", "text": "الساق وارمة من امبارح", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0174", "text": "الساق وارمة جامد", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0175", "text": "عندي الساق وارمة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0176", "text": "النهارده رجلي الشمال أتخن من اليمين", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0177", "text": "حاسس إن رجلي الشمال أتخن من اليمين", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0178", "text": "رجلي الشمال أتخن من اليمين", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0179", "text": "عندي رجلي الشمال أتخن من اليمين", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0180", "text": "بعد التمرين رجلي الشمال أتخن من اليمين", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0181", "text": "حاسس إن ألم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0182", "text": "من الصبح ألم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0183", "text": "ألم في الساق من امبارح", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0184", "text": "ألم في الساق وأنا بتمرن", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0185", "text": "النهارده ألم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0186", "text": "حاسس إن تورم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0187", "text": "النهارده تورم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0188", "text": "تورم في الساق ومش عارف أعمل ايه", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0189", "text": "عندي تورم في الساق", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0190", "text": "تورم في الساق جامد", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0191", "text": "بطة الرجل وارمة ومش عارف أعمل ايه", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0192", "text": "يا دكتور بطة الرجل وارمة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0193", "text": "بطة الرجل وارمة من ساعة ما صحيت", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0194", "text": "حاسس إن بطة الرجل وارمة", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0195", "text": "بطة الرجل وارمة وأنا بتمرن", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0196", "text": "semanet regly wag3ani", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0197", "text": "semanet regly wag3ani ba3d el tamreen", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0198", "text": "3andy semanet regly wag3ani", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0199", "text": "semanet regly wag3ani awy", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0200", "text": "el naharda semanet regly wag3ani", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0201", "text": "regly wermet awy", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0202", "text": "regly wermet ba3d el tamreen", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0203", "text": "el naharda regly wermet", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0204", "text": "regly wermet", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0205", "text": "3andy regly wermet", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0206", "text": "3andy calf pain", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0207", "text": "el naharda calf pain", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0208", "text": "calf pain", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0209", "text": "calf pain awy", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0210", "text": "calf pain ba3d el tamreen", "red_flag": true, "symptom": "calf pain or swelling"}
+{"id": "train-0211", "text": "عندي حرارة من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0212", "text": "عندي عندي حرارة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0213", "text": "عندي حرارة وأنا بتمرن", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0214", "text": "عندي حرارة جامد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0215", "text": "النهارده عندي حرارة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0216", "text": "سخنت بالليل من امبارح", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0217", "text": "النهارده سخنت بالليل", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0218", "text": "بعد التمرين سخنت بالليل", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0219", "text": "سخنت بالليل جامد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0220", "text": "سخنت بالليل من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0221", "text": "جسمي سخن نار من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0222", "text": "بعد التمرين جسمي سخن نار", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0223", "text": "حاسس إن جسمي سخن نار", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0224", "text": "يا دكتور جسمي سخن نار", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0225", "text": "جسمي سخن نار جامد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0226", "text": "من الصبح بترعش من البرد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0227", "text": "بعد التمرين بترعش من البرد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0228", "text": "بترعش من البرد من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0229", "text": "بترعش من البرد جامد", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0230", "text": "بترعش من البرد ومش عارف أعمل ايه", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0231", "text": "النهارده جالي برد ورعشة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0232", "text": "جالي برد ورعشة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0233", "text": "جالي برد ورعشة من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0234", "text": "جالي برد ورعشة وأنا بتمرن", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0235", "text": "جالي برد ورعشة ومش عارف أعمل ايه", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0236", "text": "درجة حرارتي ٣٨ وأنا بتمرن", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0237", "text": "بعد التمرين درجة حرارتي ٣٨", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0238", "text": "حاسس إن درجة حرارتي ٣٨", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0239", "text": "النهارده درجة حرارتي ٣٨", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0240", "text": "درجة حرارتي ٣٨ ومش عارف أعمل ايه", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0241", "text": "يا دكتور حرارتي ٣٩ ونص", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0242", "text": "النهارده حرارتي ٣٩ ونص", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0243", "text": "حرارتي ٣٩ ونص من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0244", "text": "عندي حرارتي ٣٩ ونص", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0245", "text": "بعد التمرين حرارتي ٣٩ ونص", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0246", "text": "عندي عندي سخونة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0247", "text": "بعد التمرين عندي سخونة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0248", "text": "عندي سخونة ومش عارف أعمل ايه", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0249", "text": "عندي سخونة من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0250", "text": "النهارده عندي سخونة", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0251", "text": "بعد التمرين حمى", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0252", "text": "حمى ومش عارف أعمل ايه", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0253", "text": "حاسس إن حمى", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0254", "text": "حمى", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0255", "text": "حمى من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0256", "text": "جسمي مولع من ساعة ما صحيت", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0257", "text": "النهارده جسمي مولع", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0258", "text": "عندي جسمي مولع", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0259", "text": "حاسس إن جسمي مولع", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0260", "text": "من الصبح جسمي مولع", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0261", "text": "sokhna ba3d el tamreen", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0262", "text": "sokhna awy", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0263", "text": "sokhna", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0264", "text": "3andy sokhna", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0265", "text": "el naharda sokhna", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0266", "text": "3andy 7arara", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0267", "text": "3andy 7arara awy", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0268", "text": "3andy 7arara ba3d el tamreen", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0269", "text": "el naharda 3andy 7arara", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0270", "text": "3andy 3andy 7arara", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0271", "text": "fever ba3d el tamreen", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0272", "text": "3andy fever", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0273", "text": "fever", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0274", "text": "el naharda fever", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0275", "text": "fever awy", "red_flag": true, "symptom": "fever or shivering"}
+{"id": "train-0276", "text": "حاسس إن الجرح بيطلع مية", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0277", "text": "الجرح بيطلع مية ومش عارف أعمل ايه", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0278", "text": "الجرح بيطلع مية من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0279", "text": "الجرح بيطلع مية من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0280", "text": "النهارده الجرح بيطلع مية", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0281", "text": "في إفرازات من الجرح من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0282", "text": "في إفرازات من الجرح جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0283", "text": "في إفرازات من الجرح من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0284", "text": "يا دكتور في إفرازات من الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0285", "text": "في إفرازات من الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0286", "text": "الجرح ملتهب", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0287", "text": "الجرح ملتهب من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0288", "text": "عندي الجرح ملتهب", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0289", "text": "الجرح ملتهب جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0290", "text": "الجرح ملتهب من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0291", "text": "من الصبح الجرح لونه أحمر وسخن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0292", "text": "بعد التمرين الجرح لونه أحمر وسخن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0293", "text": "الجرح لونه أحمر وسخن من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0294", "text": "الجرح لونه أحمر وسخن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0295", "text": "الجرح لونه أحمر وسخن وأنا بتمرن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0296", "text": "بعد التمرين الغرز فاتحة", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0297", "text": "الغرز فاتحة وأنا بتمرن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0298", "text": "الغرز فاتحة جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0299", "text": "يا دكتور الغرز فاتحة", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0300", "text": "النهارده الغرز فاتحة", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0301", "text": "الجرح بيرشح وأنا بتمرن", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0302", "text": "الجرح بيرشح جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0303", "text": "من الصبح الجرح بيرشح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0304", "text": "الجرح بيرشح من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0305", "text": "الجرح بيرشح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0306", "text": "يا دكتور صديد في الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0307", "text": "النهارده صديد في الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0308", "text": "صديد في الجرح ومش عارف أعمل ايه", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0309", "text": "صديد في الجرح جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0310", "text": "من الصبح صديد في الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0311", "text": "التهاب الجرح جامد", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0312", "text": "التهاب الجرح من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0313", "text": "يا دكتور التهاب الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0314", "text": "التهاب الجرح من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0315", "text": "التهاب الجرح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0316", "text": "الجرح ريحته مش حلوة ومش عارف أعمل ايه", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0317", "text": "الجرح ريحته مش حلوة من امبارح", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0318", "text": "حاسس إن الجرح ريحته مش حلوة", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0319", "text": "الجرح ريحته مش حلوة", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0320", "text": "الجرح ريحته مش حلوة من ساعة ما صحيت", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0321", "text": "el gar7 bytala3 mayya ba3d el tamreen", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0322", "text": "3andy el gar7 bytala3 mayya", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0323", "text": "el gar7 bytala3 mayya awy", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0324", "text": "el gar7 bytala3 mayya", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0325", "text": "el naharda el gar7 bytala3 mayya", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0326", "text": "el naharda el gar7 multaheb", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0327", "text": "el gar7 multaheb awy", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0328", "text": "el gar7 multaheb", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0329", "text": "3andy el gar7 multaheb", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0330", "text": "el gar7 multaheb ba3d el tamreen", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0331", "text": "wound is leaking ba3d el tamreen", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0332", "text": "el naharda wound is leaking", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0333", "text": "wound is leaking", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0334", "text": "wound is leaking awy", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0335", "text": "3andy wound is leaking", "red_flag": true, "symptom": "wound discharge"}
+{"id": "train-0336", "text": "ركبتي منفوخة جامد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0337", "text": "ركبتي منفوخة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0338", "text": "عندي ركبتي منفوخة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0339", "text": "ركبتي منفوخة ومش عارف أعمل ايه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0340", "text": "النهارده ركبتي منفوخة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0341", "text": "حاسس إن ركبتي ورمت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0342", "text": "ركبتي ورمت جامد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0343", "text": "يا دكتور ركبتي ورمت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0344", "text": "ركبتي ورمت من ساعة ما صحيت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0345", "text": "بعد التمرين ركبتي ورمت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0346", "text": "يا دكتور الركبة بتورم أكتر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0347", "text": "الركبة بتورم أكتر وأنا بتمرن", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0348", "text": "الركبة بتورم أكتر ومش عارف أعمل ايه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0349", "text": "الركبة بتورم أكتر جامد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0350", "text": "حاسس إن الركبة بتورم أكتر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0351", "text": "ركبتي سخنة وحمرا جامد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0352", "text": "بعد التمرين ركبتي سخنة وحمرا", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0353", "text": "يا دكتور ركبتي سخنة وحمرا", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0354", "text": "ركبتي سخنة وحمرا وأنا بتمرن", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0355", "text": "ركبتي سخنة وحمرا من ساعة ما صحيت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0356", "text": "ورم في الركبة بيزيد ومش عارف أعمل ايه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0357", "text": "ورم في الركبة بيزيد من امبارح", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0358", "text": "من الصبح ورم في الركبة بيزيد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0359", "text": "عندي ورم في الركبة بيزيد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0360", "text": "حاسس إن ورم في الركبة بيزيد", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0361", "text": "ركبتي لونها احمر ومش عارف أعمل ايه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0362", "text": "النهارده ركبتي لونها احمر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0363", "text": "عندي ركبتي لونها احمر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0364", "text": "بعد التمرين ركبتي لونها احمر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0365", "text": "من الصبح ركبتي لونها احمر", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0366", "text": "عندي انتفاخ الركبة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0367", "text": "بعد التمرين انتفاخ الركبة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0368", "text": "انتفاخ الركبة وأنا بتمرن", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0369", "text": "يا دكتور انتفاخ الركبة", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0370", "text": "انتفاخ الركبة من امبارح", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0371", "text": "يا دكتور ركبتي وارمه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0372", "text": "ركبتي وارمه من ساعة ما صحيت", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0373", "text": "النهارده ركبتي وارمه", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0374", "text": "ركبتي وارمه من امبارح", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0375", "text": "ركبتي وارمه وأنا بتمرن", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0376", "text": "rokbety manfo5a ba3d el tamreen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0377", "text": "rokbety manfo5a awy", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0378", "text": "rokbety manfo5a", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0379", "text": "el naharda rokbety manfo5a", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0380", "text": "3andy rokbety manfo5a", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0381", "text": "rokbty warma w so5na awy", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0382", "text": "rokbty warma w so5na ba3d el tamreen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0383", "text": "el naharda rokbty warma w so5na", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0384", "text": "rokbty warma w so5na", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0385", "text": "3andy rokbty warma w so5na", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0386", "text": "knee is swollen awy", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0387", "text": "3andy knee is swollen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0388", "text": "knee is swollen ba3d el tamreen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0389", "text": "el naharda knee is swollen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0390", "text": "knee is swollen", "red_flag": true, "symptom": "knee swelling or redness"}
+{"id": "train-0391", "text": "النهارده رجلي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0392", "text": "يا دكتور رجلي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0393", "text": "عندي رجلي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0394", "text": "رجلي بتنمل من ساعة ما صحيت", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0395", "text": "رجلي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0396", "text": "النهارده إيدي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0397", "text": "إيدي بتنمل جامد", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0398", "text": "إيدي بتنمل ومش عارف أعمل ايه", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0399", "text": "حاسس إن إيدي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0400", "text": "إيدي بتنمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0401", "text": "من الصبح مش حاسس بصوابعي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0402", "text": "النهارده مش حاسس بصوابعي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0403", "text": "مش حاسس بصوابعي جامد", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0404", "text": "مش حاسس بصوابعي وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0405", "text": "عندي مش حاسس بصوابعي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0406", "text": "عندي تنميل في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0407", "text": "بعد التمرين تنميل في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0408", "text": "يا دكتور تنميل في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0409", "text": "حاسس إن تنميل في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0410", "text": "تنميل في رجلي وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0411", "text": "خدر في رجلي وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0412", "text": "خدر في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0413", "text": "خدر في رجلي من امبارح", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0414", "text": "يا دكتور خدر في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0415", "text": "حاسس إن خدر في رجلي", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0416", "text": "من الصبح رجلي مخدرة", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0417", "text": "رجلي مخدرة من ساعة ما صحيت", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0418", "text": "رجلي مخدرة وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0419", "text": "يا دكتور رجلي مخدرة", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0420", "text": "رجلي مخدرة من امبارح", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0421", "text": "فقدان الإحساس في الرجل جامد", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0422", "text": "يا دكتور فقدان الإحساس في الرجل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0423", "text": "حاسس إن فقدان الإحساس في الرجل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0424", "text": "فقدان الإحساس في الرجل ومش عارف أعمل ايه", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0425", "text": "النهارده فقدان الإحساس في الرجل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0426", "text": "عندي منملة", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0427", "text": "منملة وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0428", "text": "منملة", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0429", "text": "منملة من امبارح", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0430", "text": "من الصبح منملة", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0431", "text": "عندي دراعي منمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0432", "text": "دراعي منمل وأنا بتمرن", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0433", "text": "دراعي منمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0434", "text": "يا دكتور دراعي منمل", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0435", "text": "دراعي منمل من ساعة ما صحيت", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0436", "text": "regly betnamel", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0437", "text": "regly betnamel ba3d el tamreen", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0438", "text": "3andy regly betnamel", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0439", "text": "regly betnamel awy", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0440", "text": "el naharda regly betnamel", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0441", "text": "tanmil fe edi awy", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0442", "text": "tanmil fe edi", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0443", "text": "tanmil fe edi ba3d el tamreen", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0444", "text": "el naharda tanmil fe edi", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0445", "text": "3andy tanmil fe edi", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0446", "text": "3andy numbness", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0447", "text": "numbness ba3d el tamreen", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0448", "text": "numbness", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0449", "text": "el naharda numbness", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0450", "text": "numbness awy", "red_flag": true, "symptom": "numbness"}
+{"id": "train-0451", "text": "دايخة من امبارح", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0452", "text": "دايخة وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0453", "text": "دايخة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0454", "text": "يا دكتور دايخة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0455", "text": "بعد التمرين دايخة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0456", "text": "الدنيا بتلف وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0457", "text": "الدنيا بتلف من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0458", "text": "يا دكتور الدنيا بتلف", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0459", "text": "الدنيا بتلف جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0460", "text": "بعد التمرين الدنيا بتلف", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0461", "text": "حسيت بدوخة وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0462", "text": "حسيت بدوخة ومش عارف أعمل ايه", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0463", "text": "حسيت بدوخة جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0464", "text": "حسيت بدوخة من امبارح", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0465", "text": "يا دكتور حسيت بدوخة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0466", "text": "النهارده راسي بتلف", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0467", "text": "راسي بتلف", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0468", "text": "راسي بتلف وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0469", "text": "راسي بتلف من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0470", "text": "راسي بتلف جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0471", "text": "كنت هقع", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0472", "text": "كنت هقع جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0473", "text": "كنت هقع من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0474", "text": "بعد التمرين كنت هقع", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0475", "text": "كنت هقع ومش عارف أعمل ايه", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0476", "text": "بعد التمرين زغللة في عيني", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0477", "text": "زغللة في عيني ومش عارف أعمل ايه", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0478", "text": "عندي زغللة في عيني", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0479", "text": "من الصبح زغللة في عيني", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0480", "text": "زغللة في عيني من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0481", "text": "وقعت من طولي جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0482", "text": "من الصبح وقعت من طولي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0483", "text": "يا دكتور وقعت من طولي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0484", "text": "وقعت من طولي وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0485", "text": "بعد التمرين وقعت من طولي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0486", "text": "بعد التمرين دوار", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0487", "text": "النهارده دوار", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0488", "text": "يا دكتور دوار", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0489", "text": "دوار من امبارح", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0490", "text": "من الصبح دوار", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0491", "text": "النهارده فقدت الوعي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0492", "text": "فقدت الوعي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0493", "text": "فقدت الوعي من امبارح", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0494", "text": "فقدت الوعي من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0495", "text": "عندي فقدت الوعي", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0496", "text": "اغمى عليا من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0497", "text": "من الصبح اغمى عليا", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0498", "text": "اغمى عليا من امبارح", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0499", "text": "اغمى عليا", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0500", "text": "عندي دوخة جامدة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0501", "text": "دوخة جامدة من ساعة ما صحيت", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0502", "text": "من الصبح دوخة جامدة", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0503", "text": "دوخة جامدة جامد", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0504", "text": "دوخة جامدة وأنا بتمرن", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0505", "text": "3andy dayekha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0506", "text": "dayekha ba3d el tamreen", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0507", "text": "el naharda dayekha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0508", "text": "dayekha awy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0509", "text": "dayekha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0510", "text": "dokha awy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0511", "text": "dokha ba3d el tamreen", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0512", "text": "dokha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0513", "text": "3andy dokha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0514", "text": "el naharda dokha", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0515", "text": "dizzy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0516", "text": "el naharda dizzy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0517", "text": "dizzy ba3d el tamreen", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0518", "text": "dizzy awy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0519", "text": "3andy dizzy", "red_flag": true, "symptom": "dizziness or fainting"}
+{"id": "train-0520", "text": "بعد التمرين وجع حاد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0521", "text": "وجع حاد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0522", "text": "وجع حاد وأنا بتمرن", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0523", "text": "يا دكتور وجع حاد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0524", "text": "النهارده وجع حاد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0525", "text": "ألم شديد مفاجئ من امبارح", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0526", "text": "ألم شديد مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0527", "text": "النهارده ألم شديد مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0528", "text": "من الصبح ألم شديد مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0529", "text": "عندي ألم شديد مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0530", "text": "شكة جامدة ومش عارف أعمل ايه", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0531", "text": "شكة جامدة وأنا بتمرن", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0532", "text": "شكة جامدة جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0533", "text": "بعد التمرين شكة جامدة", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0534", "text": "حاسس إن شكة جامدة", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0535", "text": "وجع بيخزق جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0536", "text": "وجع بيخزق", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0537", "text": "عندي وجع بيخزق", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0538", "text": "وجع بيخزق وأنا بتمرن", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0539", "text": "حاسس إن وجع بيخزق", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0540", "text": "طرقعة في الركبة ووجع جامد من امبارح", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0541", "text": "من الصبح طرقعة في الركبة ووجع جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0542", "text": "حاسس إن طرقعة في الركبة ووجع جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0543", "text": "طرقعة في الركبة ووجع جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0544", "text": "طرقعة في الركبة ووجع جامد من ساعة ما صحيت", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0545", "text": "وجع زي السكينة", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0546", "text": "وجع زي السكينة وأنا بتمرن", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0547", "text": "وجع زي السكينة من ساعة ما صحيت", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0548", "text": "بعد التمرين وجع زي السكينة", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0549", "text": "عندي وجع زي السكينة", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0550", "text": "حاسس إن وجع مش طبيعي", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0551", "text": "وجع مش طبيعي جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0552", "text": "وجع مش طبيعي من امبارح", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0553", "text": "من الصبح وجع مش طبيعي", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0554", "text": "النهارده وجع مش طبيعي", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0555", "text": "يا دكتور ألم مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0556", "text": "ألم مفاجئ ومش عارف أعمل ايه", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0557", "text": "ألم مفاجئ من امبارح", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0558", "text": "ألم مفاجئ وأنا بتمرن", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0559", "text": "حاسس إن ألم مفاجئ", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0560", "text": "وجع نار", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0561", "text": "وجع نار جامد", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0562", "text": "من الصبح وجع نار", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0563", "text": "وجع نار من ساعة ما صحيت", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0564", "text": "وجع نار من امبارح", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0565", "text": "3andy alam shedid", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0566", "text": "alam shedid", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0567", "text": "el naharda alam shedid", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0568", "text": "alam shedid awy", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0569", "text": "alam shedid ba3d el tamreen", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0570", "text": "wag3 gamed fag2a", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0571", "text": "3andy wag3 gamed fag2a", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0572", "text": "wag3 gamed fag2a awy", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0573", "text": "wag3 gamed fag2a ba3d el tamreen", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0574", "text": "el naharda wag3 gamed fag2a", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0575", "text": "sharp pain awy", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0576", "text": "3andy sharp pain", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0577", "text": "el naharda sharp pain", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0578", "text": "sharp pain", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0579", "text": "sharp pain ba3d el tamreen", "red_flag": true, "symptom": "sharp or sudden pain"}
+{"id": "train-0580", "text": "مفيش دوخة", "red_flag": false, "symptom": null}
+{"id": "train-0581", "text": "مش حاسس بدوخة", "red_flag": false, "symptom": null}
+{"id": "train-0582", "text": "مكانش عندي دوخة النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0583", "text": "لو حصل دوخة هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0584", "text": "دوخة؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0585", "text": "ولا دوخة ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0586", "text": "مفيش تنميل", "red_flag": false, "symptom": null}
+{"id": "train-0587", "text": "مفيش تنميل الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0588", "text": "مش حاسس بتنميل", "red_flag": false, "symptom": null}
+{"id": "train-0589", "text": "مكانش عندي تنميل النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0590", "text": "لو حصل تنميل هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0591", "text": "تنميل؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0592", "text": "ولا تنميل ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0593", "text": "مفيش سخونية", "red_flag": false, "symptom": null}
+{"id": "train-0594", "text": "مفيش سخونية الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0595", "text": "مش حاسس بسخونية", "red_flag": false, "symptom": null}
+{"id": "train-0596", "text": "مكانش عندي سخونية النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0597", "text": "لو حصل سخونية هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0598", "text": "سخونية؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0599", "text": "ولا سخونية ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0600", "text": "مفيش حرارة", "red_flag": false, "symptom": null}
+{"id": "train-0601", "text": "مفيش حرارة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0602", "text": "مش حاسس بحرارة", "red_flag": false, "symptom": null}
+{"id": "train-0603", "text": "مكانش عندي حرارة النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0604", "text": "لو حصل حرارة هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0605", "text": "حرارة؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0606", "text": "ولا حرارة ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0607", "text": "مفيش وجع في صدري", "red_flag": false, "symptom": null}
+{"id": "train-0608", "text": "مفيش وجع في صدري الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0609", "text": "مش حاسس بوجع في صدري", "red_flag": false, "symptom": null}
+{"id": "train-0610", "text": "مكانش عندي وجع في صدري النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0611", "text": "لو حصل وجع في صدري هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0612", "text": "وجع في صدري؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0613", "text": "ولا وجع في صدري ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0614", "text": "مفيش ضيق في النفس", "red_flag": false, "symptom": null}
+{"id": "train-0615", "text": "مفيش ضيق في النفس الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0616", "text": "مش حاسس بضيق في النفس", "red_flag": false, "symptom": null}
+{"id": "train-0617", "text": "مكانش عندي ضيق في النفس النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0618", "text": "لو حصل ضيق في النفس هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0619", "text": "ضيق في النفس؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0620", "text": "ولا ضيق في النفس ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0621", "text": "مفيش صديد", "red_flag": false, "symptom": null}
+{"id": "train-0622", "text": "مفيش صديد الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0623", "text": "مش حاسس بصديد", "red_flag": false, "symptom": null}
+{"id": "train-0624", "text": "مكانش عندي صديد النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0625", "text": "لو حصل صديد هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0626", "text": "صديد؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0627", "text": "ولا صديد ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0628", "text": "مفيش ورم", "red_flag": false, "symptom": null}
+{"id": "train-0629", "text": "مفيش ورم الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0630", "text": "مش حاسس بورم", "red_flag": false, "symptom": null}
+{"id": "train-0631", "text": "مكانش عندي ورم النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0632", "text": "لو حصل ورم هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0633", "text": "ورم؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0634", "text": "ولا ورم ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0635", "text": "مفيش وجع حاد", "red_flag": false, "symptom": null}
+{"id": "train-0636", "text": "مفيش وجع حاد الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0637", "text": "مش حاسس بوجع حاد", "red_flag": false, "symptom": null}
+{"id": "train-0638", "text": "مكانش عندي وجع حاد النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0639", "text": "لو حصل وجع حاد هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0640", "text": "وجع حاد؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0641", "text": "ولا وجع حاد ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0642", "text": "مفيش رعشة", "red_flag": false, "symptom": null}
+{"id": "train-0643", "text": "مفيش رعشة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0644", "text": "مش حاسس برعشة", "red_flag": false, "symptom": null}
+{"id": "train-0645", "text": "مكانش عندي رعشة النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0646", "text": "لو حصل رعشة هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0647", "text": "رعشة؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0648", "text": "ولا رعشة ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0649", "text": "مفيش إفرازات من الجرح", "red_flag": false, "symptom": null}
+{"id": "train-0650", "text": "مفيش إفرازات من الجرح الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0651", "text": "مش حاسس بإفرازات من الجرح", "red_flag": false, "symptom": null}
+{"id": "train-0652", "text": "مكانش عندي إفرازات من الجرح النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0653", "text": "لو حصل إفرازات من الجرح هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0654", "text": "إفرازات من الجرح؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0655", "text": "ولا إفرازات من الجرح ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0656", "text": "مفيش خدر", "red_flag": false, "symptom": null}
+{"id": "train-0657", "text": "مفيش خدر الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0658", "text": "مش حاسس بخدر", "red_flag": false, "symptom": null}
+{"id": "train-0659", "text": "مكانش عندي خدر النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0660", "text": "لو حصل خدر هكلم الدكتور", "red_flag": false, "symptom": null}
+{"id": "train-0661", "text": "خدر؟ لا خالص", "red_flag": false, "symptom": null}
+{"id": "train-0662", "text": "ولا خدر ولا حاجة", "red_flag": false, "symptom": null}
+{"id": "train-0663", "text": "صدري منشرح", "red_flag": false, "symptom": null}
+{"id": "train-0664", "text": "صدري واسع النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0665", "text": "قلبي مبسوط", "red_flag": false, "symptom": null}
+{"id": "train-0666", "text": "قلبي حاسس إني هخف", "red_flag": false, "symptom": null}
+{"id": "train-0667", "text": "نفسي أرجع ألعب كورة", "red_flag": false, "symptom": null}
+{"id": "train-0668", "text": "نفسي مفتوحة للأكل", "red_flag": false, "symptom": null}
+{"id": "train-0669", "text": "خلاص الدوخة راحت من أسبوع", "red_flag": false, "symptom": null}
+{"id": "train-0670", "text": "السخونية راحت خالص", "red_flag": false, "symptom": null}
+{"id": "train-0671", "text": "الدكتور سألني عن التنميل وقلتله لا", "red_flag": false, "symptom": null}
+{"id": "train-0672", "text": "قريت إن الدوخة ممكن تحصل بس محصلتش", "red_flag": false, "symptom": null}
+{"id": "train-0673", "text": "مبقاش في ورم", "red_flag": false, "symptom": null}
+{"id": "train-0674", "text": "الجرح قفل ونشف", "red_flag": false, "symptom": null}
+{"id": "train-0675", "text": "بعد التمرين شوية تعب بعد التمرين", "red_flag": false, "symptom": null}
+{"id": "train-0676", "text": "النهارده شوية تعب بعد التمرين", "red_flag": false, "symptom": null}
+{"id": "train-0677", "text": "شوية تعب بعد التمرين بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0678", "text": "وجع خفيف في الفخد الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0679", "text": "وجع خفيف في الفخد", "red_flag": false, "symptom": null}
+{"id": "train-0680", "text": "النهارده وجع خفيف في الفخد", "red_flag": false, "symptom": null}
+{"id": "train-0681", "text": "شد عضلي خفيف", "red_flag": false, "symptom": null}
+{"id": "train-0682", "text": "بعد التمرين شد عضلي خفيف", "red_flag": false, "symptom": null}
+{"id": "train-0683", "text": "شد عضلي خفيف الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0684", "text": "بعد التمرين تيبس الصبح وبيروح", "red_flag": false, "symptom": null}
+{"id": "train-0685", "text": "تيبس الصبح وبيروح", "red_flag": false, "symptom": null}
+{"id": "train-0686", "text": "تيبس الصبح وبيروح الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0687", "text": "رجلي تعبانة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0688", "text": "رجلي تعبانة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0689", "text": "رجلي تعبانة", "red_flag": false, "symptom": null}
+{"id": "train-0690", "text": "الوجع ٢ من ١٠ الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0691", "text": "النهارده الوجع ٢ من ١٠", "red_flag": false, "symptom": null}
+{"id": "train-0692", "text": "بعد التمرين الوجع ٢ من ١٠", "red_flag": false, "symptom": null}
+{"id": "train-0693", "text": "النهارده الوجع ٤ من ١٠ زي كل مرة", "red_flag": false, "symptom": null}
+{"id": "train-0694", "text": "بعد التمرين الوجع ٤ من ١٠ زي كل مرة", "red_flag": false, "symptom": null}
+{"id": "train-0695", "text": "الوجع ٤ من ١٠ زي كل مرة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0696", "text": "كملت التمرين عادي بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0697", "text": "بعد التمرين كملت التمرين عادي", "red_flag": false, "symptom": null}
+{"id": "train-0698", "text": "النهارده كملت التمرين عادي", "red_flag": false, "symptom": null}
+{"id": "train-0699", "text": "التمرين كان صعب شوية", "red_flag": false, "symptom": null}
+{"id": "train-0700", "text": "التمرين كان صعب شوية بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0701", "text": "التمرين كان صعب شوية الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0702", "text": "ركبتي كويسة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0703", "text": "ركبتي كويسة", "red_flag": false, "symptom": null}
+{"id": "train-0704", "text": "بعد التمرين ركبتي كويسة", "red_flag": false, "symptom": null}
+{"id": "train-0705", "text": "النهارده مفيش مشاكل", "red_flag": false, "symptom": null}
+{"id": "train-0706", "text": "مفيش مشاكل", "red_flag": false, "symptom": null}
+{"id": "train-0707", "text": "مفيش مشاكل الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0708", "text": "النهارده حاسس بتحسن", "red_flag": false, "symptom": null}
+{"id": "train-0709", "text": "حاسس بتحسن الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0710", "text": "بعد التمرين حاسس بتحسن", "red_flag": false, "symptom": null}
+{"id": "train-0711", "text": "عملت التكرارات كلها الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0712", "text": "النهارده عملت التكرارات كلها", "red_flag": false, "symptom": null}
+{"id": "train-0713", "text": "عملت التكرارات كلها", "red_flag": false, "symptom": null}
+{"id": "train-0714", "text": "الوجع قل عن الأسبوع اللي فات بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0715", "text": "الوجع قل عن الأسبوع اللي فات", "red_flag": false, "symptom": null}
+{"id": "train-0716", "text": "النهارده الوجع قل عن الأسبوع اللي فات", "red_flag": false, "symptom": null}
+{"id": "train-0717", "text": "عضلاتي مشدودة شوية الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0718", "text": "عضلاتي مشدودة شوية", "red_flag": false, "symptom": null}
+{"id": "train-0719", "text": "بعد التمرين عضلاتي مشدودة شوية", "red_flag": false, "symptom": null}
+{"id": "train-0720", "text": "النهارده نمت كويس", "red_flag": false, "symptom": null}
+{"id": "train-0721", "text": "نمت كويس بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0722", "text": "بعد التمرين نمت كويس", "red_flag": false, "symptom": null}
+{"id": "train-0723", "text": "بعد التمرين أخدت المسكن زي ما الدكتور قال", "red_flag": false, "symptom": null}
+{"id": "train-0724", "text": "أخدت المسكن زي ما الدكتور قال الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0725", "text": "النهارده أخدت المسكن زي ما الدكتور قال", "red_flag": false, "symptom": null}
+{"id": "train-0726", "text": "العضلة بتحرقني شوية وده طبيعي بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0727", "text": "بعد التمرين العضلة بتحرقني شوية وده طبيعي", "red_flag": false, "symptom": null}
+{"id": "train-0728", "text": "العضلة بتحرقني شوية وده طبيعي", "red_flag": false, "symptom": null}
+{"id": "train-0729", "text": "بعد التمرين ضهري تعبان من الشغل", "red_flag": false, "symptom": null}
+{"id": "train-0730", "text": "النهارده ضهري تعبان من الشغل", "red_flag": false, "symptom": null}
+{"id": "train-0731", "text": "ضهري تعبان من الشغل بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0732", "text": "كتفي متيبس شوية", "red_flag": false, "symptom": null}
+{"id": "train-0733", "text": "كتفي متيبس شوية بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0734", "text": "بعد التمرين كتفي متيبس شوية", "red_flag": false, "symptom": null}
+{"id": "train-0735", "text": "زهقت من التمرين بصراحة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0736", "text": "زهقت من التمرين بصراحة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0737", "text": "زهقت من التمرين بصراحة", "red_flag": false, "symptom": null}
+{"id": "train-0738", "text": "بعد التمرين معرفتش أكمل آخر تكرار", "red_flag": false, "symptom": null}
+{"id": "train-0739", "text": "معرفتش أكمل آخر تكرار بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0740", "text": "النهارده معرفتش أكمل آخر تكرار", "red_flag": false, "symptom": null}
+{"id": "train-0741", "text": "الحمد لله تمام بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0742", "text": "النهارده الحمد لله تمام", "red_flag": false, "symptom": null}
+{"id": "train-0743", "text": "الحمد لله تمام", "red_flag": false, "symptom": null}
+{"id": "train-0744", "text": "مفيش جديد", "red_flag": false, "symptom": null}
+{"id": "train-0745", "text": "بعد التمرين مفيش جديد", "red_flag": false, "symptom": null}
+{"id": "train-0746", "text": "مفيش جديد بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0747", "text": "بعد التمرين صدري مفتوح ومبسوط", "red_flag": false, "symptom": null}
+{"id": "train-0748", "text": "صدري مفتوح ومبسوط الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0749", "text": "النهارده صدري مفتوح ومبسوط", "red_flag": false, "symptom": null}
+{"id": "train-0750", "text": "النهارده نفسي أخلص العلاج بسرعة", "red_flag": false, "symptom": null}
+{"id": "train-0751", "text": "نفسي أخلص العلاج بسرعة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0752", "text": "نفسي أخلص العلاج بسرعة", "red_flag": false, "symptom": null}
+{"id": "train-0753", "text": "نفسي في أكلة حلوة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0754", "text": "النهارده نفسي في أكلة حلوة", "red_flag": false, "symptom": null}
+{"id": "train-0755", "text": "نفسي في أكلة حلوة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0756", "text": "قلبي معاكم بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0757", "text": "بعد التمرين قلبي معاكم", "red_flag": false, "symptom": null}
+{"id": "train-0758", "text": "قلبي معاكم", "red_flag": false, "symptom": null}
+{"id": "train-0759", "text": "النهارده قلبي مرتاح النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0760", "text": "قلبي مرتاح النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0761", "text": "بعد التمرين قلبي مرتاح النهارده", "red_flag": false, "symptom": null}
+{"id": "train-0762", "text": "رجلي على رجلك يا دكتور بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0763", "text": "بعد التمرين رجلي على رجلك يا دكتور", "red_flag": false, "symptom": null}
+{"id": "train-0764", "text": "النهارده رجلي على رجلك يا دكتور", "red_flag": false, "symptom": null}
+{"id": "train-0765", "text": "النهارده عرقان شوية", "red_flag": false, "symptom": null}
+{"id": "train-0766", "text": "عرقان شوية بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0767", "text": "بعد التمرين عرقان شوية", "red_flag": false, "symptom": null}
+{"id": "train-0768", "text": "الجو حر بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0769", "text": "الجو حر الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0770", "text": "الجو حر", "red_flag": false, "symptom": null}
+{"id": "train-0771", "text": "اتأخرت على التمرين الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0772", "text": "اتأخرت على التمرين", "red_flag": false, "symptom": null}
+{"id": "train-0773", "text": "النهارده اتأخرت على التمرين", "red_flag": false, "symptom": null}
+{"id": "train-0774", "text": "عملت المشي نص ساعة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0775", "text": "عملت المشي نص ساعة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0776", "text": "عملت المشي نص ساعة", "red_flag": false, "symptom": null}
+{"id": "train-0777", "text": "النهارده الركبة بتطقطق من غير وجع", "red_flag": false, "symptom": null}
+{"id": "train-0778", "text": "الركبة بتطقطق من غير وجع", "red_flag": false, "symptom": null}
+{"id": "train-0779", "text": "الركبة بتطقطق من غير وجع الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0780", "text": "حاسس بشد بسيط بعد السكوات الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0781", "text": "بعد التمرين حاسس بشد بسيط بعد السكوات", "red_flag": false, "symptom": null}
+{"id": "train-0782", "text": "النهارده حاسس بشد بسيط بعد السكوات", "red_flag": false, "symptom": null}
+{"id": "train-0783", "text": "tamam el hamdulellah", "red_flag": false, "symptom": null}
+{"id": "train-0784", "text": "kolo tamam", "red_flag": false, "symptom": null}
+{"id": "train-0785", "text": "ta3ban shwaya", "red_flag": false, "symptom": null}
+{"id": "train-0786", "text": "pain 3/10", "red_flag": false, "symptom": null}
+{"id": "train-0787", "text": "el wag3 a2al", "red_flag": false, "symptom": null}
+{"id": "train-0788", "text": "no pain today", "red_flag": false, "symptom": null}
+{"id": "train-0789", "text": "feeling better", "red_flag": false, "symptom": null}
+{"id": "train-0790", "text": "شوية وجع عادي في العضلة", "red_flag": false, "symptom": null}
+{"id": "train-0791", "text": "شوية وجع عادي في العضلة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0792", "text": "بعد التمرين شوية وجع عادي في العضلة", "red_flag": false, "symptom": null}
+{"id": "train-0793", "text": "تعبت من السلم بس ارتحت", "red_flag": false, "symptom": null}
+{"id": "train-0794", "text": "تعبت من السلم بس ارتحت الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0795", "text": "تعبت من السلم بس ارتحت بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0796", "text": "النهارده ركبتي أحسن", "red_flag": false, "symptom": null}
+{"id": "train-0797", "text": "بعد التمرين ركبتي أحسن", "red_flag": false, "symptom": null}
+{"id": "train-0798", "text": "ركبتي أحسن بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0799", "text": "الوجع بيروح مع الحركة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0800", "text": "الوجع بيروح مع الحركة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0801", "text": "الوجع بيروح مع الحركة", "red_flag": false, "symptom": null}
+{"id": "train-0802", "text": "مش قادر أنزل أوي في السكوات الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0803", "text": "مش قادر أنزل أوي في السكوات بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0804", "text": "مش قادر أنزل أوي في السكوات", "red_flag": false, "symptom": null}
+{"id": "train-0805", "text": "رقبتي واجعاني شوية من النوم بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0806", "text": "النهارده رقبتي واجعاني شوية من النوم", "red_flag": false, "symptom": null}
+{"id": "train-0807", "text": "رقبتي واجعاني شوية من النوم الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0808", "text": "ألم خفيف في الركبة زي العادة", "red_flag": false, "symptom": null}
+{"id": "train-0809", "text": "بعد التمرين ألم خفيف في الركبة زي العادة", "red_flag": false, "symptom": null}
+{"id": "train-0810", "text": "ألم خفيف في الركبة زي العادة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0811", "text": "وجع بسيط في الفخد بعد التمرين بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0812", "text": "بعد التمرين وجع بسيط في الفخد بعد التمرين", "red_flag": false, "symptom": null}
+{"id": "train-0813", "text": "وجع بسيط في الفخد بعد التمرين الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0814", "text": "النهارده ركبتي بتوجعني شوية لما بطلع السلم زي كل مرة", "red_flag": false, "symptom": null}
+{"id": "train-0815", "text": "ركبتي بتوجعني شوية لما بطلع السلم زي كل مرة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0816", "text": "بعد التمرين ركبتي بتوجعني شوية لما بطلع السلم زي كل مرة", "red_flag": false, "symptom": null}
+{"id": "train-0817", "text": "الوجع نفس بتاع امبارح", "red_flag": false, "symptom": null}
+{"id": "train-0818", "text": "النهارده الوجع نفس بتاع امبارح", "red_flag": false, "symptom": null}
+{"id": "train-0819", "text": "بعد التمرين الوجع نفس بتاع امبارح", "red_flag": false, "symptom": null}
+{"id": "train-0820", "text": "كتفي بيوجعني شوية لما أرفعه بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0821", "text": "بعد التمرين كتفي بيوجعني شوية لما أرفعه", "red_flag": false, "symptom": null}
+{"id": "train-0822", "text": "النهارده كتفي بيوجعني شوية لما أرفعه", "red_flag": false, "symptom": null}
+{"id": "train-0823", "text": "وجع ٣ من ١٠ الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0824", "text": "بعد التمرين وجع ٣ من ١٠", "red_flag": false, "symptom": null}
+{"id": "train-0825", "text": "النهارده وجع ٣ من ١٠", "red_flag": false, "symptom": null}
+{"id": "train-0826", "text": "ألم ٢ من ١٠ بيروح بالراحة الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0827", "text": "ألم ٢ من ١٠ بيروح بالراحة بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0828", "text": "بعد التمرين ألم ٢ من ١٠ بيروح بالراحة", "red_flag": false, "symptom": null}
+{"id": "train-0829", "text": "pain 1/10", "red_flag": false, "symptom": null}
+{"id": "train-0830", "text": "pain 4/10 like usual", "red_flag": false, "symptom": null}
+{"id": "train-0831", "text": "mild pain in my knee", "red_flag": false, "symptom": null}
+{"id": "train-0832", "text": "slight soreness", "red_flag": false, "symptom": null}
+{"id": "train-0833", "text": "shwayet wag3 3ady", "red_flag": false, "symptom": null}
+{"id": "train-0834", "text": "wag3 khafeef", "red_flag": false, "symptom": null}
+{"id": "train-0835", "text": "النهارده ضهري بيوجعني من الشغل", "red_flag": false, "symptom": null}
+{"id": "train-0836", "text": "ضهري بيوجعني من الشغل", "red_flag": false, "symptom": null}
+{"id": "train-0837", "text": "ضهري بيوجعني من الشغل بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0838", "text": "بعد التمرين الوجع مش أكتر من الأول", "red_flag": false, "symptom": null}
+{"id": "train-0839", "text": "الوجع مش أكتر من الأول بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0840", "text": "الوجع مش أكتر من الأول الحمد لله", "red_flag": false, "symptom": null}
+{"id": "train-0841", "text": "النهارده إيدي واجعاني من الشيل", "red_flag": false, "symptom": null}
+{"id": "train-0842", "text": "إيدي واجعاني من الشيل بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0843", "text": "بعد التمرين إيدي واجعاني من الشيل", "red_flag": false, "symptom": null}
+{"id": "train-0844", "text": "ألم العضلات بعد التمرين عادي بس كده", "red_flag": false, "symptom": null}
+{"id": "train-0845", "text": "بعد التمرين ألم العضلات بعد التمرين عادي", "red_flag": false, "symptom": null}
+{"id": "train-0846", "text": "ألم العضلات بعد التمرين عادي", "red_flag": false, "symptom": null}

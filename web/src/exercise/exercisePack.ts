@@ -34,6 +34,8 @@ export interface ExercisePack {
   status: string;
   provenance: string;
   approvedBy: string | null;
+  /** false = count reps only, never judge them (the angle failed an external test); absent = true */
+  correctionCues?: boolean;
   /** published reference values, shown with their citation; never physio-reviewed */
   literatureGoals?: LiteratureGoal[];
 }
@@ -146,7 +148,7 @@ export const PACK_COPY: Readonly<Record<string, PackCopy>> = {
     spokenMoreAr: 'ارفع ذراعك أعلى قليلًا',
     spokenLessAr: 'لا ترفع ذراعك أعلى من المرجع',
     evidenceAr:
-      'لم نقِس بعد دقة البوابة لهذا التمرين؛ المقارنة بالمرجع الشخصي ميّزت الأخطاء جيدًا في بيانات REHAB26 (AUC 0.76).',
+      'يعدّ التطبيق التكرارات فقط في هذا التمرين ولا يصحّحها: في اختبار على 8 أشخاص جدد من 4 زوايا تصوير (Fit3D)، كانت 34% من التصحيحات ستكون خاطئة.',
   },
   'upper-limb.shoulder-flexion': {
     measureAr: 'رفع الذراع للأمام',
@@ -207,7 +209,7 @@ const PACK_COPY_EN: Readonly<Record<string, PackCopy>> = {
     spokenMoreAr: 'Raise your arm a little higher',
     spokenLessAr: 'Not higher than the reference',
     evidenceAr:
-      'The gate has not been measured for this exercise yet; comparing with the personal reference separated errors well in REHAB26 data (AUC 0.76).',
+      'For this exercise the app only counts reps and does not correct them: in a test on 8 new people from 4 camera angles (Fit3D), 34% of corrections would have been wrong.',
   },
   'upper-limb.shoulder-flexion': {
     measureAr: 'forward arm raise',

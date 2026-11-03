@@ -24,4 +24,8 @@ Train / validation subjects only; numbers from `docs/experiments.md` entries dat
 
 UCOPhyRehab++ (external, physio-scored, motion capture; `docs/experiments.md` 2026-11-03): rep counting MAE 0.56 reps (exact 76%) on the 269 recordings whose measured angle moves, abstained on 124; agreement with the physio's 1-5 score is weak for every method (Spearman 0.14-0.22).
 
+Pain red flags (synthetic Egyptian-Arabic notes, not physio-reviewed; `docs/experiments.md` 2026-11-03): test red flags caught 14 / 40 by the word list, 39 / 40 by word list OR the 58 KB on-device model; false alarms 3 / 19 and 7 / 19.
+
+Fit3D (external, 8 new people, 4 new cameras, Vicon truth; `docs/experiments.md` 2026-11-03), shipped view rule not refitted: knee packs silent on all 608 diagonal-view units (speaking would be wrong on 70%), 0 false cues; shoulder abduction speaks on 74% with false-cue rate 0.34 (95% upper 0.41), above target; learned gate certifies nothing (stays silent).
+
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

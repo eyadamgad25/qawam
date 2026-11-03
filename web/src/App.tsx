@@ -4,6 +4,7 @@ import {
   type SyntheticFrameResult,
 } from './anglePipelineDemo';
 import { evaluatePainTriage, type PainTriageResult } from './painTriage';
+import { painModelFlags } from './painModel';
 import LocalVideoPoseDemo from './LocalVideoPoseDemo';
 import ExerciseCoach from './exercise/ExerciseCoach';
 import { DEMO_DEFAULTS, PAIN_RED_FLAGS, sourceOf } from './demoDefaults';
@@ -78,7 +79,6 @@ export default function App() {
     null,
   );
   const [painDemoText, setPainDemoText] = useState('');
-  const [painModelFlag, setPainModelFlag] = useState(false);
   const [painDemoResult, setPainDemoResult] = useState<PainTriageResult | null>(null);
 
   const tabs: { id: Tab; label: string }[] = [
@@ -193,19 +193,12 @@ export default function App() {
               rows={3}
               placeholder="مثال: عندي سخونية والجرح بينز"
             />
-            <label className="pain-model-toggle">
-              <input
-                type="checkbox"
-                checked={painModelFlag}
-                onChange={(event) => setPainModelFlag(event.target.checked)}
-              />
-              <span>
-                {tr(
-                  'محاكاة إشارة نموذج إيجابية (للاختبار فقط)',
-                  'Simulate a positive model flag (testing only)',
-                )}
-              </span>
-            </label>
+            <p className="pain-model-note">
+              {tr(
+                'يعمل معها نموذج صغير على جهازك يلتقط الصياغات الأخرى والفرانكو. يضيف تنبيهات فقط ولا يلغي أي عبارة من القائمة. دُرّب على عبارات مصطنعة، ولم يراجعه أخصائي.',
+                'A small model on your device also catches other wordings, including Franco-Arabic. It only adds alerts and never cancels a phrase from the list. It was trained on synthetic notes and no physio has reviewed it.',
+              )}
+            </p>
             <button
               className="demo-run-button"
               type="button"
@@ -214,7 +207,7 @@ export default function App() {
                   evaluatePainTriage({
                     text: painDemoText,
                     lexicon: PAIN_RED_FLAGS,
-                    modelFlag: painModelFlag,
+                    modelFlag: painModelFlags(painDemoText),
                   }),
                 )
               }
@@ -254,8 +247,8 @@ export default function App() {
                 </p>
                 <p>
                   {tr(
-                    'هذه نتيجة تجريبية من قائمة لم يراجعها أخصائي. عدم وجود إشارة لا يعني أنك بخير؛ إذا قلقت فتواصل مع أخصائيك.',
-                    'This is a prototype result from a list no physio has reviewed. No flag does not mean you are fine; if you are worried, contact your physio.',
+                    'هذه نتيجة تجريبية من قائمة ونموذج لم يراجعهما أخصائي. عدم وجود إشارة لا يعني أنك بخير؛ إذا قلقت فتواصل مع أخصائيك.',
+                    'This is a prototype result from a list and a model no physio has reviewed. No flag does not mean you are fine; if you are worried, contact your physio.',
                   )}
                 </p>
               </div>

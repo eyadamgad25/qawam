@@ -37,7 +37,8 @@
       "url": "https://doi.org/10.1016/j.jse.2011.07.032"
     }
   ],
-  "notes": "Front view keeps abduction in the image plane. Shoulder abduction = interior angle between the trunk (shoulder to hip) and the upper arm, so arm at the side is about 0.",
+  "notes": "Front view keeps abduction in the image plane. Shoulder abduction = interior angle between the trunk (shoulder to hip) and the upper arm, so arm at the side is about 0. Correction cues are off: on Fit3D (8 new people, 4 cameras, docs/experiments.md 2026-11-03) the view rule let through cues that were wrong 34% of the time.",
+  "correctionCues": false,
   "status": "provisional",
   "provenance": "default",
   "approvedBy": null,

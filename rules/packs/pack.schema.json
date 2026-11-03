@@ -180,6 +180,10 @@
     "notes": {
       "type": "string"
     },
+    "correctionCues": {
+      "type": "boolean",
+      "description": "false = count reps only, never judge or correct them (set when an evaluation found the measured angle too unreliable to cue on). Absent means true."
+    },
     "status": {
       "enum": [
         "provisional",

@@ -4,6 +4,15 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-25 — Pain check on real Arabic text: the shipped model fails, a model retrained on real titles is much better
+
+- **Rules, written before any score:** `docs/superpowers/specs/2026-11-25-pain-check-real-text.md`. **Commands:** `py -3.14 ml\pain\shifaa_eval.py sample`, label, `py -3.14 ml\pain\shifaa_eval.py score`, `py -3.14 ml\pain\train_shifaa_model.py` (scikit-learn). The app's own TypeScript does the checking (`ml/pain/pain_batch.ts`).
+- **Data:** Shifaa (Kaggle, Apache 2.0): 84,422 rows, 55,184 distinct consultation numbers. Question titles (about 8 words). Texts stay in `data/`; only counts are written. 250 titles (150 bone/muscle/sports, 100 from symptom categories, odd numbers) labelled blind by the AI assistant, not by a clinician: 94 state one of the nine symptoms.
+- **Shipped check on blind titles:** caught 82 / 94, false alarms 102 / 156 (accuracy 0.544, macro-F1 0.538). On the people the app is for (150 titles): caught 24 / 26, **false alarms 77 / 124 (62%)**. The word list alone: 36 of 94 caught, 1 of 156 false alarms. The whole collection of 4,474 bone, muscle and sports titles: 70% flagged by the check, 5% by the word list. **The "useful" rule (recall >= 0.80, at most 20% false alarms) is not met.** The model learned our own synthetic wording; the 39 / 40 on synthetic notes did not transfer.
+- **Retrained** (same features and size, 63 KB; even-numbered consultations + the synthetic notes; threshold fixed on held-out even titles): blind titles caught **86 / 94, false alarms 29 / 156** (accuracy 0.852, F1 0.823, macro-F1 0.848); target titles 20 / 26 and 10 / 124. Synthetic test: 37 / 40 caught (shipped 39 / 40), false alarms 3 / 19 (7 / 19). No blind title appears in the training half.
+- **Decision by the rule:** not shipped (the project owner later chose to use it in the demo behind a note, `docs/decisions.md` 2026-11-25). The rule asked for "not worse on the synthetic test" and it misses two more red flags there (and catches 20 / 26 instead of 24 / 26 on target titles). On balance it is far more usable, so this is a choice between missed signs and alarm fatigue that a clinician has to make.
+- **Caveats:** titles to a web clinic, mostly formal Arabic and several dialects, not Egyptian pain notes after exercise; labels by one non-clinician; training labels are diagnosis categories, not symptoms; one run, no tuning on the blind half. That half is now used up.
+
 ## 2026-11-25 — Confirmation of the three-rep reference: three of four rules pass, so not in the app yet
 
 - **Rules, written before any score:** `docs/superpowers/specs/2026-11-25-three-rep-confirmation.md`. **Commands:** `py -3.14 ml\eval\confirm_reference.py --freeze`, then `py -3.14 ml\eval\confirm_reference.py` (run once). Frozen cut-offs: plain 0.203, per-patient 1.051 (4,477 reps of the three older datasets), `ml/eval/confirm_cuts.json`.

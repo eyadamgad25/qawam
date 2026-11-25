@@ -28,6 +28,8 @@ KERAAL (6 real low-back-pain patients, two clinicians; `docs/experiments.md` 202
 
 Pain red flags (synthetic Egyptian-Arabic notes, not physio-reviewed; `docs/experiments.md` 2026-11-03): test red flags caught 14 / 40 by the word list, 39 / 40 by word list OR the 58 KB on-device model; false alarms 3 / 19 and 7 / 19. With the temperature rule and negation (all 121 notes): 78 / 81 caught, false alarms 9 / 40.
 
+Pain red flags on real text (Shifaa titles, 250 labelled blind by a non-clinician; `docs/experiments.md` 2026-11-25): shipped check caught 82 / 94 with 102 / 156 false alarms (macro-F1 0.54), so the synthetic numbers above do not transfer; a model retrained on real titles caught 86 / 94 with 29 / 156 (macro-F1 0.85); in the demo since 2026-11-25 behind a note.
+
 Fit3D (external, 8 new people, 4 new cameras, Vicon truth; `docs/experiments.md` 2026-11-03), shipped view rule not refitted: knee packs silent on all 608 diagonal-view units (speaking would be wrong on 70%), 0 false cues; shoulder abduction speaks on 74% with false-cue rate 0.34 (95% upper 0.41), above target; learned gate certifies nothing (stays silent).
 
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

@@ -1,4 +1,6 @@
-"""Train the on-device pain red-flag model and export it to web/src/painModel.json.
+"""Train the first on-device pain red-flag model (synthetic notes only) and export it to web/src/painModel.json.
+
+Replaced in the app on 2026-11-25 by train_shifaa_model.py --export; running this one overwrites that file.
 
 Logistic regression on distinct character 2-4-grams (pain_text.char_ngrams), each scaled by
 1 / sqrt(number of n-grams in the note), balanced class weights, L2. Plain numpy, no new

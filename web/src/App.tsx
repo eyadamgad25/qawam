@@ -4,7 +4,7 @@ import {
   type SyntheticFrameResult,
 } from './anglePipelineDemo';
 import { evaluatePainTriage, type PainTriageResult } from './painTriage';
-import { painModelFlags } from './painModel';
+import { PAIN_TEST, painModelFlags } from './painModel';
 import LocalVideoPoseDemo from './LocalVideoPoseDemo';
 import ExerciseCoach from './exercise/ExerciseCoach';
 import { DEMO_DEFAULTS, PAIN_RED_FLAGS, sourceOf } from './demoDefaults';
@@ -80,6 +80,7 @@ export default function App() {
   );
   const [painDemoText, setPainDemoText] = useState('');
   const [painDemoResult, setPainDemoResult] = useState<PainTriageResult | null>(null);
+  const [painNoteRead, setPainNoteRead] = useState(false);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'exercise', label: tr('التمرين', 'Exercise') },
@@ -175,6 +176,50 @@ export default function App() {
                 {tr('لم يراجعها أخصائي', 'Not reviewed by a physio')}
               </span>
             </div>
+            <div
+              className="pain-before-use"
+              role="note"
+              aria-labelledby="pain-note-title"
+            >
+              <h3 id="pain-note-title">
+                {tr('اقرأ قبل الاستخدام', 'Read this before you use it')}
+              </h3>
+              <ul>
+                <li>
+                  {tr(
+                    `إذا كان عندك ألم في الصدر أو صعوبة في التنفس أو إغماء، لا تستخدم هذا الفحص: اتصل بالإسعاف ${DEMO_DEFAULTS.emergencyNumber.value}.`,
+                    `If you have chest pain, trouble breathing or fainting, do not use this check: call an ambulance on ${DEMO_DEFAULTS.emergencyNumber.value}.`,
+                  )}
+                </li>
+                <li>
+                  {tr(
+                    `قد يفوته عرض خطير: في اختبارنا على عناوين استشارات حقيقية فاته ${PAIN_TEST.targetMissed} من ${PAIN_TEST.targetSigns} في أمراض العظام والعضلات، و${PAIN_TEST.missed} من ${PAIN_TEST.signs} في الكل.`,
+                    `It can miss a serious sign: in our test on real consultation titles it missed ${PAIN_TEST.targetMissed} of ${PAIN_TEST.targetSigns} about bones and muscles, and ${PAIN_TEST.missed} of ${PAIN_TEST.signs} overall.`,
+                  )}
+                </li>
+                <li>
+                  {tr(
+                    `وقد ينبهك بلا داعٍ: أخطأ في ${PAIN_TEST.falseAlarms} من ${PAIN_TEST.ordinary} نصًا عاديًا.`,
+                    `It can also worry you for nothing: it flagged ${PAIN_TEST.falseAlarms} of ${PAIN_TEST.ordinary} ordinary texts.`,
+                  )}
+                </li>
+                <li>
+                  {tr(
+                    'لم يراجعه طبيب أو أخصائي علاج طبيعي، والاختبار صنّفه غير متخصص. ليس تشخيصًا، وعدم التنبيه لا يعني أنك بخير.',
+                    'No doctor or physiotherapist has reviewed it, and the test was labelled by a non-clinician. It is not a diagnosis, and no flag does not mean you are fine.',
+                  )}
+                </li>
+              </ul>
+              {!painNoteRead && (
+                <button
+                  className="demo-run-button"
+                  type="button"
+                  onClick={() => setPainNoteRead(true)}
+                >
+                  {tr('فهمت، أريد المتابعة', 'I understand, continue')}
+                </button>
+              )}
+            </div>
             <p>
               {tr(
                 `اكتب بالعامية كيف تشعر. نبحث عن ${PAIN_RED_FLAGS.length} عبارة خطر مأخوذة من إرشادات NHS بعد تغيير مفصل الركبة ومن قائمة المشروع. عدم وجود إشارة لا يعني أنك بخير. النص يبقى داخل الصفحة ولا يُحفظ أو يُرسل.`,
@@ -189,19 +234,21 @@ export default function App() {
               id="pain-demo-text"
               value={painDemoText}
               onChange={(event) => setPainDemoText(event.target.value)}
+              disabled={!painNoteRead}
               dir="rtl"
               rows={3}
               placeholder="مثال: عندي سخونية والجرح بينز"
             />
             <p className="pain-model-note">
               {tr(
-                'يعمل معها نموذج صغير على جهازك يلتقط الصياغات الأخرى والفرانكو. يضيف تنبيهات فقط ولا يلغي أي عبارة من القائمة. دُرّب على عبارات مصطنعة، ولم يراجعه أخصائي.',
-                'A small model on your device also catches other wordings, including Franco-Arabic. It only adds alerts and never cancels a phrase from the list. It was trained on synthetic notes and no physio has reviewed it.',
+                'يعمل معها نموذج صغير على جهازك يلتقط الصياغات الأخرى والفرانكو. يضيف تنبيهات فقط ولا يلغي أي عبارة من القائمة. دُرّب على عناوين استشارات طبية عربية منشورة وعبارات مصطنعة، ولم يراجعه أخصائي.',
+                'A small model on your device also catches other wordings, including Franco-Arabic. It only adds alerts and never cancels a phrase from the list. It was trained on published Arabic consultation titles and synthetic notes, and no physio has reviewed it.',
               )}
             </p>
             <button
               className="demo-run-button"
               type="button"
+              disabled={!painNoteRead}
               onClick={() =>
                 setPainDemoResult(
                   evaluatePainTriage({

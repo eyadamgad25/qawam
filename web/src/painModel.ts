@@ -1,9 +1,10 @@
 /**
- * On-device pain red-flag model (painModel.json, trained by ml/pain/train_flag_model.py).
+ * On-device pain red-flag model (painModel.json, written by ml/pain/train_shifaa_model.py --export).
  *
  * Logistic regression on character n-grams of the normalised note. It only ever adds
  * flags: the app escalates when the word list OR the model flags (evaluatePainTriage's
- * modelFlag), so the model can never hide a word-list match. Trained on synthetic notes.
+ * modelFlag), so the model can never hide a word-list match. Trained on titles of published
+ * Arabic consultations (Shifaa) and synthetic notes; not reviewed by a clinician.
  */
 import modelJson from './painModel.json';
 import { assertedText, normalizeArabicText } from './painTriage';
@@ -17,6 +18,20 @@ interface PainModel {
 }
 
 export const PAIN_MODEL = modelJson as unknown as PainModel;
+
+/**
+ * The whole check on 250 real consultation titles labelled blind by a non-clinician
+ * (docs/experiments.md, 2026-11-25). Shown to the user before the check can be used;
+ * change it only together with a new test.
+ */
+export const PAIN_TEST = {
+  signs: 94,
+  missed: 8,
+  targetSigns: 26,
+  targetMissed: 6,
+  ordinary: 156,
+  falseAlarms: 29,
+} as const;
 
 /** Same n-grams as ml/pain/pain_text.py char_ngrams (code points, one space of padding). */
 export function charNgrams(text: string): Set<string> {

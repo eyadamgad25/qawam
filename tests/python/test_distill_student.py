@@ -47,3 +47,18 @@ def test_threshold_flags_no_more_than_the_target_rate():
     s = np.arange(100) / 100
     t = d.threshold_matching(s, 0.15)
     assert (s > t).mean() <= 0.15 and (s >= t).mean() > 0.15
+
+
+def test_a_score_file_with_one_teacher_is_read(tmp_path):
+    path = tmp_path / "s.csv"
+    path.write_text("kind,key,camelbert\n" + "".join(f"title,{i},0.2\n" for i in range(1, 60)), encoding="utf-8")
+    scores = d.read_scores(path, rows(), {})
+    assert list(scores[("title", "1")]) == ["camelbert"]
+
+
+def test_macro_f1_gain_interval_is_above_zero_when_the_new_flags_are_better():
+    y = [True] * 40 + [False] * 60
+    old = [True] * 30 + [False] * 10 + [True] * 20 + [False] * 40
+    new = [True] * 38 + [False] * 2 + [True] * 5 + [False] * 55
+    low, high = d.gain_interval(y, old, new, n=500, metric="macro_f1")
+    assert 0 < low < high

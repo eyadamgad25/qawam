@@ -3,6 +3,8 @@
 Spec and pass rule: docs/superpowers/specs/2026-11-26-arabic-pain-model-design.md (only the CAMeLBERT-DA student can ship).
 Same features, weight cap and app code as today's model; only the training targets change (teacher probabilities).
 Writes data/derived/shifaa/student_<teacher>.json and distill.json. Counts only, no text.
+With --blind 3 (docs/superpowers/specs/2026-11-26-llm-pain-labels-design.md): blind set 3, all three blind sets removed from
+distillation, macro-F1 gain, student_llm_<teacher>.json and distill3.json; --llm <llm_scores.csv> <threshold> adds the LLM ceiling.
 
   py -3.14 ml\\pain\\distill_student.py data\\derived\\shifaa\\teacher_scores.csv
 """
@@ -18,12 +20,11 @@ from typing import Any
 
 import numpy as np
 from pain_text import char_ngrams, normalize
-from shifaa_eval import OUT, REPO, SEED, blind_sample, blind_sample2, confusion, load, run_app_check, target
+from shifaa_eval import OUT, REPO, SEED, blind_sample, blind_sample2, blind_sample3, confusion, load, run_app_check, target
 from teacher_data import fit_rows
 from train_flag_model import load as load_notes
 from train_shifaa_model import C, KEEP, features
 
-TEACHERS = ("marbert", "camelbert")
 SHIPPABLE = "camelbert"
 NOTE_FILES = ("synthetic-notes.jsonl", "training-notes.jsonl")
 
@@ -31,7 +32,9 @@ NOTE_FILES = ("synthetic-notes.jsonl", "training-notes.jsonl")
 def read_scores(path: Path, rows: list[dict[str, Any]], note_counts: dict[str, int]) -> dict[tuple[str, str], dict[str, float]]:
     """{(kind, key): {teacher: p}}; raises if any title or note is missing or unknown."""
     with path.open(encoding="utf-8", newline="") as f:
-        got = {(r["kind"], r["key"]): {t: float(r[t]) for t in TEACHERS} for r in csv.DictReader(f)}
+        reader = csv.DictReader(f)
+        teachers = [c for c in reader.fieldnames or [] if c not in ("kind", "key")]
+        got = {(r["kind"], r["key"]): {t: float(r[t]) for t in teachers} for r in reader}
     want = {("title", str(r["id"])) for r in rows} | {("note", f"{n}:{i}") for n, c in note_counts.items() for i in range(c)}
     if set(got) != want:
         raise ValueError(f"teacher scores do not match the data: {len(want - set(got))} missing, {len(set(got) - want)} unknown")
@@ -84,14 +87,17 @@ def distil(rows, scores, teacher: str, blind: list[dict[str, Any]]):
             "weights": {g: round(float(w[i]), 4) for g, i in vocab.items() if i in top}, "checks": []}, len(titles), len(notes)
 
 
-def gain_interval(y, old, new, n=2000) -> list[float]:
-    rng = np.random.default_rng(SEED)
+def gain_interval(y, old, new, n=2000, metric: str = "recall", seed: int = SEED) -> list[float]:
+    """95% interval of new minus old, resampling titles: recall (distillation test) or macro_f1 (LLM-label test)."""
+    rng = np.random.default_rng(seed)
     y, old, new = (np.asarray(a, bool) for a in (y, old, new))
     out = []
     for _ in range(n):
         i = rng.integers(0, len(y), len(y))
-        pos = y[i].sum()
-        out.append(((new[i] & y[i]).sum() - (old[i] & y[i]).sum()) / max(1, pos))
+        if metric == "recall":
+            out.append(((new[i] & y[i]).sum() - (old[i] & y[i]).sum()) / max(1, y[i].sum()))
+        else:
+            out.append(confusion(y[i].tolist(), new[i].tolist())[metric] - confusion(y[i].tolist(), old[i].tolist())[metric])
     return [round(float(q), 4) for q in np.percentile(out, [2.5, 97.5])]
 
 
@@ -101,7 +107,14 @@ def main(argv: list[str]) -> int:
     note_counts = {n: len(load_notes(n)) for n in NOTE_FILES}
     scores = read_scores(Path(argv[0]), rows, note_counts)
     first, second = blind_sample(rows), blind_sample2(rows)
-    labels = json.loads((OUT / "labels2.json").read_text(encoding="utf-8"))
+    third = "--blind" in argv and argv[argv.index("--blind") + 1] == "3"
+    removed = first + second
+    metric, seed, tag, label_file = "recall", SEED, "", "labels2.json"
+    if third:
+        second = blind_sample3(rows)
+        removed = removed + second
+        metric, seed, tag, label_file = "macro_f1", 20261127, "3", "labels3.json"
+    labels = json.loads((OUT / label_file).read_text(encoding="utf-8"))
     y = [bool(labels[str(i + 1)]) for i in range(len(second))]
     _, held = fit_rows(rows)
     ordinary = [r["title"] for r in held if target(r) and r["kind"] != "symptom"]
@@ -112,16 +125,31 @@ def main(argv: list[str]) -> int:
     old_full = [f["list"] or f["temp"] or f["model"] for f in old]
     synth = [n for n in load_notes("synthetic-notes.jsonl") if n["split"] == "test"]
     report: dict[str, Any] = {"held-out ordinary titles": len(ordinary), "today's flag rate there": round(rate, 4),
-                              "blind2 positives": sum(y), "today": {}}
+                              f"blind{tag or 2} positives": sum(y), "rule": f"{metric} gain interval above 0", "today": {}}
     for group in ("all", "target", "symptom"):
         idx = [i for i, r in enumerate(second) if group in ("all", r["group"])]
         report["today"][group] = confusion([y[i] for i in idx], [old_full[i] for i in idx])
     report["today"]["synthetic test"] = confusion([n["red_flag"] for n in synth],
                                                   [a["list"] or a["temp"] or a["model"] for a in run_app_check([n["text"] for n in synth])])
-    for teacher in TEACHERS:
-        model, n_titles, n_notes = distil(rows, scores, teacher, first + second)
+    if third:  # also reported: the category-label student of the last test, and the LLM itself, on blind set 3
+
+        def block_of(flags):
+            idx = {g: [i for i, r in enumerate(second) if g in ("all", r["group"])] for g in ("all", "target", "symptom")}
+            return {g: confusion([y[i] for i in ix], [flags[i] for i in ix]) for g, ix in idx.items()}
+
+        if (OUT / "student_camelbert.json").exists():
+            cat = run_app_check(texts, OUT / "student_camelbert.json")
+            report["category-label student"] = block_of([f["list"] or f["temp"] or f["model"] for f in cat])
+        if "--llm" in argv:
+            from llm_gate import read_llm
+
+            j = argv.index("--llm")
+            llm, cut = read_llm(Path(argv[j + 1]))["blind3"], float(argv[j + 2])
+            report["LLM (ceiling)"] = block_of([o["list"] or o["temp"] or llm[r["id"]] >= cut for o, r in zip(old, second)])
+    for teacher in list(next(iter(scores.values()))):
+        model, n_titles, n_notes = distil(rows, scores, teacher, removed)
         model["threshold"] = round(threshold_matching(np.array([model_score(model, t) for t in ordinary]), rate), 4)
-        path = OUT / f"student_{teacher}.json"
+        path = OUT / f"student{'_llm' if third else ''}_{teacher}.json"
         path.write_text(json.dumps(model, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         new = run_app_check(texts, path)
         new_full = [f["list"] or f["temp"] or f["model"] for f in new]
@@ -136,14 +164,15 @@ def main(argv: list[str]) -> int:
                 block[name][group] = confusion([y[i] for i in idx], [flags[i] for i in idx])
         block["student"]["synthetic test"] = confusion(
             [n["red_flag"] for n in synth], [a["list"] or a["temp"] or a["model"] for a in run_app_check([n["text"] for n in synth], path)])
-        block["recall gain, 95% interval"] = gain_interval(y, old_full, new_full)
+        key = f"{metric} gain, 95% interval"
+        block[key] = gain_interval(y, old_full, new_full, metric=metric, seed=seed)
         s, o = block["student"]["target"], report["today"]["target"]
-        block["passes"] = block["recall gain, 95% interval"][0] > 0 and s["fn"] <= o["fn"]
+        block["passes"] = block[key][0] > 0 and s["fn"] <= o["fn"]
         report[teacher] = block
         print(f"{teacher}: student caught {block['student']['all']['tp']}/{sum(y)} vs today {report['today']['all']['tp']}; "
-              f"interval {block['recall gain, 95% interval']}; target misses {s['fn']} vs {o['fn']}; passes {block['passes']}")
-    report["ships"] = SHIPPABLE if report[SHIPPABLE]["passes"] else None
-    (OUT / "distill.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+              f"interval {block[key]}; target misses {s['fn']} vs {o['fn']}; passes {block['passes']}")
+    report["ships"] = SHIPPABLE if SHIPPABLE in report and report[SHIPPABLE]["passes"] else None
+    (OUT / f"distill{tag}.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print("ships:", report["ships"])
     return 0
 

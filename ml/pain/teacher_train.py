@@ -5,7 +5,7 @@ model). Settings fixed before any score: 3 epochs, learning rate 2e-5, max lengt
 Writes teacher_scores.csv: kind,key,marbert,camelbert (kind "title" -> consultation number, "note" -> file:line index).
 Scores only: no text is written.
 
-  python ml/pain/teacher_train.py <folder or zip with Shifaa CSVs> <output folder>
+  python ml/pain/teacher_train.py <folder or zip with Shifaa CSVs> <output folder> [--llm <llm_scores.csv> <threshold>]
 """
 
 from __future__ import annotations
@@ -67,7 +67,14 @@ def main(argv: list[str]) -> int:
     source, out = Path(argv[0]), Path(argv[1])
     rows = load(source)
     train_notes = load_notes("training-notes.jsonl")
-    texts, y, weight = training_set(rows, train_notes)
+    teachers, name = TEACHERS, "teacher_scores.csv"
+    labels = None
+    if argv[2:3] == ["--llm"]:  # run 2 of docs/superpowers/specs/2026-11-26-llm-pain-labels-design.md
+        threshold = float(argv[4])
+        with Path(argv[3]).open(encoding="utf-8", newline="") as f:
+            labels = {int(r["id"]): int(float(r["p_yes"]) >= threshold) for r in csv.DictReader(f) if r["set"] == "train"}
+        teachers, name = {"camelbert": TEACHERS["camelbert"]}, "teacher_scores_llm.csv"
+    texts, y, weight = training_set(rows, train_notes, labels=labels)
     keys = [("title", str(r["id"])) for r in rows]
     score_texts = [r["title"] for r in rows]
     for name in NOTE_FILES:
@@ -76,7 +83,7 @@ def main(argv: list[str]) -> int:
             score_texts.append(n["text"])
     print(f"{len(rows)} titles, training on {len(texts)} texts; scoring {len(score_texts)}")
     scores = {}
-    for short, hub in TEACHERS.items():
+    for short, hub in teachers.items():
         tok = AutoTokenizer.from_pretrained(hub)
         model = AutoModelForSequenceClassification.from_pretrained(hub, num_labels=2)
         scores[short] = train_and_score(model, tok, texts, y, weight, score_texts, device="cuda")
@@ -84,12 +91,12 @@ def main(argv: list[str]) -> int:
         del model
         torch.cuda.empty_cache()
     out.mkdir(parents=True, exist_ok=True)
-    with (out / "teacher_scores.csv").open("w", newline="", encoding="utf-8") as f:
+    with (out / name).open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["kind", "key", *TEACHERS])
+        w.writerow(["kind", "key", *teachers])
         for i, (kind, key) in enumerate(keys):
-            w.writerow([kind, key, *(f"{scores[t][i]:.5f}" for t in TEACHERS)])
-    print("wrote", out / "teacher_scores.csv")
+            w.writerow([kind, key, *(f"{scores[t][i]:.5f}" for t in teachers)])
+    print(f"{int(y[:len(y) - len(train_notes)].sum())} titles labelled yes; wrote", out / name)
     return 0
 
 

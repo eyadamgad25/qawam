@@ -233,7 +233,9 @@ def build_curves(
 ) -> tuple[list[RepCurves], list[str]]:
     packs = load_packs()
     by_exercise = {
-        p["datasetMapping"]["rehab24_6_exercise_id"]: p for p in packs.values() if "datasetMapping" in p
+        p["datasetMapping"]["rehab24_6_exercise_id"]: p
+        for p in packs.values()
+        if "rehab24_6_exercise_id" in p.get("datasetMapping", {})
     }
     reps = load_repetitions(
         split,  # type: ignore[arg-type]

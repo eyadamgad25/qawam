@@ -4,6 +4,14 @@ Append-only. Newest entry at the top. Each entry: date, task, decision, alternat
 
 ---
 
+## 2026-11-25 — The retrained pain model goes into the demo, behind a note that states its errors
+
+- **Decision (project owner):** use the best model available, the one retrained on Shifaa titles, and show a note before use. The pain check is disabled until the person accepts a note giving its measured misses (6 of 26 on bone and muscle titles, 8 of 94 overall) and false alarms (29 of 156), that no clinician reviewed it, and to call 123 instead for chest pain, trouble breathing or fainting. The note stays visible and the numbers live in `PAIN_TEST` (`web/src/painModel.ts`), to be changed only with a new test.
+- **This overrides** the rule written before the test ("not worse on the synthetic test"): it catches 37 of 40 there instead of 39, and 20 instead of 24 of 26 on the closest real titles. Reason: the old model flagged 62% of ordinary bone, muscle and sports titles, which would make the warning useless.
+- **Known misses, for the clinician first (`docs/clinician-review.docx`):** "قلبي بيوجعني وأنا بعمل السكوات", "ارتفاع في درجة الحرارة", "حاسس رجلي نايمة ومش حاسس بيها", "مش حاسس برجلي" and three others. They are not patched into the word list, because that list is cited and because patching the test notes would hide the problem.
+- **Alternatives:** word list only (precise, misses most signs); both models (62% false alarms again); no pain check until reviewed.
+- **Reverse:** `py -3.14 ml\pain\train_flag_model.py` restores the old model; a named clinician's answer replaces this decision.
+
 ## 2026-11-02 — Literature values may drive demo defaults, labelled on screen
 
 - **Decision:** While no physiotherapist is assigned, published values may set demo behaviour, not only display goals. They live in `rules/literature/demo-defaults.json` (`status: provisional`, `provenance: literature`, `reviewedBy: null`), and every one is shown with the label "مأخوذة من مصدر منشور، ولم يراجعها أخصائي علاج طبيعي بعد" plus its citation link (`web/src/LiteratureNote.tsx`). Values: cue tolerance 14 deg (Hancock et al. 2018: visual estimation and a short-arm goniometer only separate knee angles about 14 deg apart; was 10 deg test default); 8 home reps (ACSM 2009, 8-12 for novices); shoulder flexion 121 deg and abduction 128 deg display goals (Namdari et al. 2012); ambulance 123; 23 Egyptian-dialect red-flag phrases from the NHS knee-replacement complications page plus the brief's own list (numbness, dizziness, sharp pain, marked source `brief`). Not set, for lack of a verifiable source: pain limits (the Silbernagel 2007 pain-monitoring threshold could not be confirmed from the full text), lunge and leg-abduction goals, rep-counter thresholds (the app counts against the patient's reference, not absolute angles).

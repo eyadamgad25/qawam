@@ -69,17 +69,38 @@ def read_anvil(path: Path) -> str | None:
     return None
 
 
-def features(path: Path) -> np.ndarray:
-    """(frames, 18) normalised 2D joints; frames missing a joint are dropped."""
+def read_error_type(path: Path) -> str | None:
+    """Error type ("Error1"...) from an Anvil file, same encoding handling as read_anvil."""
+    raw = path.read_bytes()
+    for encoding in ("utf-16", "utf-8-sig", "cp1252"):
+        try:
+            root = ET.fromstring(re.sub(r"^\s*<\?xml[^>]*\?>", "", raw.decode(encoding)))
+        except (UnicodeDecodeError, ET.ParseError):
+            continue
+        for track in root.iter("track"):
+            if track.get("name") == "Global error":
+                for attribute in track.iter("attribute"):
+                    if attribute.get("name") == "type":
+                        return attribute.text
+        return None
+    return None
+
+
+def features(path: Path, aspect: float = 1.0, step: int = STEP) -> np.ndarray:
+    """(frames, 18) normalised 2D joints; frames missing a joint are dropped.
+
+    BlazePose x and y are fractions of image width and height, so comparing videos of different
+    shapes needs aspect = width / height. Within one group the default 1.0 only rescales."""
     positions = json.loads(path.read_text())["positions"]
     frames = []
-    for key in sorted(positions, key=float)[::STEP]:
+    for key in sorted(positions, key=float)[::step]:
         frame = positions[key]
         if all(j in frame for j in JOINTS):
             frames.append([frame[j][:2] for j in JOINTS])
     if len(frames) < 5:
         return np.empty((0, 2 * len(JOINTS)))
     xy = np.asarray(frames, dtype=float)
+    xy[:, :, 0] *= aspect
     hip = xy[:, 7:9].mean(axis=1, keepdims=True)
     shoulder = xy[:, 1:3].mean(axis=1, keepdims=True)
     torso = float(np.median(np.linalg.norm((shoulder - hip)[:, 0], axis=1)))
@@ -104,7 +125,7 @@ def angle_features(x: np.ndarray) -> np.ndarray:
     ], axis=1) / 30.0
 
 
-def load(root: Path) -> list[dict[str, Any]]:
+def load(root: Path, aspect: float = 1.0, step: int = STEP) -> list[dict[str, Any]]:
     recordings = []
     for group in ("group1A", "group2A"):
         for pose in sorted((root / group / "blazepose").glob("*.json")):
@@ -121,7 +142,9 @@ def load(root: Path) -> list[dict[str, Any]]:
                 "patient": group == "group1A",
                 "verdict_A": verdicts["A"],
                 "verdict_B": verdicts["B"],
-                "x": features(pose),
+                "type_A": read_error_type(root / group / "annotatorA" / anvil),
+                "type_B": read_error_type(root / group / "annotatorB" / anvil),
+                "x": features(pose, aspect, step),
             })
     return [r for r in recordings if len(r["x"])]
 
@@ -187,11 +210,34 @@ def auc_with_ci(rows: Sequence[Mapping[str, Any]], method: str, label: str, roun
             "n": len(rows), "errors": sum(r[label] for r in rows)}
 
 
+def within_exercise(rows: Sequence[Mapping[str, Any]], method: str, label: str, rounds: int = 2000,
+                    seed: int = 20261104) -> dict[str, Any]:
+    """Mean of the per-exercise AUCs, 95% CI resampling patients. Exercises differ a lot in their
+    share of errors, so a pooled AUC can rise or fall just from the mix; read this one first."""
+    rows = [r for r in rows if r[method] is not None]
+
+    def mean_auc(rs: Sequence[Mapping[str, Any]]) -> float | None:
+        aucs = []
+        for ex in {r["exercise"] for r in rs}:
+            part = [r for r in rs if r["exercise"] == ex]
+            a = auroc([-r[method] for r in part], [1 - r[label] for r in part])
+            if a is not None:
+                aucs.append(a)
+        return float(np.mean(aucs)) if aucs else None
+
+    people = sorted({r["person"] for r in rows})
+    by = {p: [r for r in rows if r["person"] == p] for p in people}
+    rng = np.random.default_rng(seed)
+    boots = [a for _ in range(rounds) if (a := mean_auc([r for k in rng.integers(0, len(people), len(people)) for r in by[people[k]]])) is not None]
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    return {"mean": round(mean_auc(rows), 3), "ci95": [round(float(lo), 3), round(float(hi), 3)]}
+
+
 def build_report(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     agreed = [{**r, "error_agreed": r["error_A"]} for r in rows if r["error_A"] == r["error_B"]]
     report: dict[str, Any] = {"recordings_scored": len(rows), "patients": sorted({r["person"] for r in rows})}
     for label, part in (("error_A", rows), ("error_B", rows), ("error_agreed", agreed)):
-        report[label] = {m: auc_with_ci(part, m, label) for m in METHODS}
+        report[label] = {m: {**auc_with_ci(part, m, label), "within_exercise": within_exercise(part, m, label)} for m in METHODS}
         report[label]["by_exercise"] = {
             ex: {m: auc_with_ci([r for r in part if r["exercise"] == ex], m, label)["auc"] for m in METHODS}
             for ex in sorted({r["exercise"] for r in part})
@@ -202,10 +248,12 @@ def build_report(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
 def markdown(report: Mapping[str, Any]) -> str:
     lines = [f"KERAAL personal reference: {report['recordings_scored']} patient recordings scored, patients {report['patients']}", ""]
     for label in ("error_A", "error_B", "error_agreed"):
-        lines += [f"## {label}", "", "| Method | AUC | 95% CI | n | errors |", "| --- | --- | --- | --- | --- |"]
+        lines += [f"## {label}", "", "| Method | Within exercise | 95% CI | Pooled AUC | 95% CI | n | errors |",
+                  "| --- | --- | --- | --- | --- | --- | --- |"]
         for m in METHODS:
             r = report[label][m]
-            lines.append(f"| {m} | {r['auc']} | {r['ci95']} | {r['n']} | {r['errors']} |")
+            w = r["within_exercise"]
+            lines.append(f"| {m} | {w['mean']} | {w['ci95']} | {r['auc']} | {r['ci95']} | {r['n']} | {r['errors']} |")
         lines += ["", "By exercise: " + json.dumps(report[label]["by_exercise"]), ""]
     return "\n".join(lines)
 

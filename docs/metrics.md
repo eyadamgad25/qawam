@@ -24,9 +24,11 @@ Train / validation subjects only; numbers from `docs/experiments.md` entries dat
 
 UCOPhyRehab++ (external, physio-scored, motion capture; `docs/experiments.md` 2026-11-03): rep counting MAE 0.56 reps (exact 76%) on the 269 recordings whose measured angle moves, abstained on 124; agreement with the physio's 1-5 score is weak for every method (Spearman 0.14-0.22).
 
-KERAAL (6 real low-back-pain patients, two clinicians; `docs/experiments.md` 2026-11-03), AUC for flagging recordings both clinicians call wrong, angle features: patient's own early recording as reference 0.28, healthy reference 0.65 [0.53, 0.81].
+KERAAL (6 real low-back-pain patients, two clinicians; `docs/experiments.md` 2026-11-03), AUC for flagging recordings both clinicians call wrong, angle features, mean within exercise: patient's own early recording as reference 0.29 [0.20, 0.56], healthy reference 0.55 [0.44, 0.88] (0.84 on hiding face only). Small trained model 0.55 [0.37, 0.75], simple linear model 0.72 [0.46, 0.91]: no method is clear of chance across exercises.
 
 Pain red flags (synthetic Egyptian-Arabic notes, not physio-reviewed; `docs/experiments.md` 2026-11-03): test red flags caught 14 / 40 by the word list, 39 / 40 by word list OR the 58 KB on-device model; false alarms 3 / 19 and 7 / 19. With the temperature rule and negation (all 121 notes): 78 / 81 caught, false alarms 9 / 40.
+
+Pain red flags on real text (Shifaa titles, 250 labelled blind by a non-clinician; `docs/experiments.md` 2026-11-25): shipped check caught 82 / 94 with 102 / 156 false alarms (macro-F1 0.54), so the synthetic numbers above do not transfer; a model retrained on real titles caught 86 / 94 with 29 / 156 (macro-F1 0.85); in the demo since 2026-11-25 behind a note.
 
 Fit3D (external, 8 new people, 4 new cameras, Vicon truth; `docs/experiments.md` 2026-11-03), shipped view rule not refitted: knee packs silent on all 608 diagonal-view units (speaking would be wrong on 70%), 0 false cues; shoulder abduction speaks on 74% with false-cue rate 0.34 (95% upper 0.41), above target; learned gate certifies nothing (stays silent).
 

@@ -402,7 +402,7 @@ export default function ExerciseCoach() {
         </div>
         <p>
           {tr(
-            'يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن التطبيق كل تكرار في البيت بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة، يقول قوام إنه لا يراك جيدًا بدل أن يخمّن.',
+            'يسجّل الأخصائي معك تكرارًا صحيحًا في العيادة، ثم يقارن التطبيق كل تكرار في البيت بهذا التكرار نفسه، وليس بقاعدة واحدة للجميع. إذا لم تكن زاوية التصوير مناسبة، يقول التطبيق إنه لا يراك جيدًا بدل أن يخمّن.',
             'Your physio records one correct rep with you in the clinic. At home, the app compares every rep with that same rep, not with one rule for everyone. If the camera angle is wrong, it says it cannot see you well instead of guessing.',
           )}
         </p>

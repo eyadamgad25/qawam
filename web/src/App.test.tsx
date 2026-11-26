@@ -108,6 +108,28 @@ describe('prototype safety notice', () => {
   });
 });
 
+describe('pain check note', () => {
+  it('keeps the check off until the note, with its measured errors, is accepted', () => {
+    setLang('en');
+    render(<App />);
+    openTab('Pain check');
+    const note = screen.getByRole('note', { name: 'Read this before you use it' });
+    for (const text of ['6 of 26', '8 of 94', '29 of 156', '123', 'No doctor']) {
+      expect(note.textContent).toContain(text);
+    }
+    const box = screen.getByLabelText('Describe how you feel') as HTMLTextAreaElement;
+    const check = screen.getByRole('button', {
+      name: 'Check the note',
+    }) as HTMLButtonElement;
+    expect(box.disabled && check.disabled).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'I understand, continue' }));
+    expect(box.disabled || check.disabled).toBe(false);
+    expect(
+      screen.getByRole('note', { name: 'Read this before you use it' }),
+    ).toBeTruthy();
+  });
+});
+
 describe('simulated session scenarios', () => {
   it('defaults to cannot-assess and does not show a repetition count', () => {
     render(<App />);
@@ -158,6 +180,7 @@ describe('simulated session scenarios', () => {
   it('flags an Egyptian-dialect red flag from the cited list and shows the stop prompt', () => {
     render(<App />);
     openTab('فحص الألم');
+    fireEvent.click(screen.getByRole('button', { name: 'فهمت، أريد المتابعة' }));
     fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
       target: { value: 'عندي سُخونية من امبارح' },
     });
@@ -174,6 +197,7 @@ describe('simulated session scenarios', () => {
   it('escalates a red flag in words the list does not have, through the on-device model', () => {
     render(<App />);
     openTab('فحص الألم');
+    fireEvent.click(screen.getByRole('button', { name: 'فهمت، أريد المتابعة' }));
     fireEvent.change(screen.getByLabelText('صف ما تشعر به'), {
       target: { value: 'الدنيا بتلف بيا' },
     });

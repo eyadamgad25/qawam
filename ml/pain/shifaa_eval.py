@@ -3,6 +3,7 @@
 Rules: docs/superpowers/specs/2026-11-25-pain-check-real-text.md, written before any score.
 
   py -3.14 ml\\pain\\shifaa_eval.py sample     draws the blind sample -> data/derived/shifaa/blind.jsonl
+  py -3.14 ml\\pain\\shifaa_eval.py sample2   draws the second blind sample -> data/derived/shifaa/blind2.jsonl (labels2.json)
   (label it: data/derived/shifaa/labels.json, {"1": true, ...})
   py -3.14 ml\\pain\\shifaa_eval.py score
 """
@@ -29,12 +30,23 @@ ORDINARY = ("الشد العضلي وآلام العضلات", "آلام أسف�
 SEED = 20261125
 
 
-def load() -> list[dict[str, Any]]:
+def _csv_files(source: Path):
+    """(name, binary file) for every CSV in the zip, or in a folder (Kaggle unzips datasets into folders)."""
+    # sorted by file name in both cases, so a consultation listed twice resolves the same way on the laptop and on Kaggle
+    if source.is_dir():
+        for path in sorted(source.rglob("*.csv"), key=lambda p: p.name):
+            yield path.name, path.open("rb")
+    else:
+        z = zipfile.ZipFile(source)
+        for name in sorted((n for n in z.namelist() if n.endswith(".csv")), key=lambda n: n.rsplit("/", 1)[-1]):
+            yield name, z.open(name)
+
+
+def load(source: Path | None = None) -> list[dict[str, Any]]:
     csv.field_size_limit(10**8)
     rows = []
-    z = zipfile.ZipFile(ARCHIVE)
-    for name in (n for n in z.namelist() if n.endswith(".csv")):
-        for r in csv.DictReader(io.TextIOWrapper(z.open(name), encoding="utf-8", errors="replace", newline="")):
+    for name, handle in _csv_files(source or ARCHIVE):
+        for r in csv.DictReader(io.TextIOWrapper(handle, encoding="utf-8", errors="replace", newline="")):
             number = "".join(c for c in r["Consultation Number"] or "" if c.isdigit())
             if not number or not (r["Question Title"] or "").strip():
                 continue
@@ -58,6 +70,19 @@ def blind_sample(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     a = rng.sample([r for r in odd if target(r)], 150)
     taken = {r["id"] for r in a}
     b = rng.sample([r for r in odd if r["kind"] == "symptom" and r["id"] not in taken], 100)
+    picked = [{**r, "group": "target"} for r in a] + [{**r, "group": "symptom"} for r in b]
+    rng.shuffle(picked)
+    return picked
+
+
+def blind_sample2(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """300 new odd titles, none in the first blind sample: 180 target, 120 symptom, shuffled."""
+    used = {r["id"] for r in blind_sample(rows)}
+    rng = random.Random(SEED + 1)
+    odd = sorted((r for r in rows if r["id"] % 2 and r["id"] not in used), key=lambda r: r["id"])
+    a = rng.sample([r for r in odd if target(r)], 180)
+    taken = {r["id"] for r in a}
+    b = rng.sample([r for r in odd if r["kind"] == "symptom" and r["id"] not in taken], 120)
     picked = [{**r, "group": "target"} for r in a] + [{**r, "group": "symptom"} for r in b]
     rng.shuffle(picked)
     return picked
@@ -98,6 +123,13 @@ def main(argv: list[str]) -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     rows = load()
     blind = blind_sample(rows)
+    if argv[:1] == ["sample2"]:
+        second = blind_sample2(rows)
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "blind2.jsonl").write_text("".join(json.dumps({"n": i + 1, "title": r["title"]}, ensure_ascii=False) + "\n"
+                                                  for i, r in enumerate(second)), encoding="utf-8")
+        print(len(second), "titles to label")
+        return 0
     if argv[:1] == ["sample"]:
         OUT.mkdir(parents=True, exist_ok=True)
         (OUT / "blind.jsonl").write_text("".join(json.dumps({"n": i + 1, "title": r["title"]}, ensure_ascii=False) + "\n"

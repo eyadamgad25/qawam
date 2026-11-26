@@ -4,6 +4,16 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-26 — An open LLM as labeller for the pain check: fails its gate, stopped before training
+
+- **Rules, written before any LLM output:** `docs/superpowers/specs/2026-11-26-llm-pain-labels-design.md`. **Commands:** `notebooks/pain_llm_labels_kaggle.ipynb` run 1 on Kaggle (GPU T4 x2), then `py -3.14 ml\pain\llm_gate.py <llm scores>` (run once).
+- **Labeller:** Qwen2.5-7B-Instruct (Apache 2.0), half precision over two T4s, a fixed English prompt with the codebook's nine signs and the title in Arabic; P(yes) from the yes/no answer tokens. Scored blind sets 1-3 and the 8,884 training titles; no text left Kaggle.
+- **Threshold, chosen on blind set 1:** 0.00002 (the LLM puts 81% of titles below 0.01 and 10% above 0.99, so only a tiny threshold catches enough).
+- **Gate on blind set 2 (300 titles, 105 signs, the assistant's labels):** kappa **0.518**, category labels 0.469. **Fails** (needs >= 0.60). LLM: caught 64 / 105, false alarms 22 / 195 (macro-F1 0.758); category labels: 78 / 105 and 49 / 195 (0.733); today's phone check on the same titles: 92 / 105 and 43 / 195 (0.806). Ranking quality AUC 0.79 (blind set 2), 0.81 (blind set 1). At a plain 0.5 cut it catches only 28 / 105.
+- **Decision by the rule:** stopped; run 2 (teacher on LLM labels) and the test on blind set 3 are not run, and no second model or prompt is tried. Blind set 3 stays unused (its LLM scores exist but were not looked at).
+- **What it means:** a general 7B model reading titles cold agrees with the codebook only a little better than the category does, and it is very conservative: most titles that state dizziness or chest pain in a question form get a near-certain "no". The app's own small model, trained on real titles, agrees better with the codebook than this LLM. Better labels need a stronger or Arabic-medical labeller, or clinicians.
+- **Caveats:** one model, one prompt written in English, labels by one non-clinician (the LLM may disagree with the assistant where a clinician would side with the LLM; the doctor's 60 labels will show this).
+
 ## 2026-11-26 — Arabic language models teach the phone pain model: no gain, today's model stays
 
 - **Rules, written before any score:** `docs/superpowers/specs/2026-11-26-arabic-pain-model-design.md` (only the CAMeLBERT-DA student can ship). **Commands:** `notebooks/pain_teacher_kaggle.ipynb` on Kaggle (GPU T4, 4 minutes for both teachers), then `py -3.14 ml\pain\distill_student.py data\derived\shifaa\teacher_scores.csv` (run once).

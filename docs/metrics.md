@@ -32,6 +32,8 @@ Pain red flags on real text (Shifaa titles, 250 labelled blind by a non-clinicia
 
 Pain red flags, Arabic language models as teachers (second blind set, 300 titles, 105 signs; `docs/experiments.md` 2026-11-26), same false-alarm rate on held-out titles: today's check 92 / 105 caught, 43 / 195 false alarms (macro-F1 0.81); CAMeLBERT-DA student 90 / 105, 40 / 195 (0.81), gain [-0.059, 0.017]: not shipped; teachers 94-95 / 105 with 42-46 false alarms.
 
+Open LLM as labeller (Qwen2.5-7B-Instruct, same 300 titles; `docs/experiments.md` 2026-11-26): agreement with the assistant's labels kappa 0.52 (category labels 0.47; gate needed 0.60), caught 64 / 105, 22 / 195 false alarms (macro-F1 0.76): gate failed, not used for training.
+
 Fit3D (external, 8 new people, 4 new cameras, Vicon truth; `docs/experiments.md` 2026-11-03), shipped view rule not refitted: knee packs silent on all 608 diagonal-view units (speaking would be wrong on 70%), 0 false cues; shoulder abduction speaks on 74% with false-cue rate 0.34 (95% upper 0.41), above target; learned gate certifies nothing (stays silent).
 
 Sealed test split: do not access until `--final`. Log every access in `docs/experiments.md`.

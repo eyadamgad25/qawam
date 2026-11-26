@@ -75,17 +75,26 @@ def blind_sample(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return picked
 
 
-def blind_sample2(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """300 new odd titles, none in the first blind sample: 180 target, 120 symptom, shuffled."""
-    used = {r["id"] for r in blind_sample(rows)}
-    rng = random.Random(SEED + 1)
+def _new_sample(rows, used: set[int], seed: int, n_target: int, n_symptom: int) -> list[dict[str, Any]]:
+    rng = random.Random(seed)
     odd = sorted((r for r in rows if r["id"] % 2 and r["id"] not in used), key=lambda r: r["id"])
-    a = rng.sample([r for r in odd if target(r)], 180)
+    a = rng.sample([r for r in odd if target(r)], n_target)
     taken = {r["id"] for r in a}
-    b = rng.sample([r for r in odd if r["kind"] == "symptom" and r["id"] not in taken], 120)
+    b = rng.sample([r for r in odd if r["kind"] == "symptom" and r["id"] not in taken], n_symptom)
     picked = [{**r, "group": "target"} for r in a] + [{**r, "group": "symptom"} for r in b]
     rng.shuffle(picked)
     return picked
+
+
+def blind_sample2(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """300 new odd titles, none in the first blind sample: 180 target, 120 symptom, shuffled."""
+    return _new_sample(rows, {r["id"] for r in blind_sample(rows)}, SEED + 1, 180, 120)
+
+
+def blind_sample3(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """400 new odd titles, none in the first two blind samples: 240 target, 160 symptom (seed 20261127), shuffled."""
+    used = {r["id"] for r in blind_sample(rows) + blind_sample2(rows)}
+    return _new_sample(rows, used, 20261127, 240, 160)
 
 
 def run_app_check(texts: list[str], model: Path | None = None) -> list[dict[str, Any]]:
@@ -123,10 +132,10 @@ def main(argv: list[str]) -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     rows = load()
     blind = blind_sample(rows)
-    if argv[:1] == ["sample2"]:
-        second = blind_sample2(rows)
+    if argv[:1] in (["sample2"], ["sample3"]):
+        second = blind_sample2(rows) if argv[0] == "sample2" else blind_sample3(rows)
         OUT.mkdir(parents=True, exist_ok=True)
-        (OUT / "blind2.jsonl").write_text("".join(json.dumps({"n": i + 1, "title": r["title"]}, ensure_ascii=False) + "\n"
+        (OUT / f"blind{argv[0][-1]}.jsonl").write_text("".join(json.dumps({"n": i + 1, "title": r["title"]}, ensure_ascii=False) + "\n"
                                                   for i, r in enumerate(second)), encoding="utf-8")
         print(len(second), "titles to label")
         return 0

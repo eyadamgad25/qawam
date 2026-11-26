@@ -4,6 +4,28 @@ Append-only. Newest entry at the top. Record what was run, on what data, and the
 
 ---
 
+## 2026-11-26 — An open LLM as labeller for the pain check: fails its gate, stopped before training
+
+- **Rules, written before any LLM output:** `docs/superpowers/specs/2026-11-26-llm-pain-labels-design.md`. **Commands:** `notebooks/pain_llm_labels_kaggle.ipynb` run 1 on Kaggle (GPU T4 x2), then `py -3.14 ml\pain\llm_gate.py <llm scores>` (run once).
+- **Labeller:** Qwen2.5-7B-Instruct (Apache 2.0), half precision over two T4s, a fixed English prompt with the codebook's nine signs and the title in Arabic; P(yes) from the yes/no answer tokens. Scored blind sets 1-3 and the 8,884 training titles; no text left Kaggle.
+- **Threshold, chosen on blind set 1:** 0.00002 (the LLM puts 81% of titles below 0.01 and 10% above 0.99, so only a tiny threshold catches enough).
+- **Gate on blind set 2 (300 titles, 105 signs, the assistant's labels):** kappa **0.518**, category labels 0.469. **Fails** (needs >= 0.60). LLM: caught 64 / 105, false alarms 22 / 195 (macro-F1 0.758); category labels: 78 / 105 and 49 / 195 (0.733); today's phone check on the same titles: 92 / 105 and 43 / 195 (0.806). Ranking quality AUC 0.79 (blind set 2), 0.81 (blind set 1). At a plain 0.5 cut it catches only 28 / 105.
+- **Decision by the rule:** stopped; run 2 (teacher on LLM labels) and the test on blind set 3 are not run, and no second model or prompt is tried. Blind set 3 stays unused (its LLM scores exist but were not looked at).
+- **What it means:** a general 7B model reading titles cold agrees with the codebook only a little better than the category does, and it is very conservative: most titles that state dizziness or chest pain in a question form get a near-certain "no". The app's own small model, trained on real titles, agrees better with the codebook than this LLM. Better labels need a stronger or Arabic-medical labeller, or clinicians.
+- **Caveats:** one model, one prompt written in English, labels by one non-clinician (the LLM may disagree with the assistant where a clinician would side with the LLM; the doctor's 60 labels will show this).
+
+## 2026-11-26 — Arabic language models teach the phone pain model: no gain, today's model stays
+
+- **Rules, written before any score:** `docs/superpowers/specs/2026-11-26-arabic-pain-model-design.md` (only the CAMeLBERT-DA student can ship). **Commands:** `notebooks/pain_teacher_kaggle.ipynb` on Kaggle (GPU T4, 4 minutes for both teachers), then `py -3.14 ml\pain\distill_student.py data\derived\shifaa\teacher_scores.csv` (run once).
+- **Data:** a second blind set of 300 odd-numbered Shifaa titles, none from the first 250 (180 bone/muscle/sports, 120 from symptom categories), labelled by the AI assistant with the same codebook before any training: 105 state a warning sign (SHA-256 of the labels in the spec). Teachers: MARBERTv2 and CAMeLBERT-DA, fine-tuned 3 epochs on the same 9,730 texts as today's model. Students: the same 63 KB character n-gram model, trained on the teachers' scores for 48,118 titles (held-out and both blind sets removed) and 846 training notes. Thresholds matched to today's model's 14.95% flag rate on 455 held-out ordinary titles.
+- **Today's check:** caught 92 / 105, false alarms 43 / 195 (macro-F1 0.806); bone/muscle/sports 21 / 31 caught, 13 / 149 false alarms.
+- **CAMeLBERT student (the one that could ship):** caught 90 / 105, false alarms 40 / 195 (macro-F1 0.808); bone/muscle/sports 22 / 31 and 10 / 149. Recall gain -0.019, 95% interval [-0.059, 0.017]. **Fails rule 1** (interval not above 0); passes rule 2 (9 misses vs 10). Synthetic test 39 / 40 caught, 8 / 19 false alarms (today 37 / 40, 3 / 19).
+- **MARBERT student (report only):** 88 / 105, 36 / 195 (macro-F1 0.813); gain interval [-0.080, -0.009], 11 vs 10 misses: fails both.
+- **Teachers as the ceiling** (with the word list and temperature rule): CAMeLBERT 95 / 105, 46 / 195 (macro-F1 0.807); MARBERT 94 / 105, 42 / 195 (0.816). **Even the 650 MB models catch at most 3 more of 105 at the same false-alarm rate.**
+- **Decision by the rule:** not shipped; the app keeps today's model and its note is unchanged.
+- **What it means:** the limit is the training labels, not the model. Every model learns "which diagnosis category is this title from", and a category says little about whether the title states a symptom now. More capacity cannot fix that; symptom-level labels (a clinician labelling a few thousand titles or notes) could. The student keeps nearly all of the teacher's score at 1/10,000 of the size, so distillation itself works.
+- **Caveats:** labels by one non-clinician, agreement with a clinician not yet measured; titles, not Egyptian pain notes after exercise; one run, fixed settings, no tuning. This blind set is now used up.
+
 ## 2026-11-25 — Pain check on real Arabic text: the shipped model fails, a model retrained on real titles is much better
 
 - **Rules, written before any score:** `docs/superpowers/specs/2026-11-25-pain-check-real-text.md`. **Commands:** `py -3.14 ml\pain\shifaa_eval.py sample`, label, `py -3.14 ml\pain\shifaa_eval.py score`, `py -3.14 ml\pain\train_shifaa_model.py` (scikit-learn). The app's own TypeScript does the checking (`ml/pain/pain_batch.ts`).

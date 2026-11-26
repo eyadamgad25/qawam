@@ -69,3 +69,7 @@ def test_second_blind_sample_is_new_odd_and_split_as_written():
     assert len(second) == 300 == len({r["id"] for r in second})
     assert all(r["id"] % 2 for r in second) and not first & {r["id"] for r in second}
     assert sum(r["group"] == "target" for r in second) == 180
+    third = s.blind_sample3(rows)
+    assert len(third) == 400 == len({r["id"] for r in third}) and all(r["id"] % 2 for r in third)
+    assert not (first | {r["id"] for r in second}) & {r["id"] for r in third}
+    assert sum(r["group"] == "target" for r in third) == 240

@@ -17,16 +17,16 @@ from __future__ import annotations
 
 import json
 import math
-import random
 import sys
 from typing import Any
 
 import numpy as np
 from pain_text import char_ngrams
-from shifaa_eval import OUT, REPO, SEED, blind_sample, confusion, load, run_app_check, target
+from shifaa_eval import OUT, REPO, blind_sample, confusion, load, run_app_check, target
+from teacher_data import fit_rows, training_set
 from train_flag_model import load as load_notes
 
-KEEP, MIN_DF, C, MAX_FALSE, OTHERS = 4000, 5, 1.0, 0.15, 6000
+KEEP, MIN_DF, C, MAX_FALSE = 4000, 5, 1.0, 0.15
 
 
 def features(texts: list[str], vocab: dict[str, int] | None = None):
@@ -53,23 +53,8 @@ def features(texts: list[str], vocab: dict[str, int] | None = None):
 def train_model(rows: list[dict[str, Any]], notes: list[dict[str, Any]]) -> dict[str, Any]:
     from sklearn.linear_model import LogisticRegression
 
-    rng = random.Random(SEED)
-    even = sorted((r for r in rows if r["id"] % 2 == 0), key=lambda r: r["id"])
-    held = [r for r in even if r["id"] % 10 == 0]
-    fit = [r for r in even if r["id"] % 10]
-    pos = [r["title"] for r in fit if r["kind"] == "symptom"]
-    neg = [r["title"] for r in fit if target(r) and r["kind"] != "symptom"]
-    neg += rng.sample([r["title"] for r in fit if not target(r) and r["kind"] == "other"], OTHERS)
-    texts = [*pos, *neg, *(n["text"] for n in notes)]
-    y = np.array([1] * len(pos) + [0] * len(neg) + [int(n["red_flag"]) for n in notes])
-    weight = np.empty(len(y))
-    real = len(pos) + len(neg)
-    for block in (slice(0, real), slice(real, None)):
-        for c in (0, 1):
-            mask = np.zeros(len(y), bool)
-            mask[block] = True
-            mask &= y == c
-            weight[mask] = len(y) / 4 / mask.sum()
+    texts, y, weight = training_set(rows, notes)
+    _, held = fit_rows(rows)
     x, vocab = features(texts)
     clf = LogisticRegression(C=C, max_iter=2000).fit(x, y, sample_weight=weight)
     w, b = clf.coef_[0], float(clf.intercept_[0])
@@ -82,7 +67,8 @@ def train_model(rows: list[dict[str, Any]], notes: list[dict[str, Any]]) -> dict
 
     ordinary = sorted(score(r["title"]) for r in held if target(r) and r["kind"] != "symptom")
     threshold = ordinary[min(len(ordinary) - 1, math.ceil((1 - MAX_FALSE) * len(ordinary)))]
-    print(f"train: {len(pos)} symptom, {len(neg)} other titles, {len(notes)} notes; kept {len(weights)}; "
+    real = len(y) - len(notes)
+    print(f"train: {int(y[:real].sum())} symptom, {real - int(y[:real].sum())} other titles, {len(notes)} notes; kept {len(weights)}; "
           f"threshold {threshold:.3f} from {len(ordinary)} held-out ordinary titles")
     return {"about": "research candidate, not shipped", "ngram": [2, 4], "bias": round(b, 4), "threshold": round(threshold, 4),
             "weights": weights, "checks": []}

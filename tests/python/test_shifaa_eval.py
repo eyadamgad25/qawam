@@ -49,3 +49,23 @@ def test_scores():
     c = s.confusion([True, True, False, False], [True, False, True, False])
     assert (c["recall"], c["false_alarm_rate"], c["f1"], c["macro_f1"]) == (0.5, 0.5, 0.5, 0.5)
     assert s.decide([{"list": False, "temp": False, "model": True}], ("list", "temp")) == [False]
+
+
+def test_a_folder_of_csvs_loads_like_the_zip(tmp_path):
+    rows = [("Bone_Diseases", "1001", "العظام - المفاصل - التنميل"), ("Physical_Health", "1004", "الصحة الغذائية - المأكولات")]
+    archive(tmp_path / "a.zip", rows)
+    folder = tmp_path / "unzipped" / "inner"
+    folder.mkdir(parents=True)
+    with zipfile.ZipFile(tmp_path / "a.zip") as z:
+        z.extractall(folder)
+    assert s.load(tmp_path / "a.zip") == s.load(tmp_path / "unzipped")
+
+
+def test_second_blind_sample_is_new_odd_and_split_as_written():
+    rows = [{"id": i, "file": "Bone_Diseases" if i % 5 else "Internal", "diagnosis": "", "kind": "symptom" if i % 3 == 0 else "ordinary",
+             "title": str(i)} for i in range(1, 6000)]
+    first = {r["id"] for r in s.blind_sample(rows)}
+    second = s.blind_sample2(rows)
+    assert len(second) == 300 == len({r["id"] for r in second})
+    assert all(r["id"] % 2 for r in second) and not first & {r["id"] for r in second}
+    assert sum(r["group"] == "target" for r in second) == 180

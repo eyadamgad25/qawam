@@ -7,6 +7,7 @@ import { evaluatePainTriage, type PainTriageResult } from './painTriage';
 import { PAIN_TEST, painModelFlags } from './painModel';
 import LocalVideoPoseDemo from './LocalVideoPoseDemo';
 import ExerciseCoach from './exercise/ExerciseCoach';
+import CheckupPanel from './checkup/CheckupPanel';
 import { DEMO_DEFAULTS, PAIN_RED_FLAGS, sourceOf } from './demoDefaults';
 import LiteratureNote from './LiteratureNote';
 import { setLang, tr, useLang } from './i18n';
@@ -36,11 +37,12 @@ export const SIMULATED_CANNOT_ASSESS = {
     'Simulated: some required landmarks are unavailable, so movement was not analyzed and no repetitions were counted.',
 } as const;
 
-export type Tab = 'exercise' | 'pain' | 'about' | 'lab';
+export type Tab = 'exercise' | 'checkup' | 'pain' | 'about' | 'lab';
 
 /** Outline icons (24px grid, stroke = currentColor); decorative, so hidden from screen readers. */
 const ICONS: Record<Tab | 'shield' | 'globe', ReactNode> = {
   exercise: <path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12" />,
+  checkup: <path d="M12 22a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M12 9v4l2 2 M10 2h4" />,
   pain: (
     <path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 12 5a5.5 5.5 0 0 0-10 3.5c0 2.3 1.5 4 3 5.5l7 7Z M3.2 12H8l2-3 3 6 2-3h5.8" />
   ),
@@ -84,6 +86,7 @@ export default function App() {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'exercise', label: tr('التمرين', 'Exercise') },
+    { id: 'checkup', label: tr('فحص دوري', 'Check-up') },
     { id: 'pain', label: tr('فحص الألم', 'Pain check') },
     { id: 'about', label: tr('عن التطبيق', 'About') },
     { id: 'lab', label: tr('تجارب تقنية', 'Lab') },
@@ -153,6 +156,10 @@ export default function App() {
       <main className="page-shell">
         <div hidden={tab !== 'exercise'}>
           <ExerciseCoach />
+        </div>
+
+        <div hidden={tab !== 'checkup'}>
+          <CheckupPanel />
         </div>
 
         <div hidden={tab !== 'pain'}>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check-up labelling</title>
+<style>
+  :root { --ink:#1d2530; --muted:#5b6675; --accent:#0f6e6e; --line:#d5dde3; --bg:#f6f9fa; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); background: var(--bg); margin: 0; padding: 16px; }
+  main { max-width: 980px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 1.4rem; margin: 0 0 4px; }
+  .box { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { font: inherit; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent); background: #fff; color: var(--accent); cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; }
+  button:disabled { opacity: .45; cursor: default; }
+  canvas { background: #fff; border: 1px solid var(--line); border-radius: 8px; width: 100%; max-width: 640px; }
+  input[type=range] { width: 100%; max-width: 640px; }
+  ol { margin: 4px 0; padding-left: 20px; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  table { border-collapse: collapse; font-size: .9rem; }
+  td, th { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+  .done { color: #17633a; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Check-up labelling</h1>
+  <p class="muted">Mark when each test starts and ends on a stick-figure replay. The app's own result is never shown here.
+    Labels stay in this browser until you download them.</p>
+  <div class="box">
+    <strong>Rules (same for every recording)</strong>
+    <ol>
+      <li><b>Start</b> = the first frame where the hips leave the chair (the body starts rising). Leaning forward alone is not the start.</li>
+      <li><b>End, five-times sit-to-stand</b> = the first frame where the hips are back down at chair level after the <b>5th</b> stand-up.</li>
+      <li><b>End, Timed Up and Go</b> = the first frame where the hips are back down at chair level after walking back.</li>
+      <li>If the recording does not show a complete test, press <b>Cannot label</b>.</li>
+    </ol>
+    <div class="row">
+      <label>Your name (rater): <input id="rater" placeholder="e.g. eyad"></label>
+      <label>Recordings: <input id="files" type="file" accept=".json" multiple></label>
+    </div>
+    <p class="muted">Pick the files in <code>data/derived/checkup/to_label/</code>. Keys: ← → one frame, Shift+← → ten frames, Space play/pause, S start, E end.</p>
+  </div>
+  <div class="box" id="work" hidden>
+    <div class="row"><strong id="title"></strong> <span id="progress" class="muted"></span></div>
+    <canvas id="view" width="640" height="480"></canvas>
+    <input id="scrub" type="range" min="0" value="0">
+    <div class="row">
+      <button id="prev10">« 10</button><button id="prev">‹ 1</button><button id="play">Play</button><button id="next">1 ›</button><button id="next10">10 »</button>
+      <span id="time" class="muted"></span>
+    </div>
+    <div class="row">
+      <button id="markStart" class="primary">Mark start (S)</button>
+      <button id="markEnd" class="primary">Mark end (E)</button>
+      <button id="skip">Cannot label</button>
+      <span id="marks" class="muted"></span>
+    </div>
+    <div class="row">
+      <button id="back">Previous recording</button><button id="forward">Next recording</button>
+      <button id="download" class="primary">Download my labels</button>
+    </div>
+  </div>
+  <div class="box"><table id="list"><thead><tr><th>Recording</th><th>Start (s)</th><th>End (s)</th></tr></thead><tbody></tbody></table></div>
+</main>
+<script>
+const BONES = [[11,12],[11,23],[12,24],[23,24],[11,13],[13,15],[12,14],[14,16],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32],[27,29],[28,30]];
+const state = { recs: [], i: 0, f: 0, playing: false, labels: {} };
+const $ = (id) => document.getElementById(id);
+const view = $('view'), ctx = view.getContext('2d');
+
+function key() { return 'checkup-labels-' + ($('rater').value.trim() || 'anon'); }
+function load() { try { state.labels = JSON.parse(localStorage.getItem(key()) || '{}'); } catch { state.labels = {}; } }
+function save() { try { localStorage.setItem(key(), JSON.stringify(state.labels)); } catch {} }
+function rec() { return state.recs[state.i]; }
+function label() { const r = rec(); state.labels[r.set] ??= {}; state.labels[r.set][r.id] ??= { start: null, end: null }; return state.labels[r.set][r.id]; }
+
+function draw() {
+  const r = rec(); if (!r) return;
+  const fr = r.frames[state.f];
+  ctx.clearRect(0, 0, view.width, view.height);
+  const marks = fr.landmarks;
+  if (marks) {
+    const pts = marks.map((m) => (m && m.visibility > 0 ? [m.x * view.width, m.y * view.height] : null));
+    // fit the figure: scale all frames of this recording to the canvas
+    const { minX, minY, s } = r.fit;
+    const P = (p) => [(p[0] / view.width * fr.width - minX) * s + 20, (p[1] / view.height * fr.height - minY) * s + 20];
+    ctx.lineWidth = 4; ctx.strokeStyle = '#0f6e6e';
+    for (const [a, b] of BONES) { if (pts[a] && pts[b]) { const p = P(pts[a]), q = P(pts[b]); ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke(); } }
+    ctx.fillStyle = '#c07a00';
+    for (const i of [0, 23, 24, 25, 26, 27, 28]) { if (pts[i]) { const p = P(pts[i]); ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, 7); ctx.fill(); } }
+  } else {
+    ctx.fillStyle = '#5b6675'; ctx.fillText('no person in this frame', 20, 30);
+  }
+  const l = label();
+  $('scrub').value = state.f;
+  $('time').textContent = `frame ${state.f + 1} / ${r.frames.length}, ${fr.timeSeconds.toFixed(2)} s`;
+  $('marks').textContent = `start ${l.start === null ? '—' : l.start.toFixed(2) + ' s'}, end ${l.end === null ? '—' : l.end === 'skip' ? 'cannot label' : l.end.toFixed(2) + ' s'}`;
+  $('title').textContent = `${r.set} · ${r.id}`;
+  $('progress').textContent = `(${state.i + 1} of ${state.recs.length})`;
+}
+
+function fitOf(frames) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const fr of frames) for (const m of fr.landmarks || []) if (m && m.visibility > 0) {
+    const x = m.x * fr.width, y = m.y * fr.height; minX = Math.min(minX, x); minY = Math.min(minY, y); maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+  }
+  const s = Math.min((640 - 40) / Math.max(1, maxX - minX), (480 - 40) / Math.max(1, maxY - minY));
+  return { minX, minY, s };
+}
+
+function table() {
+  const body = $('list').querySelector('tbody'); body.innerHTML = '';
+  state.recs.forEach((r, k) => {
+    const l = (state.labels[r.set] || {})[r.id] || {};
+    const tr = document.createElement('tr');
+    const done = l.end === 'skip' || (l.start != null && l.end != null);
+    tr.innerHTML = `<td class="${done ? 'done' : ''}">${k + 1}. ${r.set} · ${r.id}</td><td>${l.start == null ? '' : l.start.toFixed(2)}</td><td>${l.end == null ? '' : l.end === 'skip' ? 'cannot label' : l.end.toFixed(2)}</td>`;
+    tr.onclick = () => { state.i = k; state.f = 0; setup(); };
+    body.appendChild(tr);
+  });
+}
+
+function setup() { const r = rec(); $('scrub').max = r.frames.length - 1; draw(); table(); }
+function step(n) { const r = rec(); state.f = Math.max(0, Math.min(r.frames.length - 1, state.f + n)); draw(); }
+function mark(which) { const l = label(); l[which] = rec().frames[state.f].timeSeconds; if (l.end === 'skip') l.end = null; save(); draw(); table(); }
+
+$('files').onchange = async (e) => {
+  load();
+  const files = [...e.target.files].sort((a, b) => a.name.localeCompare(b.name));
+  state.recs = [];
+  for (const file of files) {
+    const [set, id] = file.name.replace(/\.json$/, '').split('__');
+    const frames = JSON.parse(await file.text());
+    state.recs.push({ set, id, frames, fit: fitOf(frames) });
+  }
+  state.i = 0; state.f = 0; $('work').hidden = state.recs.length === 0; if (state.recs.length) setup();
+};
+$('rater').onchange = () => { load(); if (state.recs.length) setup(); };
+$('scrub').oninput = (e) => { state.f = +e.target.value; draw(); };
+$('prev').onclick = () => step(-1); $('next').onclick = () => step(1); $('prev10').onclick = () => step(-10); $('next10').onclick = () => step(10);
+$('markStart').onclick = () => mark('start'); $('markEnd').onclick = () => mark('end');
+$('skip').onclick = () => { const l = label(); l.start = null; l.end = 'skip'; save(); draw(); table(); };
+$('back').onclick = () => { if (state.i > 0) { state.i--; state.f = 0; setup(); } };
+$('forward').onclick = () => { if (state.i < state.recs.length - 1) { state.i++; state.f = 0; setup(); } };
+$('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; if (state.playing) tick(); };
+function tick() { if (!state.playing) return; const r = rec(); if (state.f >= r.frames.length - 1) { state.playing = false; $('play').textContent = 'Play'; return; }
+  const dt = (r.frames[state.f + 1].timeSeconds - r.frames[state.f].timeSeconds) * 1000; step(1); setTimeout(tick, Math.max(10, dt)); }
+$('download').onclick = () => {
+  const out = {};
+  for (const [set, recs] of Object.entries(state.labels)) { out[set] = {}; for (const [id, l] of Object.entries(recs)) if (l.end !== 'skip' && l.start != null && l.end != null) out[set][id] = l; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
+  a.download = `labels_${$('rater').value.trim() || 'anon'}.json`; a.click();
+};
+document.addEventListener('keydown', (e) => {
+  if (!state.recs.length || e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft') step(e.shiftKey ? -10 : -1);
+  else if (e.key === 'ArrowRight') step(e.shiftKey ? 10 : 1);
+  else if (e.key === ' ') { e.preventDefault(); $('play').click(); }
+  else if (e.key.toLowerCase() === 's') mark('start');
+  else if (e.key.toLowerCase() === 'e') mark('end');
+});
+</script>
+</body>
+</html>

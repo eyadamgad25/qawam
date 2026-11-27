@@ -185,7 +185,7 @@ select {
   bottom: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   padding-block-end: env(safe-area-inset-bottom);
   border-block-start: 1px solid var(--border);
   background: var(--surface);
@@ -1137,4 +1137,27 @@ select {
   .physio-report .no-print {
     display: none;
   }
+}
+
+/* Check-up tests */
+.checkup-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.checkup-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface-tint);
+}
+
+.checkup-result strong {
+  font-size: 1.15rem;
 }

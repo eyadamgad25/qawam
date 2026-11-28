@@ -653,7 +653,8 @@ export function speakAr(text: string, interrupt = true): void {
       utterance.voice = voice;
     }
     utterance.rate = 1.05;
-    if (interrupt) {
+    // cancel only when something is playing: Android Chrome can drop a line spoken right after cancel()
+    if (interrupt && (synth.speaking || synth.pending)) {
       synth.cancel();
     }
     synth.speak(utterance);

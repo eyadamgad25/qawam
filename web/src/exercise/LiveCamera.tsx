@@ -292,6 +292,7 @@ export default function LiveCamera(props: Props) {
   async function startCamera() {
     setError(null);
     setStarting(true);
+    say(copy.setupAr); // inside the tap: iPhones block speech that first starts after an await
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error(
@@ -315,7 +316,6 @@ export default function LiveCamera(props: Props) {
       setPhase('idle');
       setSummary(null);
       setCameraOn(true);
-      say(copy.setupAr);
     } catch (cause) {
       stopCamera();
       const denied = cause instanceof DOMException && cause.name === 'NotAllowedError';

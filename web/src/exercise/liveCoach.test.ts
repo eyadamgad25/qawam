@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   LEG_ABDUCTION_PACK,
   LUNGE_PACK,
@@ -12,6 +12,7 @@ import {
   LiveCoach,
   missingParts,
   setupStatus,
+  speakAr,
   summarise,
   type LiveReference,
 } from './liveCoach';
@@ -279,5 +280,38 @@ describe('session summary', () => {
     );
     expect(summarise([], SQUAT_PACK).textAr).toContain('لم أحسب');
     expect(arabicNumberWord(25)).toBe('25');
+  });
+});
+
+describe('speakAr', () => {
+  function fakeVoice(speaking: boolean) {
+    const calls: string[] = [];
+    vi.stubGlobal('speechSynthesis', {
+      speaking,
+      pending: false,
+      getVoices: () => [],
+      cancel: () => calls.push('cancel'),
+      speak: () => calls.push('speak'),
+    });
+    vi.stubGlobal(
+      'SpeechSynthesisUtterance',
+      class {
+        constructor(public text: string) {}
+      },
+    );
+    return calls;
+  }
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('does not cancel when nothing is playing (Android Chrome can drop a line spoken right after cancel)', () => {
+    const calls = fakeVoice(false);
+    speakAr('ثلاثة');
+    expect(calls).toEqual(['speak']);
+  });
+
+  it('interrupts a line that is still playing', () => {
+    const calls = fakeVoice(true);
+    speakAr('اثنان');
+    expect(calls).toEqual(['cancel', 'speak']);
   });
 });

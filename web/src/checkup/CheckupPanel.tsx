@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { drawPoseOverlay } from '../LocalVideoPoseDemo';
 import { tr } from '../i18n';
-import { speakAr, spokenNumber } from '../exercise/liveCoach';
+import { hasVoiceForLanguage, speakAr, spokenNumber } from '../exercise/liveCoach';
 import type { PoseFrame } from '../exercise/poseFrames';
 import { detectCurrentFrame, loadLandmarker } from '../exercise/videoPose';
 import {
@@ -435,6 +435,13 @@ function CheckupCamera({
 
   async function startCamera() {
     setError(null);
+    // spoken inside the tap: iPhones (and some Android browsers) block speech that first starts after an await
+    speakAr(
+      tr(
+        'اجلس على الكرسي وأنت على جانب الكاميرا',
+        'Sit on the chair, side-on to the camera',
+      ),
+    );
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error(
@@ -458,12 +465,6 @@ function CheckupCamera({
       setPhase('idle');
       setResult(null);
       setCameraOn(true);
-      speakAr(
-        tr(
-          'اجلس على الكرسي وأنت على جانب الكاميرا',
-          'Sit on the chair, side-on to the camera',
-        ),
-      );
     } catch (cause) {
       stopCamera();
       setError(
@@ -560,6 +561,14 @@ function CheckupCamera({
       {error && (
         <p className="field-help" role="alert">
           {error}
+        </p>
+      )}
+      {cameraOn && !hasVoiceForLanguage() && (
+        <p className="field-help">
+          {tr(
+            'لا يوجد صوت عربي مثبّت في المتصفح، فقد لا تسمع العد. جرّب Chrome أو ثبّت الصوت العربي من إعدادات تحويل النص إلى كلام.',
+            'No English voice is installed in this browser, so you may not hear the count. Try Chrome or install a voice in the text-to-speech settings.',
+          )}
         </p>
       )}
       <div className="pose-video-stage" hidden={!cameraOn}>
